@@ -7,6 +7,10 @@ const productSchema = new mongoose.Schema(
             required: true, 
             unique: true 
         },
+        catagory: {
+            type: String, 
+            required: true 
+        },
         threshold_point: { 
             type: Number, 
             required: true 
@@ -21,4 +25,4 @@ const productSchema = new mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model("Product", productSchema);
+export const Product = mongoose.model("Product", productSchema);

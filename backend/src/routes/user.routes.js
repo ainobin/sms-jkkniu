@@ -1,9 +1,32 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/user.controller.js";
+import { upload } from "../middlewares/multer.middleware.js";
+import { 
+    registerUser, 
+    loginUser,
+    logoutUser,
+    changePassword,
+    changeDetails,
+    getCurrentUser,
+    changeSignature
+}from "../controllers/user.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
-const userRoutes = Router();
+const router = Router();
 
-userRoutes.route("/register").post(registerUser);
+router.route("/register").post(
+    upload.fields([{
+        name: "signature",
+        maxCount: 1
+    }]),
+    registerUser 
+);
 
+router.route("/login").post(loginUser)
+router.route("/logout").get(verifyJWT, logoutUser)
+router.route("/change-password").patch(verifyJWT, changePassword)
+router.route("/change-details").patch(verifyJWT, changeDetails)
+router.route("/change-signature").patch(verifyJWT, upload.single("signature"), changeSignature)
 
-export default userRoutes;
+router.route("/me").get(verifyJWT, getCurrentUser)
+
+export default router;

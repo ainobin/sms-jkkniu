@@ -53,7 +53,18 @@ export default function RegisterForm() {
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
           </div>
-
+          {/* Depertment Field */}
+          <div>
+            <input
+              type="text"
+              placeholder="Depertment"
+              {...register("depertment", { required: "depertment is required" })}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+            {errors.depertment && (
+              <p className="text-red-500 text-sm mt-1">{errors.depertment.message}</p>
+            )}
+          </div>
           {/* Designation Field */}
           <div>
             <input
@@ -66,7 +77,6 @@ export default function RegisterForm() {
               <p className="text-red-500 text-sm mt-1">{errors.designation.message}</p>
             )}
           </div>
-
           {/* Role Dropdown */}
           <div>
             <select
@@ -80,7 +90,6 @@ export default function RegisterForm() {
             </select>
             {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>}
           </div>
-
           {/* Password Field */}
           <div>
             <input

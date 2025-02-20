@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import {Header, Footer, Login, RegisterForm} from './components/index.js'
+import {Header, Footer, Login, RegisterForm, OrderForm} from './components/index.js'
 
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
       <Header/>
       <main className='justify-center items-center flex flex-col flex-1'>
 
-        <RegisterForm/>
+        <OrderForm/>
       
       </main>
       <Footer/>
