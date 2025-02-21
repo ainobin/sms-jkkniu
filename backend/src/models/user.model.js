@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
             required: true, 
             unique: true 
         },
-        depertment: { 
+        department: { 
             type: String, 
             required: true
         },
@@ -75,7 +75,7 @@ userSchema.methods.generateAccessToken =  function (){
             fullName: this.fullName,
             email: this.email,
             role: this.role,
-            depertment: this.depertment,
+            department: this.department,
             designation: this.designation,
             signature: this.signature  
         },
