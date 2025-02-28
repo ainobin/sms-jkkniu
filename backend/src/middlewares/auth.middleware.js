@@ -1,3 +1,4 @@
+import { log } from "console";
 import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken"
@@ -5,7 +6,7 @@ import jwt from "jsonwebtoken"
 export const verifyJWT = asyncHandler( async (req, res, next) => {
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-    
+        console.log("token: ",token);
         if(!token){
             throw new ApiError(401, "Unauthorized");
         }
@@ -17,7 +18,6 @@ export const verifyJWT = asyncHandler( async (req, res, next) => {
         if(!user){
             throw new ApiError(401, "Invalid token");
         }
-    
         req.user = user;
         next();
     } catch (error) {

@@ -1,10 +1,8 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"; 
 import { ApiResponse } from "../utils/ApiResponse.js";
-
 import { Order } from "../models/order.model.js";
 import mongoose from "mongoose";
-
 
 const createOrder = asyncHandler(async (req, res) => {
     // steps:
@@ -15,11 +13,11 @@ const createOrder = asyncHandler(async (req, res) => {
     // check for order creation
     // return res
 
-    const {order_name, dept_id, dept_head_name, items_list } = req.body
+    const {order_name, dept_id, dept_admin_name, items_list } = req.body
     console.log("order_name: ", order_name);
 
     if( 
-        [order_name, dept_id, dept_head_name].some((field) => field?.trim() === "")
+        [order_name, dept_id, dept_admin_name].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
@@ -28,14 +26,14 @@ const createOrder = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Items list can not be empty")
     }
     items_list.forEach((item, index) => {
-        if (!item.name || !item.quantity || typeof item.quantity !== 'number') {
+        if (!item.product_name || !item.demand_quantity || typeof item.demand_quantity !== 'number') {
             throw new ApiError(400, `Invalid item at index ${index}: name and quantity are required, and quantity should be a number`);
         }
     });
     const order = await Order.create({
         order_name,
         dept_id,
-        dept_head_name,
+        dept_admin_name,
         items_list
     })
     if (!order) {

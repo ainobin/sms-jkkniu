@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 // schema for each item in the order
 const ItemSchema = new mongoose.Schema({
@@ -14,10 +14,11 @@ const ItemSchema = new mongoose.Schema({
         type: Number, 
         required: true
     },
-    alloted_quantity: { 
+    manager_alloted_quantity: { 
         type: Number, 
         default: 0 
     }, // Default 0 if not allocated
+
     comment: { 
         type: String, 
         default: '' 
@@ -33,7 +34,7 @@ const OrderSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
-    dept_head_name: { 
+    dept_admin_name: { 
         type: String, 
         required: true 
     },

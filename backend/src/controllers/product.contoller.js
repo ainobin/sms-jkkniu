@@ -13,11 +13,11 @@ const createProduct = asyncHandler(async (req, res) => {
     // check for product creation
     // return res
 
-    const {name, catagory, threshold_point, current_stock } = req.body
+    const {name, category, threshold_point, current_stock } = req.body
     console.log("name: ", name);
 
     if( 
-        [name, catagory].some((field) => field?.trim() === "")
+        [name, category].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
@@ -38,7 +38,7 @@ const createProduct = asyncHandler(async (req, res) => {
 
     const product = await Product.create({
         name,
-        catagory,
+        category,
         threshold_point,
         current_stock
     });

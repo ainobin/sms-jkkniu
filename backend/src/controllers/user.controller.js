@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
 import {User} from "../models/user.model.js";
+import { log } from "console";
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -82,8 +83,8 @@ const loginUser = asyncHandler(async (req, res) => {
     // return res
 
     const { username, password } = req.body;
-    console.log("username: ", username);
-    console.log("password: ", password);
+    // console.log("username: ", username);
+    // console.log("password: ", password);
 
     if (!username || !password) {
         throw new ApiError(400, "username and password are required");
@@ -104,14 +105,17 @@ const loginUser = asyncHandler(async (req, res) => {
     const loggedInUser = await User.findById(user._id).select("-password");
 
     const accessToken = await loggedInUser.generateAccessToken();
-
+    console.log(accessToken);
+    
     return res
         .status(200)
         .cookie("accessToken", accessToken, {
             httpOnly: true,
-            secure: true,
+            sameSite: "strict",  // Helps prevent CSRF attacks
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 3600000,  // Optional: Set cookie expiry (e.g., 1 hour)
         })
-        .json(new ApiResponse(200, loggedInUser, "User logged in successfully"));
+        .json(new ApiResponse(200, loggedInUser, "User logged in successfully", accessToken));
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -123,7 +127,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
     })
     .json( new ApiResponse(200, {}, "User logged out successfully"));
 
@@ -233,6 +237,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 
+
 export { 
     registerUser, 
     loginUser,
@@ -240,5 +245,5 @@ export {
     changePassword,
     changeDetails,
     getCurrentUser,
-    changeSignature
+    changeSignature,
 }

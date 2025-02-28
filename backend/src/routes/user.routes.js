@@ -27,6 +27,7 @@ router.route("/change-password").patch(verifyJWT, changePassword)
 router.route("/change-details").patch(verifyJWT, changeDetails)
 router.route("/change-signature").patch(verifyJWT, upload.single("signature"), changeSignature)
 
+
 router.route("/me").get(verifyJWT, getCurrentUser)
 
 export default router;

@@ -7,6 +7,7 @@ const app = express();
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
+    methods: ['GET', 'POST', 'PATCH'],
     credentials: true,
 }));
 app.use(express.json({
@@ -24,9 +25,11 @@ app.use(cookieParser());
 // routes
 import userRoutes from './routes/user.routes.js';
 import productRoutes from './routes/product.routes.js';
+import orderRoutes from './routes/order.routes.js';
 
 // route calls
 app.use("/api/v1/users", userRoutes)
 app.use("/api/v1/products", productRoutes)
+app.use("/api/v1/orders", orderRoutes)
  
 export {app}
