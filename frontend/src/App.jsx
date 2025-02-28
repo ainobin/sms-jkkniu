@@ -1,20 +1,18 @@
 import { useState } from 'react'
 import './App.css'
-import {Header, Footer, Login, RegisterForm, OrderForm} from './components/index.js'
-
+import {Header, Footer} from './components/index.js'
+import AboutDevelopers from './pages/AboutDevelopers.jsx'
+import { Outlet } from 'react-router-dom'
 
 function App() {
   
 
   return (
-    <div className='min-h-screen flex flex-col'>
-      <Header/>
-      <main className='justify-center items-center flex flex-col flex-1'>
-
-        <OrderForm/>
-      
-      </main>
-      <Footer/>
+    
+    <div className="w-full h-16 md:h-20 items-center justify-between px-4 relative">
+            <Header/>
+                <Outlet/>
+            <Footer/>
     </div>
   )
 }

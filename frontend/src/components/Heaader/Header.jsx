@@ -1,40 +1,101 @@
-import React from 'react'
-import { useState } from "react";
+import { useState, useEffect, useRef, useActionState, useContext } from "react";
+import { FaSignOutAlt, FaSignInAlt, FaBars, FaTimes } from "react-icons/fa";
+import profile_pic from "../profile_src/profile";
+import { Link, useNavigate } from "react-router-dom";
+import UserContext from "../../context/UserContext";
+import axios from "axios";
+// import jwt from "jsonwebtoken"
+
+function Header() {
+    // const token
+    const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+    const {setUser} = useContext(UserContext);
+    console.log("hedar isLoggedIn:", isLoggedIn)
+    const navigate = useNavigate();
+
+    const logout = async (e) => {
+        if (e) e.preventDefault();  // Only prevent if it's an event
+    
+        try {
+            const response = await axios.get("http://localhost:3000/api/v1/users/logout", {
+                withCredentials: true
+            });
+    
+            if (response.status === 200) {
+                setUser(null);  // Clear user data from context or state
+                setIsLoggedIn(false);  // Set logged-in state to false
+                
+                console.log("Logged out successfully!");
+                
+                navigate("/login");
+            } else {
+                console.error("Logout failed:", response);
+            }
+        } catch (error) {
+            console.error("Error during logout:", error);
+        }
+    };
+
+    return (
+        <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-lg bg-white/10 shadow-lg ">
+            <div className="container mx-auto flex items-center justify-between py-4 px-6">
+
+                {/* Left: University Logo */}
+                <div className="flex items-center space-x-3">
+                    <Link to="/">
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/en/7/7d/Jatiya_Kabi_Kazi_Nazrul_Islam_University_Logo.png"
+                            alt="University Logo"
+                            className="h-16 w-17"
+                        />
+                    </Link>
+                </div>
 
 
-const Header = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+                {/* Center: Project Name & University Name */}
+                <div className="text-center">
+                    <Link to="/">
+                        <h1 className="text-3xl font-bold text-center text-green-700">
+                            📦 Store Management System
+                        </h1>
+                    </Link>
+                    <h1 className="text-md opacity-80 font-bold text-emerald-950">
+                        Jatiya Kabi Kazi Nazrul Islam University, Trishal, Mymensingh
+                    </h1>
+                </div>
 
+                {/* Right: Desktop Navigation & User Section */}
+                <div className="hidden font-bold md:flex items-center space-x-6">
+                    {[
+                        { name: "About", link: "/about" },
+                        { name: "Contact", link: "/contact" },
+                    ].map(({ name, link }) => (
+                        <Link key={name} to={link} className="hover:text-gray-300 transition">
+                            {name}
+                        </Link>
+                    ))}
 
-  return (
-    <header className="bg-[#3F9A0D] flex items-center justify-between p-4 text-white relative">
-      {/* Left Logo */}
-      <img src="Jatiya_Kabi_Kazi_Nazrul_Islam_University_Logo.png" alt="University Logo" className="w-0.5 h-fit  flex-1 text-center" />
-
-      {/* Center Title */}
-      <div className="text-center ml-0 flex-10">
-        <h1 className="text-xl ">Jatiya Kabi Kazi Nazrul Islam University</h1>
-        <h2 className="text-4xl font-bold">Store Management System</h2>
-      </div>
-
-      {/* Right Profile Dropdown */}
-      <div className="relative flex-1">
-        <button onClick={() => setMenuOpen(!menuOpen)} className="focus:outline-none cursor-pointer">
-          <img src="signature.jpg" alt="Profile" className="h-25 w-25 rounded-full border-2 border-white" />
-        </button>
-
-        {/* Dropdown Menu */}
-        {menuOpen && (
-          <div className="absolute right-0 mt-2 w-40 bg-white text-black shadow-lg rounded-lg">
-            <ul className="py-2">
-              <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => setMenuOpen(false)}>Profile</li>
-              <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => setMenuOpen(false)}>Logout</li>
-            </ul>
-          </div>
-        )}
-      </div>
-    </header>
-  )
+                    {/* User Profile & Login/Logout (Centered) */}
+                    <div className="relative flex items-center space-x-2 justify-center">
+                        {isLoggedIn ? (
+                            <div className="relative">
+                                <button
+                                    onClick={() => logout()}
+                                    className="flex items-center space-x-2 hover:text-gray-300 justify-center"
+                                    role="button"
+                                >
+                                <FaSignInAlt size={24} />
+                                <span className="hidden md:inline">Logout</span>
+                                </button>
+                            </div>
+                        ) : (
+                            null
+                        )}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    );
 }
 
-export default Header
+export default Header;
