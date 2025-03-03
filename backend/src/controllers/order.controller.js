@@ -25,11 +25,19 @@ const createOrder = asyncHandler(async (req, res) => {
     if(!Array.isArray(items_list) || items_list.length === 0) {
         throw new ApiError(400, "Items list can not be empty")
     }
-    items_list.forEach((item, index) => {
-        if (!item.product_name || !item.demand_quantity || typeof item.demand_quantity !== 'number') {
-            throw new ApiError(400, `Invalid item at index ${index}: name and quantity are required, and quantity should be a number`);
+    console.log(items_list);
+    
+    const formattedItems = items_list.map((item, index) => {
+        if (!item.product_name || item.demand_quantity === undefined) {
+            throw new ApiError(400, `Invalid item at index ${index}: name and quantity are required`);
         }
+
+        return {
+            ...item,
+            demand_quantity: Number(item.demand_quantity), // Convert to number
+        };
     });
+    
     const order = await Order.create({
         order_name,
         dept_id,

@@ -3,7 +3,16 @@ import UserContext from "./UserContext";
 import axios from "axios";
 
 const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({
+        id: "",
+        fullName: "",
+        email: "",
+        department: "",
+        designation: "",
+        role: "",
+        signature: "",
+    });
+    
     const [isLoggedIn, setIsLoggedIn] = useState(false); // ✅ Fixed spelling
     const [isLoading, setIsLoading] = useState(true);
 
@@ -32,7 +41,15 @@ const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
                 console.log("isLoggedIn: ",isLoggedIn);
                 
             } catch (error) {
-                setUser(null);
+                setUser({
+                    id: "",
+                    fullName: "",
+                    email: "",
+                    department: "",
+                    designation: "",
+                    role: "",
+                    signature: "",
+                });
                 setIsLoggedIn(false);
             } finally{
                 setIsLoading(false);

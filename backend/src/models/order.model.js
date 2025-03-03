@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 // schema for each item in the order
 const ItemSchema = new mongoose.Schema({
-    _id: { 
+    id: { 
         type: String, 
         required: true
     },
@@ -18,7 +18,10 @@ const ItemSchema = new mongoose.Schema({
         type: Number, 
         default: 0 
     }, // Default 0 if not allocated
-
+    register_alloted_quantity: { 
+        type: Number, 
+        default: 0 
+    }, // Default 0 if not allocated
     comment: { 
         type: String, 
         default: '' 
