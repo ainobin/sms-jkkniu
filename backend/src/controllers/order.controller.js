@@ -86,7 +86,7 @@ const getOrderById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Order fetched successfully", order))
 });
 
-const storeManager = asyncHandler(async (req, res) => {
+const managerApproval = asyncHandler(async (req, res) => {
     // steps:
     // get order id from req.params
     // validation - not empty
@@ -172,4 +172,4 @@ const regesterApproval = asyncHandler(async (req, res) => {
 });
 
 
-export { createOrder, getOrders, getOrderById, storeManager, regesterApproval}
+export { createOrder, getOrders, getOrderById, managerApproval, regesterApproval}
