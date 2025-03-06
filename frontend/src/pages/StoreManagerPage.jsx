@@ -9,11 +9,12 @@ const storeManagerMenu = [
   { label: "Restock", path: "/store-manager/restock" },
   { label: "Profile", path: "/store-manager/profile" },
 ];
+const homePage = { label: "Store Manager", path: "/store-manager/" };
 
 const StoreManagerPage = () => {
   return (
     <div className="bg-white/70 backdrop-blur-md shadow-lg rounded-lg p-6 mt-29 mb-5 min-h-screen">
-        <Navbar menuItems={storeManagerMenu} userName={"Store Manager"} />
+        <Navbar menuItems={storeManagerMenu} homePage = {homePage} />
       <div className="p-4">
         <Outlet />
       </div>

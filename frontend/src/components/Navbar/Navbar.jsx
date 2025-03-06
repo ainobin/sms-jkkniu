@@ -2,14 +2,22 @@ import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
-const Navbar = ({ menuItems, userName }) => {
+const Navbar = ({ menuItems, homePage }) => {
   const [isOpen, setIsOpen] = useState(false);
+  console.log(homePage);
 
   return (
     <nav className="bg-[#008337] text-white px-6 py-3 rounded-lg shadow-md">
       <div className="flex justify-between items-center">
         {/* Logo / Title */}
-        <h2 className="text-lg font-semibold">{userName}</h2>
+        
+        
+        <Link
+          to={homePage.path}
+          className="hover:bg-white/20 px-4 py-2 rounded transition"
+        >
+          {homePage.label}
+        </Link>
 
         {/* Mobile Menu Button */}
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>

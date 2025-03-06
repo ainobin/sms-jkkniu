@@ -15,12 +15,18 @@ import {
   RegisterPage
 } from "./pages/pageIndex.js"
 import { 
+  ManagerHome,
   Profile,
   AddNewItem,
   Restock,
   StockCheck, 
-  Query,
-  OrderForm
+  ManagerProcessOrder,
+  OrderForm,
+  RegisterHome,
+  AdminHome,
+  Preview,
+  RegisterProcessOrder
+
 } from './components/index.js';
 
 const router = createBrowserRouter([
@@ -35,9 +41,11 @@ const router = createBrowserRouter([
         path: "/store-manager",
         element: <StoreManagerPage />, // Parent layout with <Outlet />
         children: [
+          { path: "", element: <ManagerHome/>},
+          {path:"process/:id", element:<ManagerProcessOrder />},
+          {path:"preview/:id", element:<Preview />},
           { path: "profile", element: <Profile/> },
           { path: "add-item", element: <AddNewItem/> },
-          { path: "quries", element: <Query/> },
           { path: "stock-check", element: <StockCheck/> },
           { path: "restock", element: <Restock/> },
           { path: "register-new-user", element: <RegistrationForm/> },
@@ -47,6 +55,9 @@ const router = createBrowserRouter([
         path: "/register",
         element: <RegisterPage />, // Parent layout with <Outlet />
         children: [
+          { path: "", element: <RegisterHome/>},
+          {path:"process/:id", element:<RegisterProcessOrder />},
+          {path:"preview/:id", element:<Preview />},
           { path: "profile", element: <Profile/> },
         ],
       },
@@ -54,7 +65,9 @@ const router = createBrowserRouter([
         path: "/dept-admin",
         element: <DeptAdminPage />, // Parent layout with <Outlet />
         children: [
+          { path: "", element: <AdminHome/>},
           { path: "profile", element: <Profile/> },
+          {path:"preview/:id", element:<Preview />},
           { path: "order-now", element: <OrderForm/> },
         ],
       }

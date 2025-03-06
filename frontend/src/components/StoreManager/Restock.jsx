@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Select from "react-select";
+import { useForm, Controller } from "react-hook-form";
 
 const Restock = () => {
+  const { control, handleSubmit, setValue, watch } = useForm();
   const [products, setProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState("");
   const [currentQuantity, setCurrentQuantity] = useState(0);
-  const [restockQuantity, setRestockQuantity] = useState("");
 
   // Fetch all products from database
   useEffect(() => {
@@ -20,42 +21,33 @@ const Restock = () => {
     fetchProducts();
   }, []);
 
-  // Update current quantity when a product is selected
-  const handleProductChange = (event) => {
-    const productName = event.target.value;
-    setSelectedProduct(productName);
+  // Watch selected product
+  const selectedProduct = watch("selectedProduct");
 
-    // Find the selected product in the product list
-    const product = products.find((p) => p.name === productName);
-    setCurrentQuantity(product ? product.current_stock : 0);
-  };
-
-  // Validate restock quantity (must be >= 1)
-  const handleRestockChange = (event) => {
-    const value = parseInt(event.target.value, 10);
-    setRestockQuantity(value >= 1 ? value : "");
-  };
+  useEffect(() => {
+    if (selectedProduct) {
+      setCurrentQuantity(selectedProduct.current_stock);
+    }
+  }, [selectedProduct]);
 
   // Handle form submission
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!selectedProduct || restockQuantity < 1) {
+  const onSubmit = async (data) => {
+    if (!data.selectedProduct || data.restockQuantity < 1) {
       alert("Please select a product and enter a valid restock quantity.");
       return;
     }
 
-    const updatedStock = currentQuantity + restockQuantity;
+    const updatedStock = Number(currentQuantity) + Number(data.restockQuantity);
 
     try {
-      const response = await axios.patch("http://localhost:3000/api/v1/products/restock", {
-        name: selectedProduct,
-        stock: updatedStock,
+      const response = await axios.patch("http://localhost:3000/api/v1/products/stockUpdate", {
+        name: data.selectedProduct.label,
+        stock: Number(updatedStock),
       });
 
       if (response.status === 200) {
         alert("Stock successfully updated!");
-        setRestockQuantity("");
+        setValue("restockQuantity", "");
         setCurrentQuantity(updatedStock);
       }
     } catch (error) {
@@ -67,25 +59,29 @@ const Restock = () => {
   return (
     <div className="flex items-center justify-center mt-5">
       <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
-        <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">Restock Inventory</h2>
+        <h2 className="text-3xl font-bold text-center mb-6">Restock Inventory</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Product Selection */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">Product Name</label>
-            <select
-              value={selectedProduct}
-              onChange={handleProductChange}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              required
-            >
-              <option value="">Select a Product</option>
-              {products.map((product) => (
-                <option key={product.id} value={product.name}>
-                  {product.name}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="selectedProduct"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={products.map((product) => ({
+                    value: product.id,
+                    label: product.name,
+                    current_stock: product.current_stock,
+                  }))}
+                  className="w-full"
+                  placeholder="Select a product"
+                  isSearchable
+                />
+              )}
+            />
           </div>
 
           {/* Current Quantity */}
@@ -102,13 +98,19 @@ const Restock = () => {
           {/* Restock Quantity */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">Restock Quantity</label>
-            <input
-              type="number"
-              value={restockQuantity}
-              onChange={handleRestockChange}
-              min="1"
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              required
+            <Controller
+              name="restockQuantity"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <input
+                  {...field}
+                  type="number"
+                  min="1"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  required
+                />
+              )}
             />
           </div>
 

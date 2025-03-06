@@ -4,7 +4,15 @@ import ItemToOrder from "./ItemToOrder";
 import OrderForm from "./forms/orderForm";
 import Navbar from "../components/Navbar/Navbar.jsx";
 import Profile from "./Profile/Profile.jsx";
+import Preview from "./preview.jsx";
 
+import RegisterHome from "./register/RegisterHome.jsx";
+import RegisterProcessOrder from "./register/RegisterProcessOrder.jsx";
+
+import AdminHome from "./deptAdmin/AdminHome.jsx";
+
+import ManagerHome from "./StoreManager/ManagerHome.jsx"
+import ManagerProcessOrder from "./StoreManager/ManagerProcessOrder.jsx";
 import AddNewItem from "./StoreManager/AddNewItem.jsx";
 import Restock from "./StoreManager/Restock.jsx";
 import StockCheck from "./StoreManager/StockCheck.jsx";
@@ -12,16 +20,27 @@ import Query from "./StoreManager/Query.jsx";
 
 
 
+
 export{
+
     Header,
     Footer,
     ItemToOrder,
     OrderForm,
     Navbar,
     Profile,
+    Preview,
+    
     AddNewItem,
     Restock,
     StockCheck,
-    Query
+    ManagerProcessOrder,
+    ManagerHome,
+
+    RegisterHome,
+    RegisterProcessOrder,
+    
+    AdminHome,
+
     // receptMaker,
 }
