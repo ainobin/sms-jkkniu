@@ -88,22 +88,20 @@ const getOrderById = asyncHandler(async (req, res) => {
 
 const managerApproval = asyncHandler(async (req, res) => {
     // steps:
-    // get order id from req.params
-    // validation - not empty
+    // get order details from req.body
+    // validation - not empty, less then stock
     // check if order exists
-    // update alloted_quantity field
+    // update manager_alloted_quantity field
     // update store_manager_approval field
     // update store_manager_name field
     // return res;
 
-    const { id } = req.params
-    const { store_manager_approval } = req.body;
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+    const {_id, items_list, store_manager_name, store_manager_approval} = req.body
+    if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
         throw new ApiError(400, "Invalid order id")
     }
 
-    const order = await Order.findById(id)
-
+    const order = await Order.findById(_id)
     if (!order) {
         throw new ApiError(404, "Order not found")
     }
@@ -111,14 +109,27 @@ const managerApproval = asyncHandler(async (req, res) => {
     if (order.store_manager_approval !== null) {
         throw new ApiError(400, "Order already Reviewed by store manager")
     }
-
     if (store_manager_approval === undefined) {
         throw new ApiError(400, "Store manager approval is required")
     }
-
+    if(store_manager_approval == false){
+        order.register_approval = false;
+    }
     order.store_manager_approval = store_manager_approval;
-    order.store_manager_name = req.user.name;
-    await order.save({validateBeforeSave: false});
+    order.store_manager_name = store_manager_name;
+
+    // ✅ Update only the `manager_alloted_quantity` for matching items
+    order.items_list.forEach((item) => {
+        const updatedItem = items_list.find(i => i.id === item.id);
+        if (updatedItem) {
+            if (updatedItem.manager_alloted_quantity === undefined || updatedItem.manager_alloted_quantity < 0) {
+                throw new ApiError(400, `Invalid allotted quantity for item ${item.id}`);
+            }
+            item.manager_alloted_quantity = Number(updatedItem.manager_alloted_quantity);
+        }
+    });
+
+    await order.save();
 
     return res
     .status(200)
@@ -127,7 +138,7 @@ const managerApproval = asyncHandler(async (req, res) => {
 
 const regesterApproval = asyncHandler(async (req, res) => {
     // steps:
-    // get order id from req.params
+    // get order id from req.body
     // validation - not empty
     // check if order exists
     // update register_approval field
@@ -137,9 +148,8 @@ const regesterApproval = asyncHandler(async (req, res) => {
     // call 
     // return res;
 
-    const { id } = req.params
-    const { register_approval } = req.body;
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+    const { _id, items_list, register_name, register_approval } = req.body
+    if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
         throw new ApiError(400, "Invalid order id")
     }
 
@@ -147,7 +157,7 @@ const regesterApproval = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Register approval is required")
     }
 
-    const order = await Order.findById(id)
+    const order = await Order.findById(_id)
 
     if (!order) {
         throw new ApiError(404, "Order not found")
@@ -158,12 +168,22 @@ const regesterApproval = asyncHandler(async (req, res) => {
     }
 
     order.register_approval = register_approval;
-    order.register_name = req.user.name;
-    await order.save({validateBeforeSave: false});
+    order.register_name = register_name;
+
+    order.items_list.forEach((item) => {
+        const updatedItem = items_list.find(i => i.id === item.id);
+        if(updatedItem) {
+            if(updatedItem.register_alloted_quantity === undefined || updatedItem.register_alloted_quantity<0){
+                throw new ApiError(400, `Invalid allotted quantity for item ${item.id}`)
+            }
+            item.register_alloted_quantity = Number(updatedItem.register_alloted_quantity);
+        }
+    })
+
+    await order.save();
 
     // call transaction api
-
-
+    
     // call email api
 
     return res

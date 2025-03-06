@@ -7,8 +7,8 @@ const ItemSchema = new mongoose.Schema({
         required: true
     },
     product_name: { 
-        type: String, 
-        required: true 
+        type: String,  
+        required: true
     },
     demand_quantity: { 
         type: Number, 
@@ -22,7 +22,7 @@ const ItemSchema = new mongoose.Schema({
         type: Number, 
         default: 0 
     }, // Default 0 if not allocated
-    comment: { 
+    comment: {
         type: String, 
         default: '' 
     }
