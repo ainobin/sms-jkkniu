@@ -4,6 +4,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Order } from "../models/order.model.js";
 import mongoose from "mongoose";
 
+import { Product } from "../models/product.model.js";
+
 const createOrder = asyncHandler(async (req, res) => {
     // steps:
     // get order details from frontend
@@ -96,12 +98,19 @@ const managerApproval = asyncHandler(async (req, res) => {
     // update store_manager_name field
     // return res;
 
-    const {_id, items_list, store_manager_name, store_manager_approval} = req.body
-    if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
+    const {id, items_list, store_manager_name, store_manager_approval} = req.body
+
+    console.log("id", id);
+    console.log("item_list: ", items_list);
+    
+    
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
         throw new ApiError(400, "Invalid order id")
     }
+    
 
-    const order = await Order.findById(_id)
+    const order = await Order.findById(id)
     if (!order) {
         throw new ApiError(404, "Order not found")
     }
@@ -148,47 +157,55 @@ const regesterApproval = asyncHandler(async (req, res) => {
     // call 
     // return res;
 
-    const { _id, items_list, register_name, register_approval } = req.body
-    if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
-        throw new ApiError(400, "Invalid order id")
+    const { id, items_list, register_name, register_approval } = req.body;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+        throw new ApiError(400, "Invalid order id");
     }
 
     if (register_approval === undefined) {
-        throw new ApiError(400, "Register approval is required")
+        throw new ApiError(400, "Register approval is required");
     }
 
-    const order = await Order.findById(_id)
-
+    const order = await Order.findById(id);
     if (!order) {
-        throw new ApiError(404, "Order not found")
+        throw new ApiError(404, "Order not found");
     }
 
     if (order.register_approval !== null) {
-        throw new ApiError(400, "Order already Reviewed by register")
+        throw new ApiError(400, "Order already reviewed by register");
     }
 
     order.register_approval = register_approval;
     order.register_name = register_name;
 
-    order.items_list.forEach((item) => {
+    // Use for...of instead of forEach for async handling
+    for (const item of order.items_list) {
         const updatedItem = items_list.find(i => i.id === item.id);
-        if(updatedItem) {
-            if(updatedItem.register_alloted_quantity === undefined || updatedItem.register_alloted_quantity<0){
-                throw new ApiError(400, `Invalid allotted quantity for item ${item.id}`)
+        if (updatedItem) {
+            if (updatedItem.register_alloted_quantity === undefined || updatedItem.register_alloted_quantity < 0) {
+                throw new ApiError(400, `Invalid allotted quantity for item ${item.id}`);
             }
-            item.register_alloted_quantity = Number(updatedItem.register_alloted_quantity);
-        }
-    })
 
+            item.register_alloted_quantity = Number(updatedItem.register_alloted_quantity);
+
+            // Fetch product correctly
+            const product = await Product.findOne({ "name": item.product_name });
+            if (!product) {
+                throw new ApiError(404, `Product '${item.product_name}' not found`);
+            }
+            // Update stock and save
+            product.current_stock -= item.register_alloted_quantity;
+            await product.save({ validateBeforeSave: false });
+        }
+    }
     await order.save();
 
-    // call transaction api
+    // Call transaction API (To be implemented)
     
-    // call email api
+    // Call email API (To be implemented)
 
-    return res
-    .status(200)
-    .json(new ApiResponse(200, "Order is ready to deliver", order));
+    return res.status(200).json(new ApiResponse(200, "Order is ready to deliver", order));
 });
 
 

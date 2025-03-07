@@ -79,7 +79,7 @@ const ManagerHome = () => {
                             <td className="px-4 py-3">
                                 {order.store_manager_approval === null ? (
                                     <button
-                                      onClick={() => navigate(`process/${order._id}`, { state: { items: order.items_list, mode: "process" } })}
+                                      onClick={() => navigate(`process/${order._id}`, { state: { order: order, mode: "process" } })}
                                         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200"
                                     >
                                         Process
@@ -94,7 +94,7 @@ const ManagerHome = () => {
                                 )}
                             </td>
                             <td className="px-4 py-3">
-                                {order.store_manager_approval === true && (
+                                {order.register_approval === true && (
                                     <button
                                         onClick={() => handlePrint(order)}
                                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2"

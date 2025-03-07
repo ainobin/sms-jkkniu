@@ -2,17 +2,21 @@ import { useState, useEffect, useContext } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import UserContext from "../../context/UserContext";
 
 const RegisterProcessOrder = () => {
   const location = useLocation();
   const { state } = location;
-  const { mode, items } = state || {};
+  const { order } = state || {};
+  const { user } = useContext(UserContext);
 
-  const { register, control, setValue } = useForm({
+  const { register, control, handleSubmit, getValues } = useForm({
     defaultValues: {
-      orderItems: items || [],
+      orderItems: order.items_list || [],
     },
   });
+
+  console.log("order: ", order);
 
   const { fields } = useFieldArray({
     control,
@@ -31,7 +35,58 @@ const RegisterProcessOrder = () => {
     };
     fetchProducts();
   }, []);
-  
+
+  const onYesSubmit = async () => {
+    const formData = getValues(); // Get all form values
+    const formattedData = {
+      id: order._id, // Example ID, replace dynamically if needed
+      register_name: user.name,
+      register_approval: true,
+      items_list: formData.orderItems.map(item => ({
+        id: item.id,
+        register_alloted_quantity: Number(item.alloted_quantity) || 0,
+      })),
+    };
+
+    try {
+      const response = await axios.patch("http://localhost:3000/api/v1/orders/registerAprroval", formattedData ,{
+        headers : {
+          "Content-Type" : "application/json",
+        },
+      })
+
+      console.log("Response from server:", response.data);
+      
+    } catch (error) {
+      console.log("error in register submit: ", error);
+    }
+
+  };
+  const onNoSubmit = async () => {
+    const formData = getValues(); // Get all form values
+    const formattedData = {
+      id: order._id, // Example ID, replace dynamically if needed
+      register_name: user?.name || "nai",
+      register_approval: false,
+      items_list: formData.orderItems.map(item => ({
+        id: item.id,
+        register_alloted_quantity: 0,
+      })),
+    };
+
+    try {
+      const response = await axios.patch("http://localhost:3000/api/v1/orders/registerAprroval", formattedData ,{
+        headers : {
+          "Content-Type" : "application/json",
+        },
+      })
+
+      console.log("Response from server:", response.data);
+      
+    } catch (error) {
+      console.log("error in register submit: ", error);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl">
@@ -77,6 +132,7 @@ const RegisterProcessOrder = () => {
             
                 <input
                 type="number"
+                defaultValue={item.manager_alloted_quantity}
                 {...register(`orderItems.${index}.alloted_quantity`)}
                 className="w-full p-2 border bg-white border-gray-300 rounded-lg text-center"
                 />
@@ -95,17 +151,13 @@ const RegisterProcessOrder = () => {
       </div>
       <div class="flex justify-between space-x-4 mt-5">
         <button 
-            onClick={() => {      
-
-            }}
+            onClick={onNoSubmit}
             class="curser-pointer bg-red-500 text-white font-bold ml-5 py-2 px-4 rounded-lg transition-transform duration-200 hover:bg-red-600"
         >
             Decline
         </button>
         <button 
-            onClick={() => {
-
-            }}
+            onClick={onYesSubmit}
             class="bg-green-500 text-white font-bold mr-5 py-2 px-4 rounded-lg transition-transform duration-200 hover:bg-green-600"
         >
             Approved

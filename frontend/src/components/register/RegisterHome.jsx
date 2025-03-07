@@ -50,9 +50,9 @@ const RegisterHome = () => {
                         <tr
                             key={order._id}
                             className={`border-b transition duration-200 ${
-                                order.store_manager_approval === null
+                                order.register_approval === null
                                     ? "bg-red-50 hover:bg-red-100"
-                                    : order.store_manager_approval === false
+                                    : order.register_approval === false
                                     ? "bg-red-50 hover:bg-red-100"
                                     : "bg-green-50 hover:bg-green-100"
                             }`}
@@ -61,25 +61,25 @@ const RegisterHome = () => {
                             <td className="px-4 py-3">
                                 <span
                                     className={`px-3 py-1 rounded-full text-black text-sm ${
-                                      order.store_manager_approval === null
+                                      order.register_approval === null
                                       ? "bg-yellow-200 hover:bg-yellow-300"
-                                      : order.store_manager_approval === false
+                                      : order.register_approval === false
                                       ? "bg-red-400"
                                       : "bg-green-300 hover:bg-green-400"
                                     }`}
                                 >
-                                    {order.store_manager_approval === null 
+                                    {order.register_approval === null 
                                     ? "Pending" 
-                                    : order.store_manager_approval === false
+                                    : order.register_approval === false
                                     ? "Decline"
                                     : "Approved"
                                     }
                                 </span>
                             </td>
                             <td className="px-4 py-3">
-                                {order.store_manager_approval === null ? (
+                                {order.register_approval === null ? (
                                     <button
-                                    onClick={() => navigate(`process/:${order._id}`, { state: { items: order.items_list, mode: "process" } })}
+                                    onClick={() => navigate(`process/:${order._id}`, { state: { order: order } })}
                                         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200"
                                     >
                                         Process
@@ -94,7 +94,7 @@ const RegisterHome = () => {
                                 )}
                             </td>
                             <td className="px-4 py-3">
-                                {order.store_manager_approval === true && (
+                                {order.register_approval === true && (
                                     <button
                                         onClick={() => handlePrint(order)}
                                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2"
