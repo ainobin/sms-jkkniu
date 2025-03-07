@@ -5,7 +5,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
 import {User} from "../models/user.model.js";
-import { log } from "console";
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -22,7 +21,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
     const {username, fullName, email, department, designation, role, password, signatureURL } = req.body
-    console.log("email: ", email);
+    // console.log("email: ", email);
 
     if (
         [fullName, email, username, password].some((field) => field?.trim() === "")
@@ -105,7 +104,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const loggedInUser = await User.findById(user._id).select("-password");
 
     const accessToken = await loggedInUser.generateAccessToken();
-    console.log(accessToken);
+    // console.log(accessToken);
     
     return res
         .status(200)

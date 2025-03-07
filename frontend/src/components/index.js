@@ -16,7 +16,6 @@ import ManagerProcessOrder from "./StoreManager/ManagerProcessOrder.jsx";
 import AddNewItem from "./StoreManager/AddNewItem.jsx";
 import Restock from "./StoreManager/Restock.jsx";
 import StockCheck from "./StoreManager/StockCheck.jsx";
-import Query from "./StoreManager/Query.jsx";
 
 
 
