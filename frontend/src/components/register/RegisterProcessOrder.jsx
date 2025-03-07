@@ -16,7 +16,7 @@ const RegisterProcessOrder = () => {
     },
   });
 
-  console.log("order: ", order);
+  // console.log("order: ", order);
 
   const { fields } = useFieldArray({
     control,
@@ -55,7 +55,7 @@ const RegisterProcessOrder = () => {
         },
       })
 
-      console.log("Response from server:", response.data);
+      // console.log("Response from server:", response.data);
       
     } catch (error) {
       console.log("error in register submit: ", error);
@@ -81,7 +81,7 @@ const RegisterProcessOrder = () => {
         },
       })
 
-      console.log("Response from server:", response.data);
+      // console.log("Response from server:", response.data);
       
     } catch (error) {
       console.log("error in register submit: ", error);

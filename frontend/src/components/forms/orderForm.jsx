@@ -68,11 +68,11 @@ const OrderForm = () => {
         },
       });
       
-      console.log("Response from server:", response.data);
+      // console.log("Response from server:", response.data);
     } catch (error) {
       console.error("Error while sending order data:", error.message);
     }
-    console.log("Final Order Data:", formattedData);
+    // console.log("Final Order Data:", formattedData);
   };
   
 

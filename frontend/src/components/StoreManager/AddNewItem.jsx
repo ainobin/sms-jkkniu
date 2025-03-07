@@ -16,7 +16,7 @@ const AddNewItem = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("add: ",JSON.stringify(formData))
+      // console.log("add: ",JSON.stringify(formData))
       const response = await axios.post(
         "http://localhost:3000/api/v1/products/createProduct", 
         JSON.stringify(formData),

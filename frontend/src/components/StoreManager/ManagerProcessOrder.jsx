@@ -10,7 +10,7 @@ const ManagerProcessOrder = () => {
   const { order } = state || {};
   const { user } = useContext(UserContext);
 
-  console.log("order: ", order._id);
+  // console.log("order: ", order._id);
   
 
   const { register, control, handleSubmit, getValues } = useForm({
@@ -56,7 +56,7 @@ const ManagerProcessOrder = () => {
         },
       })
 
-      console.log("Response from server:", response.data);
+      // console.log("Response from server:", response.data);
       
     } catch (error) {
       console.log("error in register submit: ", error);
@@ -82,7 +82,7 @@ const ManagerProcessOrder = () => {
         },
       })
 
-      console.log("Response from server:", response.data);
+      // console.log("Response from server:", response.data);
       
     } catch (error) {
       console.log("error in register submit: ", error);

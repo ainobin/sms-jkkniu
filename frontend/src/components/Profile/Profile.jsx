@@ -45,7 +45,7 @@ const Profile = () => {
           withCredentials: true,
         }
       );
-      console.log("Profile updated successfully", response.data);
+      // console.log("Profile updated successfully", response.data);
       setEditMode(false);
     } catch (error) {
       console.error("Error updating profile", error);
@@ -75,7 +75,7 @@ const Profile = () => {
         withCredentials: true
 
       });
-      console.log("Signature uploaded successfully", response.data);
+      // console.log("Signature uploaded successfully", response.data);
       setChangeSignature(false);
       setPreview(null); // Clear preview after upload
     } catch (error) {
@@ -92,8 +92,8 @@ const Profile = () => {
       alert("Passwords is minimum 6 character!");
       return;
     }
-    console.log("Password old:", oldPassword);
-    console.log("Password new:", newPassword);
+    // console.log("Password old:", oldPassword);
+    // console.log("Password new:", newPassword);
 
     try {
       const response = await axios.patch(
@@ -110,11 +110,11 @@ const Profile = () => {
       )
       if(response){
         alert("password changed successfully")
-        console.log("Response: ", response);
+        // console.log("Response: ", response);
       }
     } catch (error) {
       alert("Password change failed");
-      console.log("failed: ", error);
+      // console.log("failed: ", error);
     }
 
   };

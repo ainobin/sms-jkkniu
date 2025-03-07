@@ -18,7 +18,7 @@ const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
 
     useEffect(() => {
         const verifyUser = async () => {
-            console.log("verifyUser: ");
+            // console.log("verifyUser: ");
             
             try {
                 const response = await axios.get("http://localhost:3000/api/v1/users/me", {
@@ -37,7 +37,7 @@ const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
                     })
                     setIsLoggedIn(true);
                 }
-                console.log("User: ",user);
+                // console.log("User: ",user);
                 console.log("isLoggedIn: ",isLoggedIn);
                 
             } catch (error) {

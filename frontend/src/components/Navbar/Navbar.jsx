@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const Navbar = ({ menuItems, homePage }) => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(homePage);
+  // console.log(homePage);
 
   return (
     <nav className="bg-[#008337] text-white px-6 py-3 rounded-lg shadow-md">

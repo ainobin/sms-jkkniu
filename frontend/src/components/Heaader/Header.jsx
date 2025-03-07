@@ -10,7 +10,7 @@ function Header() {
     // const token
     const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
     const {setUser} = useContext(UserContext);
-    console.log("hedar isLoggedIn:", isLoggedIn)
+    // console.log("hedar isLoggedIn:", isLoggedIn)
     const navigate = useNavigate();
 
     const logout = async (e) => {
@@ -25,7 +25,7 @@ function Header() {
                 setUser(null);  // Clear user data from context or state
                 setIsLoggedIn(false);  // Set logged-in state to false
                 
-                console.log("Logged out successfully!");
+                // console.log("Logged out successfully!");
                 
                 navigate("/login");
             } else {

@@ -46,7 +46,7 @@ const LoginPage = () => {
           setIsLoggedIn(true); // ✅ Set login state
       }
 
-      console.log("Response: ", response.data?.data.role);
+      // console.log("Response: ", response.data?.data.role);
       alert(response.data.message);
       // window.location.reload();
       if (response.data?.data.role === "deptAdmin") {
