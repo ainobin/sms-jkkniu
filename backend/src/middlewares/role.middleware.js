@@ -1,6 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { verifyJWT } from "./verifyJWT.js";
-import ApiError from "../utils/ApiError.js"; 
+import {ApiError} from "../utils/ApiError.js"; 
 
 // Middleware to check if the user is a department admin
 export const isDeptAdmin = asyncHandler(async (req, res, next) => {

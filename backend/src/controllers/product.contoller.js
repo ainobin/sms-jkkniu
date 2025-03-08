@@ -3,6 +3,7 @@ import {ApiError} from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Product } from "../models/product.model.js";
 import mongoose from "mongoose";
+import { Transaction } from "../models/transaction.model.js";
 
 const createProduct = asyncHandler(async (req, res) => {
     // steps:
@@ -108,6 +109,19 @@ const stockUpdate = asyncHandler(async (req, res) => {
     const product = await Product.findOne({"name": name});
     if (!product) {
         throw new ApiError(404, "Product not found")
+    }
+
+    const transaction = await Transaction.create({
+        product_id : product._id,
+        order_id : null,
+        department : null,
+        previous_stock: product.current_stock,
+        new_stock : stock,
+        change_stock : stock - product.current_stock,
+        transaction_type : "in",
+    })
+    if(!transaction){
+        throw new ApiError(400, "transaction record failed");
     }
 
     product.current_stock = stock;

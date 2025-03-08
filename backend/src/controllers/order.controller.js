@@ -5,6 +5,7 @@ import { Order } from "../models/order.model.js";
 import mongoose from "mongoose";
 
 import { Product } from "../models/product.model.js";
+import { Transaction } from "../models/transaction.model.js";
 
 const createOrder = asyncHandler(async (req, res) => {
     // steps:
@@ -152,7 +153,7 @@ const regesterApproval = asyncHandler(async (req, res) => {
     // check if order exists
     // update register_approval field
     // update register_name field
-    // call transaction api
+    // create transaction for all products
     // call email api
     // call 
     // return res;
@@ -194,6 +195,21 @@ const regesterApproval = asyncHandler(async (req, res) => {
             if (!product) {
                 throw new ApiError(404, `Product '${item.product_name}' not found`);
             }
+            // create new transaction:
+            const transaction = await Transaction.create({
+                product_id : item.id,
+                order_id : order._id,
+                department : order.dept_id,
+                previous_stock: product.current_stock,
+                new_stock : product.current_stock - item.register_alloted_quantity,
+                change_stock : item.register_alloted_quantity,
+                transaction_type : "out"
+            })
+
+            if(!transaction){
+                throw new ApiError(400, "transaction record failed");
+            }
+
             // Update stock and save
             product.current_stock -= item.register_alloted_quantity;
             await product.save({ validateBeforeSave: false });
