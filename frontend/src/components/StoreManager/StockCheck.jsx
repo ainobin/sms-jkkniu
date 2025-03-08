@@ -25,6 +25,8 @@ const StockCheck = () => {
     item.name.toLowerCase().includes(search.toLowerCase())
   );
 
+
+
   return (
     <div className="max-w-3xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4 text-center">Stock Check</h2>
@@ -36,7 +38,7 @@ const StockCheck = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="w-full p-2 border bg-white rounded-lg mb-4 focus:ring-2 focus:ring-blue-500"
-      />
+     />
       {/* Stock Table */}
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <table className="w-full border-collapse">
@@ -53,8 +55,8 @@ const StockCheck = () => {
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
                 <tr
-                  key={item.id}
-                  onClick={() => navigate(`/transaction-history/${item.id}`)}
+                  key={item._id}
+                  onClick={() => navigate(`transactions/${item.name}` , { state: { product: item } }) }
                   className="hover:bg-gray-100 cursor-pointer transition"
                 >
                   <td className="p-3 border-b text-blue-600 font-semibold">{item.name}</td>

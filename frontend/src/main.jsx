@@ -25,7 +25,8 @@ import {
   RegisterHome,
   AdminHome,
   Preview,
-  RegisterProcessOrder
+  RegisterProcessOrder,
+  Transactions
 
 } from './components/index.js';
 
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
           { path: "stock-check", element: <StockCheck/> },
           { path: "restock", element: <Restock/> },
           { path: "register-new-user", element: <RegistrationForm/> },
+          { path: "stock-check/transactions/:id", element: <Transactions/> },
         ],
       },
       {

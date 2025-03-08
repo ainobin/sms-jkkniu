@@ -93,8 +93,8 @@ const OrderForm = () => {
           {fields.map((item, index) => {
             const selectedId = orderItems[index]?._id;
             const product = products.find((p) => p._id === selectedId);
-            const currentQuantity = orderItems[index]?.quantity || 0;
-            const availability = product ? currentQuantity <= (product?.current_stock || 0) : false;
+            const currentQuantity = orderItems[index]?.demand_quantity || 0;
+            const availability = product ? currentQuantity <= product.current_stock : false;
 
             const filteredProducts = products
               .filter((p) => !selectedProductIds.includes(p._id) || p._id === selectedId)
@@ -118,7 +118,7 @@ const OrderForm = () => {
                   {...register(`orderItems.${index}.demand_quantity`, {
                     required: "Quantity is required",
                     min: { value: 1, message: "Minimum quantity is 1" },
-                    validate: (value) => value <= (product?.current_stock || 0) || "Exceeds stock availability",
+                    // validate: (value) => value <= (product?.current_stock || 0) || "Exceeds stock availability",
                   })}
                   className="w-full p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500"
                 />
