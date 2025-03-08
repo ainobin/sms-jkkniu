@@ -1,13 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
-import UserContext from '../../context/UserContext'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Printer } from 'lucide-react';
 
 const AdminHome = () => {
 
-  const { user } = useContext(UserContext);
-  // console.log(user);
   const role = "manager"
 
   const [orders, setOrders] = useState([]);

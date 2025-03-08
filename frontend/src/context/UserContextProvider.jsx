@@ -22,10 +22,17 @@ const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
             
             try {
                 const response = await axios.get("http://localhost:3000/api/v1/users/me", {
-                    withCredentials : true
+                    withCredentials : true,
+                    
+                    // This is the key change - tell axios to accept 401 status as valid
+                    validateStatus: function (status) {
+                        return status >= 200 && status < 500; // Accept 401 as non-error
+                    }
                 })
 
-                if (response.data) {
+                // console.log(response)
+
+                if (response.status === 200 && response?.data) {
                     setUser({
                         id: response.data.data._id,
                         fullName: response.data.data.fullName,
@@ -34,11 +41,22 @@ const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
                         designation: response.data.data.designation,
                         role: response.data.data.role,
                         signature: response.data.data.signature,
-                    })
+                    });
                     setIsLoggedIn(true);
                 }
-                // console.log("User: ",user);
-                console.log("isLoggedIn: ",isLoggedIn);
+                else if (response.status === 401) {
+                    // Handle 401 silently (no console error)
+                    setUser({
+                        id: "",
+                        fullName: "",
+                        email: "",
+                        department: "",
+                        designation: "",
+                        role: "",
+                        signature: "",
+                    });
+                    setIsLoggedIn(false);
+                }
                 
             } catch (error) {
                 setUser({
@@ -50,7 +68,7 @@ const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
                     role: "",
                     signature: "",
                 });
-                setIsLoggedIn(false);
+                setIsLoggedIn(false);               
             } finally{
                 setIsLoading(false);
             }

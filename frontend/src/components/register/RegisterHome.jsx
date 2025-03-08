@@ -31,7 +31,7 @@ const RegisterHome = () => {
     };
 
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-6">
+      <div className="flex flex-col items-center p-6">
           <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
               <>
                   <h1 className="text-3xl font-bold mb-6 text-center text-green-700">📋 Orders List</h1>

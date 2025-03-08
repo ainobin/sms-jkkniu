@@ -1,6 +1,5 @@
 import Header from "./Heaader/Header";
 import Footer from "./Footer/Footer";
-import ItemToOrder from "./ItemToOrder";
 import OrderForm from "./forms/orderForm";
 import Navbar from "../components/Navbar/Navbar.jsx";
 import Profile from "./Profile/Profile.jsx";
@@ -24,7 +23,6 @@ export{
 
     Header,
     Footer,
-    ItemToOrder,
     OrderForm,
     Navbar,
     Profile,

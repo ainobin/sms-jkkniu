@@ -34,6 +34,7 @@ const router = createBrowserRouter([
     element:<App/>,
     children:[
       { path: "/", element: <LoginPage /> },
+      { path: "/login", element: <LoginPage /> },
       { path: "/developers", element: <AboutDevelopers /> },
 
       // Store Manager Page with Nested Routes

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useActionState, useContext } from "react";
 import { FaSignOutAlt, FaSignInAlt, FaBars, FaTimes } from "react-icons/fa";
+import { CgLogIn, CgLogOut  } from "react-icons/cg";
 import profile_pic from "../profile_src/profile";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
@@ -84,12 +85,21 @@ function Header() {
                                     className="flex items-center space-x-2 hover:text-gray-300 justify-center"
                                     role="button"
                                 >
-                                <FaSignInAlt size={24} />
+                                <CgLogOut size={24} />
                                 <span className="hidden md:inline">Logout</span>
                                 </button>
                             </div>
                         ) : (
-                            null
+                            <div className="relative">
+                                <button
+                                    onClick={() => navigate("/login")}
+                                    className="flex items-center space-x-2 hover:text-gray-300 justify-center"
+                                    role="button"
+                                >
+                                <CgLogIn  size={24} />
+                                <span className="hidden md:inline">login</span>
+                                </button>
+                            </div>
                         )}
                     </div>
                 </div>

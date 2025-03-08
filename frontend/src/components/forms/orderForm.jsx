@@ -50,8 +50,8 @@ const OrderForm = () => {
   const onSubmit = async (data) => {
     const formattedData = {
       order_name: Ordername,
-      dept_id: user.id,
-      dept_admin_name: user.fullName,
+      dept_id: user?.id,
+      dept_admin_name: user?.fullName,
       items_list: data.orderItems.map(item => ({
         id: item._id,
         product_name: item.product_name,

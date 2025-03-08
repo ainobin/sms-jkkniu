@@ -50,8 +50,15 @@ const LoginPage = () => {
       alert(response.data.message);
       // window.location.reload();
       if (response.data?.data.role === "deptAdmin") {
+        navigate("/dept-admin");
+      }
+      if(response.data?.data.role === "manager"){
         navigate("/store-manager");
       }
+      if(response.data?.data.role === "register"){
+        navigate("/register");
+      }
+      
     } catch (error) {
       setIsLoading(false);
       alert("Login Failed");
