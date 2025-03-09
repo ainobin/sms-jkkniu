@@ -216,8 +216,6 @@ const regesterApproval = asyncHandler(async (req, res) => {
         }
     }
     await order.save();
-
-    // Call transaction API (To be implemented)
     
     // Call email API (To be implemented)
 

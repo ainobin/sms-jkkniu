@@ -6,7 +6,7 @@ import axios from "axios";
 const Preview = () => {
   const location = useLocation();
   const { state } = location;
-  const { mode, items } = state || {};
+  const { items } = state || {};
 
   const { register, control, setValue } = useForm({
     defaultValues: {

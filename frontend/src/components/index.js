@@ -4,6 +4,7 @@ import OrderForm from "./forms/orderForm";
 import Navbar from "../components/Navbar/Navbar.jsx";
 import Profile from "./Profile/Profile.jsx";
 import Preview from "./preview.jsx";
+import generatePDF from "./utils/generatePDF.js";
 
 import RegisterHome from "./register/RegisterHome.jsx";
 import RegisterProcessOrder from "./register/RegisterProcessOrder.jsx";

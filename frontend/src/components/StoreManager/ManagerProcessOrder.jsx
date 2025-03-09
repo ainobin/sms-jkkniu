@@ -7,28 +7,35 @@ import UserContext from "../../context/UserContext";
 const ManagerProcessOrder = () => {
   const location = useLocation();
   const { state } = location;
-  const { order } = state || {};
-  const { user } = useContext(UserContext);
+  const { order } = state || {}; // Extract order details from navigation state
+  const { user } = useContext(UserContext); // Get user details from context
 
-  // console.log("order: ", order._id);
-  
-
+  // Initialize form with default values using react-hook-form
   const { register, control, handleSubmit, getValues } = useForm({
     defaultValues: {
-      orderItems: order.items_list || [],
+      orderItems: order.items_list || [], // Populate order items list
     },
   });
 
+  // Manage dynamic form fields for order items
   const { fields } = useFieldArray({
     control,
     name: "orderItems",
   });
+
+  // State to store available products
   const [products, setProducts] = useState([]);
 
+  /**
+   * Fetch all available products from the backend when the component mounts.
+   */
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts");
+        const response = await axios.get(
+          // TODO: use .env file variable and modify all url in the code.
+          "http://localhost:3000/api/v1/products/getAllProducts"
+        );
         setProducts(response.data?.message || []);
       } catch (error) {
         console.error("Error fetching products:", error.message);
@@ -36,134 +43,154 @@ const ManagerProcessOrder = () => {
     };
     fetchProducts();
   }, []);
+
+  /**
+   * Handles the approval of an order by the store manager.
+   * Sends an API request with approved quantities.
+   */
   const onYesSubmit = async () => {
     const formData = getValues(); // Get all form values
     const formattedData = {
-      id: order._id, // Example ID, replace dynamically if needed
+      id: order._id,
       store_manager_name: user.name,
       store_manager_approval: true,
-      items_list: formData.orderItems.map(item => ({
+      items_list: formData.orderItems.map((item) => ({
         id: item.id,
         manager_alloted_quantity: Number(item.alloted_quantity) || 0,
       })),
     };
 
     try {
-      const response = await axios.patch("http://localhost:3000/api/v1/orders/managerApproval", formattedData ,{
-        headers : {
-          "Content-Type" : "application/json",
-          
-        },
-      })
-
-      // console.log("Response from server:", response.data);
-      
+      await axios.patch(
+        "http://localhost:3000/api/v1/orders/managerApproval",
+        formattedData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
     } catch (error) {
-      console.log("error in register submit: ", error);
+      console.error("Error in approval submission:", error);
     }
   };
 
+  /**
+   * Handles declining an order by the store manager.
+   * Sends an API request to update order status.
+   */
   const onNoSubmit = async () => {
     const formData = getValues(); // Get all form values
     const formattedData = {
-      id: order._id, // Example ID, replace dynamically if needed
+      id: order._id,
       store_manager_name: user.name,
       store_manager_approval: false,
-      items_list: formData.orderItems.map(item => ({
+      items_list: formData.orderItems.map((item) => ({
         id: item.id,
         manager_alloted_quantity: 0,
       })),
-      
     };
-    try {
-      const response = await axios.patch("http://localhost:3000/api/v1/orders/managerApproval", formattedData ,{
-        headers : {
-          "Content-Type" : "application/json",
-        },
-      })
 
-      // console.log("Response from server:", response.data);
-      
+    try {
+      await axios.patch(
+        "http://localhost:3000/api/v1/orders/managerApproval",
+        formattedData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
     } catch (error) {
-      console.log("error in register submit: ", error);
+      console.error("Error in decline submission:", error);
     }
   };
-  
-
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl">
-      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">🛠 Process Order</h2>
-        <div className="text-center hidden md:grid grid-cols-5 gap-3 px-3 py-2 bg-gray-100 rounded-md font-semibold text-gray-700 text-sm">
-          <span>Product Name</span>
-          <span>Demand Quantity</span>
-          <span>Current stock</span>
-          <span>Manager Alloted</span>
-          <span>Comment</span>
-        </div>
+      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">
+        🛠 Process Order
+      </h2>
 
-        <div className="text-center space-y-3 mt-2">
-            {fields.map((item, index) => {
-            const product = products.find((p) => p._id === item.id);
-            // const stock = product ? product.current_stock : "N/A";
+      {/* Table Header */}
+      <div className="text-center hidden md:grid grid-cols-5 gap-3 px-3 py-2 bg-gray-100 rounded-md font-semibold text-gray-700 text-sm">
+        <span>Product Name</span>
+        <span>Demand Quantity</span>
+        <span>Current Stock</span>
+        <span>Manager Alloted</span>
+        <span>Comment</span>
+      </div>
 
-            return (
-                <div key={item.id} className="grid grid-cols-1 md:grid-cols-5 gap-9 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
-                {/* Product Name (Readonly) */}
-                <input
-                    type="text"
-                    value={item.product_name}
-                    readOnly
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
-                />
-                {/*Demand Quantity (Readonly) */}
-                <input
-                    type="number"
-                    value={item.demand_quantity}
-                    readOnly
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
-                />
-                {/*curent stock Quantity (Readonly) */}
-                <input
-                    type="number"
-                    value={products.find((p) => p.name === item.product_name)?.current_stock || 0}
-                    readOnly
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
-                />
+      {/* Order Items List */}
+      <div className="text-center space-y-3 mt-2">
+        {fields.map((item, index) => {
+          const product = products.find((p) => p._id === item.id);
 
-                {/* Alloted Quantity (Editable in Process Mode) */}
-            
-                <input
+          return (
+            <div
+              key={item.id}
+              className="grid grid-cols-1 md:grid-cols-5 gap-9 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200"
+            >
+              {/* Product Name (Readonly) */}
+              <input
+                type="text"
+                value={item.product_name}
+                readOnly
+                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
+              />
+
+              {/* Demand Quantity (Readonly) */}
+              <input
+                type="number"
+                value={item.demand_quantity}
+                readOnly
+                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
+              />
+
+              {/* Current Stock (Readonly) */}
+              <input
+                type="number"
+                value={
+                  products.find((p) => p.name === item.product_name)
+                    ?.current_stock || 0
+                }
+                readOnly
+                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
+              />
+
+              {/* Alloted Quantity (Editable) */}
+              <input
                 type="number"
                 defaultValue={0}
                 {...register(`orderItems.${index}.alloted_quantity`)}
                 className="w-full p-2 border bg-white border-gray-300 rounded-lg text-center"
-                />
+              />
 
-                {/* Comment (Readonly) */}
-                <input
-                    type="text"
-                    value={item.comment}
-                    readOnly
-                    className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
-                />
-                </div>
-            );
+              {/* Comment (Readonly) */}
+              <input
+                type="text"
+                value={item.comment}
+                readOnly
+                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
+              />
+            </div>
+          );
         })}
-        
       </div>
-      <div class="flex justify-between space-x-4 mt-5">
-        <button 
-            onClick={onNoSubmit}
-            class="curser-pointer bg-red-500 text-white font-bold ml-5 py-2 px-4 rounded-lg transition-transform duration-200 hover:bg-red-600"
+
+      {/* Action Buttons */}
+      <div className="flex justify-between space-x-4 mt-5">
+        <button
+          onClick={onNoSubmit}
+          className="cursor-pointer bg-red-500 text-white font-bold ml-5 py-2 px-4 rounded-lg transition-transform duration-200 hover:bg-red-600"
         >
-            Decline
+          Decline
         </button>
-        <button 
-            onClick={onYesSubmit}
-            class="bg-green-500 text-white font-bold mr-5 py-2 px-4 rounded-lg transition-transform duration-200 hover:bg-green-600"
+        <button
+          onClick={onYesSubmit}
+          className="bg-green-500 text-white font-bold mr-5 py-2 px-4 rounded-lg transition-transform duration-200 hover:bg-green-600"
         >
-            Approved
+          Approve
         </button>
       </div>
     </div>
