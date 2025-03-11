@@ -16,11 +16,11 @@ const createOrder = asyncHandler(async (req, res) => {
     // check for order creation
     // return res
 
-    const {order_name, dept_id, dept_admin_name, items_list } = req.body
+    const {order_name, dept_id, dept_name, dept_admin_name, items_list } = req.body
     // console.log("order_name: ", order_name);
 
     if( 
-        [order_name, dept_id, dept_admin_name].some((field) => field?.trim() === "")
+        [order_name, dept_id, dept_name, dept_admin_name].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
@@ -44,6 +44,7 @@ const createOrder = asyncHandler(async (req, res) => {
     const order = await Order.create({
         order_name,
         dept_id,
+        dept_name,
         dept_admin_name,
         items_list
     })
@@ -66,7 +67,7 @@ const getOrders = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Orders fetched successfully", orders))
 });
 
-const getOrderById = asyncHandler(async (req, res) => {
+const getOrdersByDeptId = asyncHandler(async (req, res) => {
     // steps:
     // get order id from req.params
     // validation - not empty
@@ -78,7 +79,7 @@ const getOrderById = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid order id")
     }
 
-    const order = await Order.findById(id)
+    const order = await Order.find({dept_id : id})
 
     if (!order) {
         throw new ApiError(404, "Order not found")
@@ -223,4 +224,4 @@ const regesterApproval = asyncHandler(async (req, res) => {
 });
 
 
-export { createOrder, getOrders, getOrderById, managerApproval, regesterApproval}
+export { createOrder, getOrders, getOrdersByDeptId, managerApproval, regesterApproval}

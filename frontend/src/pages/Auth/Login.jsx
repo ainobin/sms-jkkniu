@@ -4,18 +4,23 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [isloding, setIsLoading] = useState(false);
 
-  const {setUser} = useContext(UserContext);
-  const { setIsLoggedIn } = useContext(UserContext);
+  const {user, setUser} = useContext(UserContext);
+  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  
+  if(isLoggedIn){
+    navigate(`${user.role === "register" ? "/register" : user.role === "manager" ? "/store-manager" : "/dept-admin"}`)
+  }
 
   const onSubmit = async (formData) => {
     try {
@@ -47,7 +52,7 @@ const LoginPage = () => {
       }
 
       // console.log("Response: ", response.data?.data.role);
-      alert(response.data.message);
+      toast.success(response.data.message);
       // window.location.reload();
       if (response.data?.data.role === "deptAdmin") {
         navigate("/dept-admin");
@@ -61,8 +66,13 @@ const LoginPage = () => {
       
     } catch (error) {
       setIsLoading(false);
-      alert("Login Failed");
-      console.log("failed: ", error);
+      if(error.status == 401){
+        toast.error("Username or Password is wrong")
+      }else{
+        toast.error("Login Failed");
+      }
+      
+      // console.log("failed: ", error);
     }
   };
 

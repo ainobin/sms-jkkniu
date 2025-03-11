@@ -1,11 +1,8 @@
-import { useState, useEffect, useRef, useActionState, useContext } from "react";
-import { FaSignOutAlt, FaSignInAlt, FaBars, FaTimes } from "react-icons/fa";
+import { useContext } from "react";
 import { CgLogIn, CgLogOut  } from "react-icons/cg";
-import profile_pic from "../profile_src/profile";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
-// import jwt from "jsonwebtoken"
 
 function Header() {
     // const token
@@ -36,7 +33,6 @@ function Header() {
             console.error("Error during logout:", error);
         }
     };
-
     return (
         <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-lg bg-white/10 shadow-lg ">
             <div className="container mx-auto flex items-center justify-between py-4 px-6">
