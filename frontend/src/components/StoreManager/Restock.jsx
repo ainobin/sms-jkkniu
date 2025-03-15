@@ -14,7 +14,9 @@ const Restock = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts");
+        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts", {
+          withCredentials: true, // Send cookies along with the request
+        });
         setProducts(response.data.message); // Store fetched products in state
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -48,7 +50,11 @@ const Restock = () => {
       const response = await axios.patch("http://localhost:3000/api/v1/products/stockUpdate", {
         name: data.selectedProduct.label, // Product name
         stock: Number(updatedStock), // Updated stock value
-      });
+      },
+      {
+        withCredentials: true, // Send cookies along with the request
+      }
+    );
 
       // Check response status and update UI accordingly
       if (response.status === 200) {

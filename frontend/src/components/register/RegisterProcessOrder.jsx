@@ -34,7 +34,9 @@ const RegisterProcessOrder = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts");
+        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts", {
+          withCredentials: true,
+        });
         setProducts(response.data?.message || []);
       } catch (error) {
         console.error("Error fetching products:", error.message);
@@ -64,6 +66,7 @@ const RegisterProcessOrder = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
       });
       toast.success("Order Approved"); // Notify success
       navigate("/register"); // Navigate back to the register page
@@ -101,6 +104,7 @@ const RegisterProcessOrder = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
       });
       toast.success("Order Cancelled"); // Notify success
       navigate("/register"); // Navigate back to the register page

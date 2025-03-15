@@ -17,7 +17,7 @@ const Profile = () => {
   const [signature, setSignature] = useState(null);
   const [preview, setPreview] = useState(user?.signature || "");
 
-  const [oldPassword, setOldPassword] = useState(null);
+  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -43,9 +43,11 @@ const Profile = () => {
           withCredentials: true,
         }
       );
-      toast.success("Profile updated successfully");
-      setUser(response.data.data.user);
       setEditMode(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      toast.success("Profile updated successfully");
     } catch (error) {
       console.error("Error updating profile", error);
     }
@@ -110,7 +112,9 @@ const Profile = () => {
       if (response) {
         toast.success("Password changed successfully");
         setChangePassword(false);
-        setOldPassword(null);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
         // console.log("Response: ", response);
       }
     } catch (error) {

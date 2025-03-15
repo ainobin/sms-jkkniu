@@ -18,7 +18,9 @@ const ManagerHome = () => {
     const fetchOrders = async () => {
       try {
         // Fetch orders from backend API
-        const response = await axios.get("http://localhost:3000/api/v1/orders/getAllOrders");
+        const response = await axios.get("http://localhost:3000/api/v1/orders/getAllOrders", {
+          withCredentials: true,
+        });
         const fetchedOrders = (response.data.message || []).reverse(); // Reverse to show latest orders first
         // Update state with fetched orders
         setPendingOrders(

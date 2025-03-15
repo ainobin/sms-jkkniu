@@ -13,7 +13,7 @@ const Preview = () => {
       orderItems: order.items_list || [],
     },
   });
-  console.log(order);
+  // console.log(order);
 
 
   const { fields } = useFieldArray({
@@ -25,7 +25,9 @@ const Preview = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts");
+        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts",{
+          withCredentials: true,
+        });
         setProducts(response.data?.message || []);
       } catch (error) {
         console.error("Error fetching products:", error.message);

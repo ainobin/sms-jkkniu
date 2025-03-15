@@ -41,7 +41,9 @@ const OrderForm = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts");
+        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts", {
+          withCredentials: true,
+        });
         setProducts(response.data?.message || []);
       } catch (error) {
         console.error("Error fetching products:", error.message);
@@ -87,7 +89,7 @@ const OrderForm = () => {
       }))
     };
 
-    console.log(formattedData);
+    // console.log(formattedData);
     
 
     try {
@@ -96,12 +98,13 @@ const OrderForm = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
       });
       if(response){
         toast.success( "Order Submitted Successfully... " );
       navigate('/dept-admin');
       }
-      console.log(response);
+      // console.log(response);
       
 
     } catch (error) {

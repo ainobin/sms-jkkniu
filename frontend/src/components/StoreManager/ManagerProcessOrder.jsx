@@ -40,7 +40,10 @@ const ManagerProcessOrder = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/products/getAllProducts"
+          "http://localhost:3000/api/v1/products/getAllProducts",
+          {
+            withCredentials: true,
+          }
         );
         setProducts(response.data?.message || []);
       } catch (error) {
@@ -75,6 +78,7 @@ const ManagerProcessOrder = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
       toast.success("Order approved successfully!");
@@ -121,6 +125,7 @@ const ManagerProcessOrder = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
       toast.success("Order declined successfully!");

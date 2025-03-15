@@ -17,7 +17,9 @@ const Transactions = () => {
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/v1/transactions/${product._id}`);
+                const response = await axios.get(`http://localhost:3000/api/v1/transactions/${product._id}`, {
+                    withCredentials: true
+                });
                 setTransactions(response.data.message.reverse());
 
             } catch (error) {

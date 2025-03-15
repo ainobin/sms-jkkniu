@@ -11,7 +11,9 @@ const StockCheck = () => {
   useEffect(() => {
     const fetchStock = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts");
+        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts", {
+          withCredentials: true,
+        });
         setItems(response.data.message);
       } catch (error) {
         console.error("Error fetching stock data:", error);

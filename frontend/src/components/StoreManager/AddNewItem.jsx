@@ -29,8 +29,8 @@ const AddNewItem = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            // TODO: with credentials will be true when we use user middleware
           },
+          withCredentials: true,
         }
       );
 

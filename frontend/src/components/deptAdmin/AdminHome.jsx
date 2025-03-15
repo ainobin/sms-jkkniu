@@ -17,7 +17,9 @@ const AdminHome = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/v1/orders/getOrders/${user.id}`);
+        const response = await axios.get(`http://localhost:3000/api/v1/orders/getOrders/${user.id}`, {
+          withCredentials: true,
+        });
         // TODO: use .env for future.
         const fetchedOrders = (response.data.message || []).reverse(); // Reverse to show latest orders first
         // Update state with fetched orders
