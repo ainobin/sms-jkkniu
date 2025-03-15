@@ -127,16 +127,16 @@ const Preview = () => {
         <div className="flex gap-2">
           Register :
           <span
-            className={`px-3 py-1 rounded-full text-black text-sm ${order.store_manager_approval === null
+            className={`px-3 py-1 rounded-full text-black text-sm ${order.register_approval === null
                 ? "bg-yellow-200 hover:bg-yellow-300"
-                : order.store_manager_approval === false
+                : order.register_approval === false
                   ? "bg-red-400"
                   : "bg-green-300 hover:bg-green-400"
               }`}
           >
-            {order.store_manager_approval === null
+            {order.register_approval === null
               ? "Pending"
-              : order.store_manager_approval === false
+              : order.register_approval === false
                 ? "Decline"
                 : "Approved"
             }

@@ -1,10 +1,16 @@
 import { useState, useEffect, useContext } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../../context/UserContext";
+import toast from "react-hot-toast";
 
+/**
+ * Component for processing orders by the store manager.
+ * Allows the manager to approve or decline an order and allocate quantities for each product.
+ */
 const ManagerProcessOrder = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
   const { order } = state || {}; // Extract order details from navigation state
@@ -28,17 +34,18 @@ const ManagerProcessOrder = () => {
 
   /**
    * Fetch all available products from the backend when the component mounts.
+   * TODO: Use environment variables for API URLs instead of hardcoding.
    */
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          // TODO: use .env file variable and modify all url in the code.
           "http://localhost:3000/api/v1/products/getAllProducts"
         );
         setProducts(response.data?.message || []);
       } catch (error) {
         console.error("Error fetching products:", error.message);
+        // TODO: Add a toast notification to inform the user about the error.
       }
     };
     fetchProducts();
@@ -70,8 +77,23 @@ const ManagerProcessOrder = () => {
           },
         }
       );
+      toast.success("Order approved successfully!");
+      navigate("/store-manager");
     } catch (error) {
       console.error("Error in approval submission:", error);
+      if (error.response?.status === 400) {
+        toast.error("invalid Request");
+        return
+      }
+      if (error.response?.status === 404) {
+        toast.error("Order not found");
+        return
+      }
+      if (error.response?.status === 403) {
+        toast.error("Invalid allotted quantity");
+        return
+      }
+      toast.error("Failed to approve order. Try again.");
     }
   };
 
@@ -101,8 +123,19 @@ const ManagerProcessOrder = () => {
           },
         }
       );
+      toast.success("Order declined successfully!");
+      navigate("/store-manager");
     } catch (error) {
       console.error("Error in decline submission:", error);
+      if (error.response?.status === 400) {
+        toast.error("invalid Request");
+        return
+      }
+      if (error.response?.status === 404) {
+        toast.error("Order not found");
+        return
+      }
+      toast.error("Failed to decline order. Try again.");
     }
   };
 
@@ -110,6 +143,9 @@ const ManagerProcessOrder = () => {
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl">
       <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">
         🛠 Process Order
+      </h2>
+      <h2 className="text-xl text-center text-gray-600 mb-4">
+        {order.order_name}
       </h2>
 
       {/* Table Header */}

@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 const app = express();
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN.split(','), // Convert comma-separated string to an array
     methods: ['GET', 'POST', 'PATCH'],
     credentials: true,
 }));

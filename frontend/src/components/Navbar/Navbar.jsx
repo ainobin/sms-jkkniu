@@ -56,7 +56,7 @@ const Navbar = ({ menuItems, homePage }) => {
       {isOpen && (
         <ul
           className={`md:hidden mt-3 bg-white/90 backdrop-blur-md rounded-lg shadow-md p-3 
-      transition-all duration-300 ease-in-out transform ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                      transition-all duration-300 ease-in-out transform ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
             }`}
         >
           {menuItems.map((item, index) => (
@@ -72,7 +72,6 @@ const Navbar = ({ menuItems, homePage }) => {
           ))}
         </ul>
       )}
-
     </nav>
   );
 };

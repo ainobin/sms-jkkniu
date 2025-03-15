@@ -48,6 +48,19 @@ const createProduct = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Product creation failed")
     }
 
+    const transaction = await Transaction.create({
+        product_id : product._id,
+        order_id : null,
+        department : null,
+        previous_stock: 0,
+        new_stock : current_stock,
+        change_stock : current_stock,
+        transaction_type : "in",
+    })
+    if(!transaction){
+        throw new ApiError(400, "transaction record failed");
+    }
+
     return res.json(new ApiResponse(200, "Product created successfully", product))
     
 });

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const Restock = () => {
   // Initialize form control, form handling functions, and state variables 
@@ -35,7 +36,7 @@ const Restock = () => {
   const onSubmit = async (data) => {
     // Validate input: Ensure a product is selected and restock quantity is valid
     if (!data.selectedProduct || data.restockQuantity < 1) {
-      alert("Please select a product and enter a valid restock quantity.");
+      toast.error("Please select a product and enter a valid restock quantity.");
       return;
     }
 
@@ -51,13 +52,13 @@ const Restock = () => {
 
       // Check response status and update UI accordingly
       if (response.status === 200) {
-        alert("Stock successfully updated!");
+        toast.success("Stock successfully updated!");
         setValue("restockQuantity", ""); // Reset input field
         setCurrentQuantity(updatedStock); // Update state with new stock value
       }
     } catch (error) {
       console.error("Error updating stock:", error);
-      alert("Failed to update stock. Please try again.");
+      toast.error("Failed to update stock. Please try again.");
     }
   };
 
@@ -84,6 +85,26 @@ const Restock = () => {
                   className="w-full"
                   placeholder="Select a product"
                   isSearchable
+                  required
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      backgroundColor: "white", // Keep the control background white
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      backgroundColor: "white", // Keep the dropdown menu background white
+                    }),
+                    option: (base, state) => ({
+                      ...base,
+                      backgroundColor: state.isFocused ? "#f0f0f0" : "white", // Light gray on hover, white otherwise
+                      color: "black", // Ensure text color is black
+                    }),
+                    singleValue: (base) => ({
+                      ...base,
+                      color: "black", // Ensure selected value text is black
+                    }),
+                  }}
                 />
               )}
             />
@@ -112,7 +133,7 @@ const Restock = () => {
                   {...field}
                   type="number"
                   min="1"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:outline-none"
                   required
                 />
               )}

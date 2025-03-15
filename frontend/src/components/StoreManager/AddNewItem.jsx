@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const AddNewItem = () => {
   const {
@@ -33,8 +34,8 @@ const AddNewItem = () => {
         }
       );
 
-      // TODO: toast will be added here setAlert will be remain.
       setAlert({ type: "success", message: "Item added successfully!" });
+      toast.success("Item added successfully!");
 
       // Reset form fields after successful submission
       reset();
@@ -42,11 +43,20 @@ const AddNewItem = () => {
       console.error("Error adding item:", error);
       
       // Show API response error if available, otherwise a generic message
+      if(error.response?.status === 400){
+        setAlert({ type: "error", message: "Name and stock are required" });
+        toast.error("Name and stock are required");
+        return
+      }
+      if(error.response?.status === 409){
+        setAlert({ type: "error", message: "Item already exists" });
+        toast.error("Item already exists");
+        return
+      }
       const errorMessage =
       error.response?.data?.message || "Failed to add item. Try again.";
-      
-      // TODO: toast will be added here with fixed error text. setAlert will be remain
       setAlert({ type: "error", message: errorMessage });
+      toast.error(errorMessage);
     } finally {
       // Hide alert after 4 seconds
       setTimeout(() => setAlert(null), 3000);
