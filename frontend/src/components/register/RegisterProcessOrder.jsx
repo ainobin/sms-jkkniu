@@ -17,7 +17,7 @@ const RegisterProcessOrder = () => {
   const { user } = useContext(UserContext); // Get user details from context
 
   // Initialize form with default values
-  const { register, control, handleSubmit, getValues } = useForm({
+  const { register, control, handleSubmit, getValues, formState: { errors } } = useForm({
     defaultValues: {
       orderItems: order.items_list || [], // Populate form with order items
     },
@@ -49,8 +49,7 @@ const RegisterProcessOrder = () => {
    * Handles the approval of an order.
    * Sends the approved data to the server and navigates back to the register page.
    */
-  const onYesSubmit = async () => {
-    const formData = getValues(); // Get all form values
+  const onYesSubmit = handleSubmit(async (formData) => {
     const formattedData = {
       id: order._id, // Order ID
       register_name: user.fullName, // Name of the user approving the order
@@ -81,7 +80,7 @@ const RegisterProcessOrder = () => {
       }
       toast.error("Order Approval Failed"); // Notify failure
     }
-  };
+  });
 
   /**
    * Handles the decline of an order.
@@ -155,12 +154,28 @@ const RegisterProcessOrder = () => {
               />
 
               {/* Alloted Quantity (Editable in Process Mode) */}
-              <input
-                type="number"
-                defaultValue={item.manager_alloted_quantity}
-                {...register(`orderItems.${index}.alloted_quantity`)}
-                className="w-full p-2 border bg-white border-gray-300 rounded-lg text-center"
-              />
+              <div className="flex flex-col">
+                <input
+                  type="number"
+                  defaultValue={item.manager_alloted_quantity}
+                  min={0}
+                  {...register(`orderItems.${index}.alloted_quantity`, {
+                    validate: {
+                      notExceedManager: value =>
+                        Number(value) <= Number(item.manager_alloted_quantity) ||
+                        "Cannot exceed manager allocation"
+                    },
+                    valueAsNumber: true,
+                  })}
+                  className={`w-full p-2 border bg-white border-gray-300 rounded-lg text-center ${errors.orderItems?.[index]?.alloted_quantity ? "border-red-500" : ""
+                    }`}
+                />
+                {errors.orderItems?.[index]?.alloted_quantity && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.orderItems[index].alloted_quantity.message}
+                  </p>
+                )}
+              </div>
 
               {/* Comment (Readonly) */}
               <input

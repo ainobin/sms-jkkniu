@@ -3,6 +3,8 @@ import UserContext from '../../context/UserContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Printer } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { generatePDF } from '../index.js';
 
 const ManagerHome = () => {
   // Access user context
@@ -45,8 +47,32 @@ const ManagerHome = () => {
    * handlePrint - Function to generate and print a PDF for a specific order
    * @param {Object} order - Order details
    */
-  const handlePrint = (order) => {
-    generatePDF([order]); // Ensure generatePDF is defined somewhere in the project
+  const handlePrint = async (order) => {
+    try {
+      const registerSign = await axios.get(`http://localhost:3000/api/v1/users/getRegisterSign`, {
+        withCredentials: true, 
+      });
+      
+      const managerSign = await axios.get(`http://localhost:3000/api/v1/users/getManagerSign`, {
+        withCredentials: true,
+      });
+      // console.log(order.dept_id);
+      
+      const deptAdminSign = await axios.get(`http://localhost:3000/api/v1/users/getDeptAdminSign/${order.dept_id}`, {
+        withCredentials: true,
+      });
+
+      const regSign = registerSign.data.data;
+      const manSign = managerSign.data.data;
+      const deptSign = deptAdminSign.data.data;
+
+      generatePDF(order, regSign, manSign, deptSign); // Call the function with the order data
+    toast.success("Receipt is downloading...");
+    } catch (error) {
+      console.error("Error fetching register signature:", error.message);
+      toast.error("Error while fatching data, Please Refresh..")
+      
+    }
   };
 
   return (

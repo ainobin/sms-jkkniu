@@ -3,7 +3,7 @@ import Footer from "./Footer/Footer";
 import OrderForm from "./forms/orderForm";
 import Navbar from "../components/Navbar/Navbar.jsx";
 import Profile from "./Profile/Profile.jsx";
-import Preview from "./preview.jsx";
+import Preview from "./Preview.jsx";
 import generatePDF from "./utils/generatePDF.js";
 
 import RegisterHome from "./register/RegisterHome.jsx";
@@ -29,6 +29,7 @@ export{
     Navbar,
     Profile,
     Preview,
+    generatePDF,
     
     AddNewItem,
     Restock,

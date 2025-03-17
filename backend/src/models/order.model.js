@@ -33,7 +33,7 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         required: true 
     },
-    dept_id: { 
+    dept_id: {
         type: String, 
         required: true 
     },
@@ -66,7 +66,7 @@ const OrderSchema = new mongoose.Schema({
         default: '' 
     },
     invoice_no: { 
-        type: String, 
+        type: Number, 
         unique: true, 
         sparse: true 
     } // Can be empty initially

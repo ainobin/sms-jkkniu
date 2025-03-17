@@ -7,7 +7,10 @@ import {
     changePassword,
     changeDetails,
     getCurrentUser,
-    changeSignature
+    changeSignature,
+    getRegisterSignature,
+    getManagerSignature,
+    getDeptAdminSignature
 }from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -23,6 +26,9 @@ router.route("/register").post(
 
 router.route("/login").post(loginUser)
 router.route("/logout").get(verifyJWT, logoutUser)
+router.route("/getRegisterSign").get(verifyJWT, getRegisterSignature)
+router.route("/getManagerSign").get(verifyJWT, getManagerSignature)
+router.route("/getDeptAdminSign/:id").get(verifyJWT, getDeptAdminSignature)
 router.route("/change-password").patch(verifyJWT, changePassword)
 router.route("/change-details").patch(verifyJWT, changeDetails)
 router.route("/change-signature").patch(verifyJWT, upload.single("signature"), changeSignature)

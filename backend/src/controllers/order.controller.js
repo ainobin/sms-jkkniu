@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 
 import { Product } from "../models/product.model.js";
 import { Transaction } from "../models/transaction.model.js";
+import { Invoice } from "../models/invoice.model.js";
 
 const createOrder = asyncHandler(async (req, res) => {
     // steps:
@@ -165,18 +166,94 @@ const managerApproval = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "Store manager approval updated successfully", order))
 });
 
-const regesterApproval = asyncHandler(async (req, res) => {
-    // steps:
-    // get order id from req.body
-    // validation - not empty
-    // check if order exists
-    // update register_approval field
-    // update register_name field
-    // create transaction for all products
-    // call email api
-    // call 
-    // return res;
+// const regesterApproval = asyncHandler(async (req, res) => {
+//     // steps:
+//     // get order id from req.body
+//     // validation - not empty
+//     // check if order exists
+//     // update register_approval field
+//     // update register_name field
+//     // create transaction for all products
+//     // call email api
+//     // call 
+//     // return res;
 
+//     const { id, items_list, register_name, register_approval } = req.body;
+
+//     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+//         throw new ApiError(400, "Invalid order id");
+//     }
+
+//     if (register_approval === undefined) {
+//         throw new ApiError(400, "Register approval is required");
+//     }
+
+//     const order = await Order.findById(id);
+//     if (!order) {
+//         throw new ApiError(404, "Order not found");
+//     }
+
+//     if (order.register_approval !== null) {
+//         throw new ApiError(400, "Order already reviewed by register");
+//     }
+
+//     order.register_approval = register_approval;
+//     order.register_name = register_name;
+
+//     // Use for...of instead of forEach for async handling
+//     for (const item of order.items_list) {
+//         const updatedItem = items_list.find(i => i.id === item.id);
+//         if (updatedItem) {
+//             if (updatedItem.register_alloted_quantity === undefined || updatedItem.register_alloted_quantity < 0) {
+//                 throw new ApiError(400, `Invalid allotted quantity for item ${item.id}`);
+//             }
+//             if (updatedItem.register_alloted_quantity > item.manager_alloted_quantity) {
+//                 throw new ApiError(403, `Allotted quantity exceeds demand for item ${item.product_name}`);
+//             }
+
+//             item.register_alloted_quantity = Number(updatedItem.register_alloted_quantity);
+
+//             // Fetch product correctly
+//             const product = await Product.findOne({ "name": item.product_name });
+//             if (!product) {
+//                 throw new ApiError(404, `Product '${item.product_name}' not found`);
+//             }
+//             if (product.current_stock < item.register_alloted_quantity) {
+//                 console.log( product.name," ", product.current_stock);
+//                 console.log("item.register_alloted_quantity: ", item.register_alloted_quantity);
+                
+//                 throw new ApiError(400, `Insufficient stock for item '${item.product_name}'`);
+//             }
+
+//             // create new transaction:
+//             const transaction = await Transaction.create({
+//                 product_id: item.id,
+//                 order_id: order._id,
+//                 department: order.dept_name,
+//                 previous_stock: product.current_stock,
+//                 new_stock: product.current_stock - item.register_alloted_quantity,
+//                 change_stock: item.register_alloted_quantity,
+//                 transaction_type: "out"
+//             })
+
+//             if (!transaction) {
+//                 throw new ApiError(400, "transaction record failed");
+//             }
+
+//             // Update stock and save
+//             product.current_stock -= item.register_alloted_quantity;
+//             await product.save({ validateBeforeSave: false });
+//         }
+//     }
+//     await order.save();
+
+//     // Call email API (To be implemented)
+
+//     return res.status(200).json(new ApiResponse(200, "Order is ready to deliver", order));
+// });
+
+
+const regesterApproval = asyncHandler(async (req, res) => {
     const { id, items_list, register_name, register_approval } = req.body;
 
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
@@ -196,57 +273,101 @@ const regesterApproval = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Order already reviewed by register");
     }
 
-    order.register_approval = register_approval;
-    order.register_name = register_name;
+    // Start a MongoDB session for transaction
+    const session = await mongoose.startSession();
+    
+    try {
+        // Start transaction
+        session.startTransaction();
 
-    // Use for...of instead of forEach for async handling
-    for (const item of order.items_list) {
-        const updatedItem = items_list.find(i => i.id === item.id);
-        if (updatedItem) {
-            if (updatedItem.register_alloted_quantity === undefined || updatedItem.register_alloted_quantity < 0) {
-                throw new ApiError(400, `Invalid allotted quantity for item ${item.id}`);
+        
+        order.register_approval = register_approval;
+        order.register_name = register_name;
+
+        // Process all items - validate everything first
+        for (const item of order.items_list) {
+            const updatedItem = items_list.find(i => i.id === item.id);
+            if (updatedItem) {
+                if (updatedItem.register_alloted_quantity === undefined || updatedItem.register_alloted_quantity < 0) {
+                    throw new ApiError(400, `Invalid alloted quantity for item ${item.id}`);
+                }
+                if (updatedItem.register_alloted_quantity > item.manager_alloted_quantity) {
+                    throw new ApiError(403, `Alloted quantity exceeds demand for item ${item.product_name}`);
+                }
+
+                item.register_alloted_quantity = Number(updatedItem.register_alloted_quantity);
+
+                // Fetch product and validate stock
+                const product = await Product.findOne({ "name": item.product_name }).session(session);
+                if (!product) {
+                    throw new ApiError(404, `Product '${item.product_name}' not found`);
+                }
+                if (product.current_stock < item.register_alloted_quantity) {
+                    throw new ApiError(400, `Insufficient stock for item '${item.product_name}'`);
+                }
             }
-            if (updatedItem.register_alloted_quantity > item.manager_alloted_quantity) {
-                throw new ApiError(403, `Allotted quantity exceeds demand for item ${item.product_name}`);
-            }
-
-            item.register_alloted_quantity = Number(updatedItem.register_alloted_quantity);
-
-            // Fetch product correctly
-            const product = await Product.findOne({ "name": item.product_name });
-            if (!product) {
-                throw new ApiError(404, `Product '${item.product_name}' not found`);
-            }
-            if (product.current_stock < item.register_alloted_quantity) {
-                throw new ApiError(400, `Insufficient stock for item '${item.product_name}'`);
-            }
-
-            // create new transaction:
-            const transaction = await Transaction.create({
-                product_id: item.id,
-                order_id: order._id,
-                department: order.dept_name,
-                previous_stock: product.current_stock,
-                new_stock: product.current_stock - item.register_alloted_quantity,
-                change_stock: item.register_alloted_quantity,
-                transaction_type: "out"
-            })
-
-            if (!transaction) {
-                throw new ApiError(400, "transaction record failed");
-            }
-
-            // Update stock and save
-            product.current_stock -= item.register_alloted_quantity;
-            await product.save({ validateBeforeSave: false });
         }
+        
+        // Now process all transactions and stock updates
+        for (const item of order.items_list) {
+            const updatedItem = items_list.find(i => i.id === item.id);
+            if (updatedItem && item.register_alloted_quantity > 0) {
+                const product = await Product.findOne({ "name": item.product_name }).session(session);
+                
+                // Create transaction
+                const transaction = await Transaction.create([{
+                    product_id: item.id,
+                    order_id: order._id,
+                    department: order.dept_name,
+                    previous_stock: product.current_stock,
+                    new_stock: product.current_stock - item.register_alloted_quantity,
+                    change_stock: item.register_alloted_quantity,
+                    transaction_type: "out"
+                }], { session });
+
+                if (!transaction || transaction.length === 0) {
+                    throw new ApiError(400, "Transaction record creation failed");
+                }
+
+                // Update stock
+                product.current_stock -= item.register_alloted_quantity;
+                await product.save({ session, validateBeforeSave: false });
+            }
+        }
+
+        const invoice = await Invoice.findOne({});
+        if (!invoice) {
+            throw new ApiError(404, "Invoice not found");
+        }
+
+        // console.log("invoice: ", invoice);
+        const newInvoiceNo = invoice.invoice_no + 1; 
+
+        // update new invoice no in invoice
+        invoice.invoice_no = newInvoiceNo;
+        invoice.order_id = order._id;
+
+        await invoice.save({ session });
+
+        // update invoice no in order
+        order.invoice_no = newInvoiceNo;
+
+        
+        // Save order updates
+        await order.save({ session });
+        
+        // Commit transaction if everything succeeded
+        await session.commitTransaction();
+        
+        return res.status(200).json(new ApiResponse(200, "Order is ready to deliver", order));
+    } catch (error) {
+        // Abort transaction on any error
+        await session.abortTransaction();
+        throw error;
+    } finally {
+        // End session
+        session.endSession();
     }
-    await order.save();
-
-    // Call email API (To be implemented)
-
-    return res.status(200).json(new ApiResponse(200, "Order is ready to deliver", order));
 });
-
 
 export { createOrder, getOrders, getOrdersByDeptId, managerApproval, regesterApproval }

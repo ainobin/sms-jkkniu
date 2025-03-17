@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Printer } from 'lucide-react';
 import toast from 'react-hot-toast';
 import UserContext from '../../context/UserContext';
+import { generatePDF } from '../index.js';
 
 const AdminHome = () => {
 
@@ -44,13 +45,34 @@ const AdminHome = () => {
   const navigate = useNavigate();
 
   // Function to handle printing an order.
-  const handlePrint = (order) => {
-    generatePDF([order]); // Make sure generatePDF function is defined elsewhere.
-    toast.success("Recipt is Downloading...")
+  const handlePrint = async (order) => {
+    try {
+      const registerSign = await axios.get(`http://localhost:3000/api/v1/users/getRegisterSign`, {
+        withCredentials: true, 
+      });
+      const managerSign = await axios.get(`http://localhost:3000/api/v1/users/getManagerSign`, {
+        withCredentials: true,
+      });
+      console.log(order.dept_id);
+      
+      const deptAdminSign = await axios.get(`http://localhost:3000/api/v1/users/getDeptAdminSign/${order.dept_id}`, {
+        withCredentials: true,
+      });
+      const regSign = registerSign.data.data;
+      const manSign = managerSign.data.data;
+      const deptSign = deptAdminSign.data.data;
+
+      generatePDF(order, regSign, manSign, deptSign); // Call the function with the order data
+    toast.success("Receipt is downloading...");
+    } catch (error) {
+      console.error("Error fetching register signature:", error.message);
+      toast.error("Error while fatching data, Please Refresh..")
+      
+    }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6">
+    <div className="flex flex-col items-center min-h-screen p-6">
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
             <>
                 <h1 className="text-3xl font-bold mb-6 text-center text-green-700">📋 Orders List</h1>

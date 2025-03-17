@@ -7,6 +7,8 @@ const Preview = () => {
   const location = useLocation();
   const { state } = location;
   const { order } = state || {};
+  console.log(order);
+  // Initialize form with default values using react-hook-form
 
   const { register, control, setValue } = useForm({
     defaultValues: {

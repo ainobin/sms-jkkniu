@@ -17,7 +17,7 @@ const ManagerProcessOrder = () => {
   const { user } = useContext(UserContext); // Get user details from context
 
   // Initialize form with default values using react-hook-form
-  const { register, control, handleSubmit, getValues } = useForm({
+  const { register, control, handleSubmit, getValues, formState: { errors } } = useForm({
     defaultValues: {
       orderItems: order.items_list || [], // Populate order items list
     },
@@ -58,8 +58,7 @@ const ManagerProcessOrder = () => {
    * Handles the approval of an order by the store manager.
    * Sends an API request with approved quantities.
    */
-  const onYesSubmit = async () => {
-    const formData = getValues(); // Get all form values
+  const onYesSubmit = handleSubmit(async (formData) => {
     const formattedData = {
       id: order._id,
       store_manager_name: user.name,
@@ -83,6 +82,7 @@ const ManagerProcessOrder = () => {
       );
       toast.success("Order approved successfully!");
       navigate("/store-manager");
+
     } catch (error) {
       console.error("Error in approval submission:", error);
       if (error.response?.status === 400) {
@@ -99,7 +99,7 @@ const ManagerProcessOrder = () => {
       }
       toast.error("Failed to approve order. Try again.");
     }
-  };
+  });
 
   /**
    * Handles declining an order by the store manager.
@@ -200,12 +200,41 @@ const ManagerProcessOrder = () => {
               />
 
               {/* Alloted Quantity (Editable) */}
-              <input
-                type="number"
-                defaultValue={0}
-                {...register(`orderItems.${index}.alloted_quantity`)}
-                className="w-full p-2 border bg-white border-gray-300 rounded-lg text-center"
-              />
+              <div className="flex flex-col">
+                <input
+                  type="number"
+                  defaultValue={0}
+                  min={0}
+                  {...register(`orderItems.${index}.alloted_quantity`, {
+                    validate: {
+                      notExceedDemand: value =>
+                        Number(value) <= Number(item.demand_quantity) ||
+                        "Cannot exceed demand quantity",
+                      notExceedStock: value => {
+                        const currentStock = products.find(p => p.name === item.product_name)?.current_stock || 0;
+                        return Number(value) <= currentStock ||
+                          "Cannot exceed current stock";
+                      }
+                    }
+                  })}
+                  className={`w-full p-2 border bg-white border-gray-300 rounded-lg text-center ${errors.orderItems?.[index]?.alloted_quantity ? "border-red-500" : ""
+                    }`}
+                  aria-invalid={errors.orderItems?.[index]?.alloted_quantity ? "true" : "false"}
+                />
+                {errors.orderItems?.[index]?.alloted_quantity && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.orderItems[index].alloted_quantity.message}
+                  </p>
+                )}
+              </div>
+
+
+              {/* Error message */}
+              {/* {errors.orderItems?.[index]?.alloted_quantity && (
+                <span className="text-red-500 text-xs block mt-1">
+                  {errors.orderItems[index].alloted_quantity.message}
+                </span>
+              )} */}
 
               {/* Comment (Readonly) */}
               <input

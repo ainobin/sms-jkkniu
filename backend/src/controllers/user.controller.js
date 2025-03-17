@@ -235,6 +235,56 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, req.user, "User found successfully"));
 });
 
+const getRegisterSignature = asyncHandler(async (req, res) => {
+    // steps:
+    // get register user data
+    // return res
+
+    const user = await User.find({ role: "register" }).select("-password");
+    if (!user) {
+        throw new ApiError(404, "Register users not found")
+    }
+    
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user[0]?.signature, "Register users found successfully"));
+});
+
+const getManagerSignature = asyncHandler(async (req, res) => {
+    // steps:
+    // get manager user data
+    // return res
+
+    const user = await User.find({ role: "manager" }).select("-password");
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user[0]?.signature, "Manager users found successfully"));
+});
+
+const getDeptAdminSignature = asyncHandler(async (req, res) => {
+    // steps:
+    // get deptAdmin id from params
+    // find deptAdmin from db by id
+    // return res
+    const { id } = req.params;
+    // console.log(id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ApiError(400, "Invalid user id");
+    }
+
+    const user = await User.findById(id).select("-password");
+    if (!user) {
+        throw new ApiError(404, "Department Admin not found");
+    }
+
+    // console.log(user);
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user.signature, "Dept Admin found successfully"));
+
+    
+});
+
 
 
 export { 
@@ -245,4 +295,8 @@ export {
     changeDetails,
     getCurrentUser,
     changeSignature,
+    getRegisterSignature,
+    getManagerSignature,
+    getDeptAdminSignature
+    
 }
