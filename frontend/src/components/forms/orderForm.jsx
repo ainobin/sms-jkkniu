@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import UserContext from "../../context/UserContext";
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom";
+import config from "../../config/config.js";
 
 const OrderForm = () => {
   // navigator
@@ -41,7 +42,7 @@ const OrderForm = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts", {
+        const response = await axios.get(`${config.serverUrl}/products/getAllProducts`, {
           withCredentials: true,
         });
         setProducts(response.data?.message || []);
@@ -94,7 +95,7 @@ const OrderForm = () => {
 
     try {
       // Sending data via POST request
-      const response = await axios.post("http://localhost:3000/api/v1/orders/createOrder", formattedData, {
+      const response = await axios.post(`${config.serverUrl}/orders/createOrder`, formattedData, {
         headers: {
           "Content-Type": "application/json",
         },

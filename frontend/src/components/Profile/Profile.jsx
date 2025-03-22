@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
 import toast from "react-hot-toast";
+import config from "../../config/config.js";
 
 const Profile = () => {
   const { user, setUser } = useContext(UserContext);
@@ -34,7 +35,7 @@ const Profile = () => {
     }
     try {
       const response = await axios.patch(
-        "http://localhost:3000/api/v1/users/change-details",
+        `${config.serverUrl}/users/change-details`,
         JSON.stringify(formData),
         {
           headers: {
@@ -71,7 +72,7 @@ const Profile = () => {
 
     try {
       const response = await axios.patch(
-        "http://localhost:3000/api/v1/users/change-signature",
+        `${config.serverUrl}/users/change-signature`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -99,7 +100,7 @@ const Profile = () => {
 
     try {
       const response = await axios.patch(
-        "http://localhost:3000/api/v1/users/change-password",
+        `${config.serverUrl}/users/change-password`,
         {
           oldPassword: oldPassword,
           newPassword: newPassword,

@@ -3,6 +3,7 @@ import { CgLogIn, CgLogOut  } from "react-icons/cg";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
+import config from "../../config/config.js";
 
 function Header() {
     // const token
@@ -15,7 +16,7 @@ function Header() {
         if (e) e.preventDefault();  // Only prevent if it's an event
     
         try {
-            const response = await axios.get("http://localhost:3000/api/v1/users/logout", {
+            const response = await axios.get(`${config.serverUrl}/users/logout`, {
                 withCredentials: true
             });
     

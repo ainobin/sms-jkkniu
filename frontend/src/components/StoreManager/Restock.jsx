@@ -3,6 +3,7 @@ import axios from "axios";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
+import config from "../../config/config.js";
 
 const Restock = () => {
   // Initialize form control, form handling functions, and state variables 
@@ -14,7 +15,7 @@ const Restock = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts", {
+        const response = await axios.get(`${config.serverUrl}/products/getAllProducts`, {
           withCredentials: true, // Send cookies along with the request
         });
         setProducts(response.data.message); // Store fetched products in state
@@ -47,7 +48,7 @@ const Restock = () => {
 
     try {
       // Send PATCH request to update stock in database
-      const response = await axios.patch("http://localhost:3000/api/v1/products/stockUpdate", {
+      const response = await axios.patch(`${config.serverUrl}/products/stockUpdate`, {
         name: data.selectedProduct.label, // Product name
         stock: Number(updatedStock), // Updated stock value
       },

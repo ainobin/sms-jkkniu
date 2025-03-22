@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Printer } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { generatePDF } from '../index.js';
+import config from "../../config/config.js";
 
 const ManagerHome = () => {
   // Access user context
@@ -20,7 +21,7 @@ const ManagerHome = () => {
     const fetchOrders = async () => {
       try {
         // Fetch orders from backend API
-        const response = await axios.get("http://localhost:3000/api/v1/orders/getAllOrders", {
+        const response = await axios.get(`${config.serverUrl}/orders/getAllOrders`, {
           withCredentials: true,
         });
         const fetchedOrders = (response.data.message || []).reverse(); // Reverse to show latest orders first
@@ -49,16 +50,16 @@ const ManagerHome = () => {
    */
   const handlePrint = async (order) => {
     try {
-      const registerSign = await axios.get(`http://localhost:3000/api/v1/users/getRegisterSign`, {
+      const registerSign = await axios.get(`${config.serverUrl}/users/getRegisterSign`, {
         withCredentials: true, 
       });
       
-      const managerSign = await axios.get(`http://localhost:3000/api/v1/users/getManagerSign`, {
+      const managerSign = await axios.get(`${config.serverUrl}/users/getManagerSign`, {
         withCredentials: true,
       });
       // console.log(order.dept_id);
       
-      const deptAdminSign = await axios.get(`http://localhost:3000/api/v1/users/getDeptAdminSign/${order.dept_id}`, {
+      const deptAdminSign = await axios.get(`${config.serverUrl}/users/getDeptAdminSign/${order.dept_id}`, {
         withCredentials: true,
       });
 

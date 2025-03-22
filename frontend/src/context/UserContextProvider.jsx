@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import UserContext from "./UserContext";
 import axios from "axios";
+import config from "../config/config.js";
 
 const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
     const [user, setUser] = useState({
@@ -21,7 +22,7 @@ const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
             // console.log("verifyUser: ");
             
             try {
-                const response = await axios.get("http://localhost:3000/api/v1/users/me", {
+                const response = await axios.get(`${config.serverUrl}/users/me`, {
                     withCredentials : true,
                     
                     // This is the key change - tell axios to accept 401 status as valid

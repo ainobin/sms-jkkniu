@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../../context/UserContext";
 import toast from "react-hot-toast";
+import config from '../../config/config.js';
 
 /**
  * Component to process an order by either approving or declining it.
@@ -34,7 +35,7 @@ const RegisterProcessOrder = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts", {
+        const response = await axios.get(`${config.serverUrl}/products/getAllProducts`, {
           withCredentials: true,
         });
         setProducts(response.data?.message || []);
@@ -61,7 +62,7 @@ const RegisterProcessOrder = () => {
     };
 
     try {
-      const response = await axios.patch("http://localhost:3000/api/v1/orders/registerAprroval", formattedData, {
+      const response = await axios.patch(`${config.serverUrl}/orders/registerAprroval`, formattedData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -99,7 +100,7 @@ const RegisterProcessOrder = () => {
     };
 
     try {
-      const response = await axios.patch("http://localhost:3000/api/v1/orders/registerAprroval", formattedData, {
+      const response = await axios.patch(`${config.serverUrl}/orders/registerAprroval`, formattedData, {
         headers: {
           "Content-Type": "application/json",
         },

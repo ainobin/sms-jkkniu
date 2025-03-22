@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import config from "../../config/config.js";
 
 const StockCheck = () => {
   const [items, setItems] = useState([]);
@@ -11,7 +12,7 @@ const StockCheck = () => {
   useEffect(() => {
     const fetchStock = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts", {
+        const response = await axios.get(`${config.serverUrl}/products/getAllProducts`, {
           withCredentials: true,
         });
         setItems(response.data.message);

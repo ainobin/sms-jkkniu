@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import config from "../config/config.js";
 
 const Preview = () => {
   const location = useLocation();
@@ -27,7 +28,7 @@ const Preview = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/products/getAllProducts",{
+        const response = await axios.get(`${config.serverUrl}/products/getAllProducts`,{
           withCredentials: true,
         });
         setProducts(response.data?.message || []);

@@ -25,7 +25,7 @@ const RegistrationForm = () => {
     formData.append("signature", signature);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/users/register", formData,
+      const response = await axios.post(`${config.serverUrl}/users/register`, formData,
         {headers: {"Content-Type": "multipart/form-data"}
       })
 

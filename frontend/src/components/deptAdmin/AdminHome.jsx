@@ -5,6 +5,7 @@ import { Printer } from 'lucide-react';
 import toast from 'react-hot-toast';
 import UserContext from '../../context/UserContext';
 import { generatePDF } from '../index.js';
+import config from '../../config/config.js';
 
 const AdminHome = () => {
 
@@ -18,7 +19,7 @@ const AdminHome = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/v1/orders/getOrders/${user.id}`, {
+        const response = await axios.get(`${config.serverUrl}/orders/getOrders/${user.id}`, {
           withCredentials: true,
         });
         // TODO: use .env for future.
@@ -47,15 +48,15 @@ const AdminHome = () => {
   // Function to handle printing an order.
   const handlePrint = async (order) => {
     try {
-      const registerSign = await axios.get(`http://localhost:3000/api/v1/users/getRegisterSign`, {
+      const registerSign = await axios.get(`${config.serverUrl}/users/getRegisterSign`, {
         withCredentials: true, 
       });
-      const managerSign = await axios.get(`http://localhost:3000/api/v1/users/getManagerSign`, {
+      const managerSign = await axios.get(`${config.serverUrl}/users/getManagerSign`, {
         withCredentials: true,
       });
       console.log(order.dept_id);
       
-      const deptAdminSign = await axios.get(`http://localhost:3000/api/v1/users/getDeptAdminSign/${order.dept_id}`, {
+      const deptAdminSign = await axios.get(`${config.serverUrl}/users/getDeptAdminSign/${order.dept_id}`, {
         withCredentials: true,
       });
       const regSign = registerSign.data.data;

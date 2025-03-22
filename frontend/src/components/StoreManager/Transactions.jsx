@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
+import config from "../../config/config.js";
 
 
 const Transactions = () => {
@@ -17,7 +18,7 @@ const Transactions = () => {
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/v1/transactions/${product._id}`, {
+                const response = await axios.get(`${config.serverUrl}/transactions/${product._id}`, {
                     withCredentials: true
                 });
                 setTransactions(response.data.message.reverse());

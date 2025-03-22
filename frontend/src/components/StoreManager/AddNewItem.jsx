@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import config from "../../config/config.js";
 
 const AddNewItem = () => {
   const {
@@ -22,7 +23,7 @@ const AddNewItem = () => {
 
       // Send a POST request with form data to the backend
       const response = await axios.post(
-        "http://localhost:3000/api/v1/products/createProduct",
+        `${config.serverUrl}/products/createProduct`,
 
         data, // No need to stringify, axios handles it
 

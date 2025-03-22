@@ -6,6 +6,7 @@ import { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import config from "../../config/config";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const LoginPage = () => {
       setIsLoading(true);
 
       const response = await axios.post(
-        "http://localhost:3000/api/v1/users/login",
+        `${config.serverUrl}/users/login`,
         {
           username: formData.username,
           password: formData.password,

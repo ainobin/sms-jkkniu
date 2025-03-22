@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../../context/UserContext";
 import toast from "react-hot-toast";
+import config from "../../config/config.js";
 
 /**
  * Component for processing orders by the store manager.
@@ -40,7 +41,7 @@ const ManagerProcessOrder = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/products/getAllProducts",
+          `${config.serverUrl}/products/getAllProducts`,
           {
             withCredentials: true,
           }
@@ -71,7 +72,7 @@ const ManagerProcessOrder = () => {
 
     try {
       await axios.patch(
-        "http://localhost:3000/api/v1/orders/managerApproval",
+        `${config.serverUrl}/orders/managerApproval`,
         formattedData,
         {
           headers: {
@@ -119,7 +120,7 @@ const ManagerProcessOrder = () => {
 
     try {
       await axios.patch(
-        "http://localhost:3000/api/v1/orders/managerApproval",
+        `${config.serverUrl}/orders/managerApproval`,
         formattedData,
         {
           headers: {
