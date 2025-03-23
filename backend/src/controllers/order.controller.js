@@ -113,57 +113,76 @@ const managerApproval = asyncHandler(async (req, res) => {
     }
 
 
-    const order = await Order.findById(id)
-    if (!order) {
-        throw new ApiError(404, "Order not found")
-    }
+    // Start a MongoDB session for transaction
+    const session = await mongoose.startSession();
 
-    if (order.store_manager_approval !== null) {
-        throw new ApiError(401, "Order already Reviewed by store manager")
-    }
-    if (store_manager_approval === undefined) {
-        throw new ApiError(400, "Store manager approval is required")
-    }
-    if (store_manager_approval == false) {
-        order.register_approval = false;
-    }
-    order.store_manager_approval = store_manager_approval;
-    order.store_manager_name = store_manager_name;
+    try {
+        // Start transaction
+        session.startTransaction();
 
-    // ✅ Update only the `manager_alloted_quantity` for matching items
-    // ✅ Update only the `manager_alloted_quantity` for matching items
-    for (const item of order.items_list) {
-        const updatedItem = items_list.find((i) => i.id === item.id);
-        if (updatedItem) {
-            // Validate allotted quantity
-            if (updatedItem.manager_alloted_quantity === undefined || updatedItem.manager_alloted_quantity < 0) {
-                throw new ApiError(403, `Invalid allotted quantity for item ${item.product_name}`);
-            }
-            if (updatedItem.manager_alloted_quantity > item.demand_quantity) {
-                throw new ApiError(403, `Allotted quantity exceeds demand for item ${item.product_name}`);
-            }
-
-            // Fetch the product details asynchronously
-            const product = await Product.findOne({ name: item.product_name });
-            if (!product) {
-                throw new ApiError(404, `Product '${item.product_name}' not found`);
-            }
-
-            // Check if allotted quantity exceeds current stock 
-            if (updatedItem.manager_alloted_quantity > product.current_stock) {
-                throw new ApiError(403, `Allotted quantity exceeds stock for item ${item.product_name}`);
-            }
-
-            // Update the manager_alloted_quantity
-            item.manager_alloted_quantity = Number(updatedItem.manager_alloted_quantity);
+        const order = await Order.findById(id).session(session);
+        if (!order) {
+            throw new ApiError(404, "Order not found");
         }
+
+        if (order.store_manager_approval !== null) {
+            throw new ApiError(401, "Order already reviewed by store manager");
+        }
+        if (store_manager_approval === undefined) {
+            throw new ApiError(400, "Store manager approval is required");
+        }
+        if (store_manager_approval === false) {
+            order.register_approval = false;
+        }
+
+        order.store_manager_approval = store_manager_approval;
+        order.store_manager_name = store_manager_name;
+
+        // Process all items - validate and update `manager_alloted_quantity`
+        for (const item of order.items_list) {
+            const updatedItem = items_list.find((i) => i.id === item.id);
+            if (updatedItem) {
+                // Validate allotted quantity
+                if (updatedItem.manager_alloted_quantity === undefined || updatedItem.manager_alloted_quantity < 0) {
+                    throw new ApiError(403, `Invalid allotted quantity for item ${item.product_name}`);
+                }
+                if (updatedItem.manager_alloted_quantity > item.demand_quantity) {
+                    throw new ApiError(403, `Allotted quantity exceeds demand for item ${item.product_name}`);
+                }
+
+                // Fetch the product details asynchronously
+                const product = await Product.findOne({ name: item.product_name }).session(session);
+                if (!product) {
+                    throw new ApiError(404, `Product '${item.product_name}' not found`);
+                }
+
+                // Check if allotted quantity exceeds current stock
+                if (updatedItem.manager_alloted_quantity > product.current_stock) {
+                    throw new ApiError(403, `Allotted quantity exceeds stock for item ${item.product_name}`);
+                }
+
+                // Update the manager_alloted_quantity
+                item.manager_alloted_quantity = Number(updatedItem.manager_alloted_quantity);
+            }
+        }
+
+        // Save order updates
+        await order.save({ session });
+
+        // Commit transaction if everything succeeded
+        await session.commitTransaction();
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, "Store manager approval updated successfully", order));
+    } catch (error) {
+        // Abort transaction on any error
+        await session.abortTransaction();
+        throw error;
+    } finally {
+        // End session
+        session.endSession();
     }
-
-    await order.save();
-
-    return res
-        .status(200)
-        .json(new ApiResponse(200, "Store manager approval updated successfully", order))
 });
 
 // const regesterApproval = asyncHandler(async (req, res) => {
@@ -337,20 +356,24 @@ const regesterApproval = asyncHandler(async (req, res) => {
 
         const invoice = await Invoice.findOne({});
         if (!invoice) {
-            throw new ApiError(404, "Invoice not found");
+            const newInvoice = await Invoice.create({
+                invoice_no: 1,
+                order_id: order._id
+            });
+        }else{
+            // console.log("invoice: ", invoice);
+            const newInvoiceNo = (invoice?.invoice_no + 1) || 1; 
+
+            // update new invoice no in invoice
+            invoice.invoice_no = newInvoiceNo;
+            invoice.order_id = order._id;
+            await invoice.save({ session });
+            order.invoice_no = newInvoiceNo;
+
         }
 
-        // console.log("invoice: ", invoice);
-        const newInvoiceNo = invoice.invoice_no + 1; 
-
-        // update new invoice no in invoice
-        invoice.invoice_no = newInvoiceNo;
-        invoice.order_id = order._id;
-
-        await invoice.save({ session });
-
         // update invoice no in order
-        order.invoice_no = newInvoiceNo;
+        
 
         
         // Save order updates
