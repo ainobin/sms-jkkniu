@@ -2,7 +2,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"; 
 import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
 import {User} from "../models/user.model.js";
 
@@ -110,8 +109,8 @@ const loginUser = asyncHandler(async (req, res) => {
         .status(200)
         .cookie("accessToken", accessToken, {
             httpOnly: true,
-            sameSite: "strict",  // Helps prevent CSRF attacks
-            secure: process.env.NODE_ENV === "production",
+            sameSite: "none",  // Helps prevent CSRF attacks //temporarily changed to lax
+            secure: process.env.NODE_ENV === "production" || true,
             maxAge: 3600000,  // Optional: Set cookie expiry (e.g., 1 hour)
         })
         .json(new ApiResponse(200, loggedInUser, "User logged in successfully", accessToken));
@@ -126,7 +125,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production" || true, // Set secure to true if the site is being served over HTTPS (production)
+        sameSite: "none" // Set sameSite to 'none' if the site is being served over HTTPS (production)
     })
     .json( new ApiResponse(200, {}, "User logged out successfully"));
 
