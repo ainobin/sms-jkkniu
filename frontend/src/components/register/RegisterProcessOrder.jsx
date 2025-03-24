@@ -115,9 +115,11 @@ const RegisterProcessOrder = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl">
-      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">🛠 Process Order</h2>
-      <h2 className="text-xl text-center text-gray-600 mb-4">{order.order_name}</h2>
+    <div className="max-w-4xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-xl">
+      <h2 className="text-xl sm:text-2xl font-semibold text-center text-gray-800 mb-2 sm:mb-4">🛠 Process Order</h2>
+      <h2 className="text-lg sm:text-xl text-center text-gray-600 mb-3 sm:mb-4">{order.order_name}</h2>
+      
+      {/* Desktop table header - hidden on mobile */}
       <div className="text-center hidden md:grid grid-cols-5 gap-3 px-3 py-2 bg-gray-100 rounded-md font-semibold text-gray-700 text-sm">
         <span>Product Name</span>
         <span>Demand Quantity</span>
@@ -131,7 +133,12 @@ const RegisterProcessOrder = () => {
           const product = products.find((p) => p._id === item.id);
 
           return (
-            <div key={item.id} className="grid grid-cols-1 md:grid-cols-5 gap-9 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+            <div key={item.id} className="grid grid-cols-1 md:grid-cols-5 gap-2 md:gap-3 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+              {/* Mobile: Product Name Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700">
+                Product Name:
+              </div>
+              
               {/* Product Name (Readonly) */}
               <input
                 type="text"
@@ -139,6 +146,12 @@ const RegisterProcessOrder = () => {
                 readOnly
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
+              
+              {/* Mobile: Demand Quantity Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
+                Demand Quantity:
+              </div>
+              
               {/* Demand Quantity (Readonly) */}
               <input
                 type="number"
@@ -146,6 +159,12 @@ const RegisterProcessOrder = () => {
                 readOnly
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
+              
+              {/* Mobile: Manager Alloted Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
+                Manager Alloted:
+              </div>
+              
               {/* Manager Alloted Quantity */}
               <input
                 type="number"
@@ -154,6 +173,11 @@ const RegisterProcessOrder = () => {
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
 
+              {/* Mobile: Register Alloted Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
+                Register Alloted:
+              </div>
+              
               {/* Alloted Quantity (Editable in Process Mode) */}
               <div className="flex flex-col">
                 <input
@@ -168,8 +192,9 @@ const RegisterProcessOrder = () => {
                     },
                     valueAsNumber: true,
                   })}
-                  className={`w-full p-2 border bg-white border-gray-300 rounded-lg text-center ${errors.orderItems?.[index]?.alloted_quantity ? "border-red-500" : ""
-                    }`}
+                  className={`w-full p-2 border bg-white border-gray-300 rounded-lg text-center ${
+                    errors.orderItems?.[index]?.alloted_quantity ? "border-red-500" : ""
+                  }`}
                 />
                 {errors.orderItems?.[index]?.alloted_quantity && (
                   <p className="text-red-500 text-xs mt-1">
@@ -178,6 +203,11 @@ const RegisterProcessOrder = () => {
                 )}
               </div>
 
+              {/* Mobile: Comment Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
+                Comment:
+              </div>
+              
               {/* Comment (Readonly) */}
               <input
                 type="text"
@@ -185,22 +215,25 @@ const RegisterProcessOrder = () => {
                 readOnly
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
+              
+              {/* Mobile-only divider */}
+              <div className="md:hidden border-b border-gray-300 w-full my-3 col-span-1"></div>
             </div>
           );
         })}
       </div>
-      <div className="flex justify-between space-x-4 mt-5">
+      <div className="flex justify-center sm:justify-between gap-4 sm:gap-6 mt-5">
         <button
           onClick={onNoSubmit}
-          className="curser-pointer bg-red-500 text-white font-bold ml-5 py-2 px-4 rounded-lg transition-transform duration-200 hover:bg-red-600"
+          className="w-full sm:w-auto bg-red-500 text-white font-bold py-3 px-6 rounded-lg transition-transform duration-200 hover:bg-red-600 text-sm sm:text-base"
         >
           Decline
         </button>
         <button
           onClick={onYesSubmit}
-          className="bg-green-500 text-white font-bold mr-5 py-2 px-4 rounded-lg transition-transform duration-200 hover:bg-green-600"
+          className="w-full sm:w-auto bg-green-500 text-white font-bold py-3 px-6 rounded-lg transition-transform duration-200 hover:bg-green-600 text-sm sm:text-base"
         >
-          Approved
+          Approve
         </button>
       </div>
     </div>

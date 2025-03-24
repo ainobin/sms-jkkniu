@@ -35,7 +35,6 @@ const ManagerProcessOrder = () => {
 
   /**
    * Fetch all available products from the backend when the component mounts.
-   * TODO: Use environment variables for API URLs instead of hardcoding.
    */
   useEffect(() => {
     const fetchProducts = async () => {
@@ -49,7 +48,6 @@ const ManagerProcessOrder = () => {
         setProducts(response.data?.message || []);
       } catch (error) {
         console.error("Error fetching products:", error.message);
-        // TODO: Add a toast notification to inform the user about the error.
       }
     };
     fetchProducts();
@@ -146,15 +144,15 @@ const ManagerProcessOrder = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-xl">
-      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">
+    <div className="max-w-4xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-xl">
+      <h2 className="text-xl sm:text-2xl font-semibold text-center text-gray-800 mb-2 sm:mb-4">
         🛠 Process Order
       </h2>
-      <h2 className="text-xl text-center text-gray-600 mb-4">
+      <h2 className="text-lg sm:text-xl text-center text-gray-600 mb-3 sm:mb-4 px-2">
         {order.order_name}
       </h2>
 
-      {/* Table Header */}
+      {/* Table Header - Desktop only */}
       <div className="text-center hidden md:grid grid-cols-5 gap-3 px-3 py-2 bg-gray-100 rounded-md font-semibold text-gray-700 text-sm">
         <span>Product Name</span>
         <span>Demand Quantity</span>
@@ -167,12 +165,18 @@ const ManagerProcessOrder = () => {
       <div className="text-center space-y-3 mt-2">
         {fields.map((item, index) => {
           const product = products.find((p) => p._id === item.id);
+          const currentStock = products.find(p => p.name === item.product_name)?.current_stock || 0;
 
           return (
             <div
               key={item.id}
-              className="grid grid-cols-1 md:grid-cols-5 gap-9 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200"
+              className="grid grid-cols-1 md:grid-cols-5 gap-2 md:gap-3 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200"
             >
+              {/* Mobile: Product Name Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700">
+                Product Name:
+              </div>
+              
               {/* Product Name (Readonly) */}
               <input
                 type="text"
@@ -181,6 +185,11 @@ const ManagerProcessOrder = () => {
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
 
+              {/* Mobile: Demand Quantity Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700">
+                Demand Quantity:
+              </div>
+              
               {/* Demand Quantity (Readonly) */}
               <input
                 type="number"
@@ -189,17 +198,24 @@ const ManagerProcessOrder = () => {
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
 
+              {/* Mobile: Current Stock Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700">
+                Current Stock:
+              </div>
+              
               {/* Current Stock (Readonly) */}
               <input
                 type="number"
-                value={
-                  products.find((p) => p.name === item.product_name)
-                    ?.current_stock || 0
-                }
+                value={currentStock}
                 readOnly
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
 
+              {/* Mobile: Alloted Quantity Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700">
+                Manager Alloted:
+              </div>
+              
               {/* Alloted Quantity (Editable) */}
               <div className="flex flex-col">
                 <input
@@ -210,16 +226,16 @@ const ManagerProcessOrder = () => {
                     validate: {
                       notExceedDemand: value =>
                         Number(value) <= Number(item.demand_quantity) ||
-                        "Cannot exceed demand quantity",
+                        "Cannot exceed demand",
                       notExceedStock: value => {
-                        const currentStock = products.find(p => p.name === item.product_name)?.current_stock || 0;
                         return Number(value) <= currentStock ||
-                          "Cannot exceed current stock";
+                          "Cannot exceed stock";
                       }
                     }
                   })}
-                  className={`w-full p-2 border bg-white border-gray-300 rounded-lg text-center ${errors.orderItems?.[index]?.alloted_quantity ? "border-red-500" : ""
-                    }`}
+                  className={`w-full p-2 border bg-white border-gray-300 rounded-lg text-center ${
+                    errors.orderItems?.[index]?.alloted_quantity ? "border-red-500" : ""
+                  }`}
                   aria-invalid={errors.orderItems?.[index]?.alloted_quantity ? "true" : "false"}
                 />
                 {errors.orderItems?.[index]?.alloted_quantity && (
@@ -229,14 +245,11 @@ const ManagerProcessOrder = () => {
                 )}
               </div>
 
-
-              {/* Error message */}
-              {/* {errors.orderItems?.[index]?.alloted_quantity && (
-                <span className="text-red-500 text-xs block mt-1">
-                  {errors.orderItems[index].alloted_quantity.message}
-                </span>
-              )} */}
-
+              {/* Mobile: Comment Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700">
+                Comment:
+              </div>
+              
               {/* Comment (Readonly) */}
               <input
                 type="text"
@@ -244,22 +257,25 @@ const ManagerProcessOrder = () => {
                 readOnly
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
+              
+              {/* Mobile-only divider */}
+              <div className="md:hidden border-b border-gray-300 w-full my-2 col-span-1"></div>
             </div>
           );
         })}
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-between space-x-4 mt-5">
+      <div className="flex justify-between space-x-4 mt-6">
         <button
           onClick={onNoSubmit}
-          className="cursor-pointer bg-red-500 text-white font-bold ml-5 py-2 px-4 rounded-lg transition-transform duration-200 hover:bg-red-600"
+          className="flex-1 cursor-pointer bg-red-500 text-white font-bold py-3 px-4 rounded-lg transition-transform duration-200 hover:bg-red-600 text-sm sm:text-base"
         >
           Decline
         </button>
         <button
           onClick={onYesSubmit}
-          className="bg-green-500 text-white font-bold mr-5 py-2 px-4 rounded-lg transition-transform duration-200 hover:bg-green-600"
+          className="flex-1 bg-green-500 text-white font-bold py-3 px-4 rounded-lg transition-transform duration-200 hover:bg-green-600 text-sm sm:text-base"
         >
           Approve
         </button>
