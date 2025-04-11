@@ -77,9 +77,9 @@ const AdminHome = () => {
     return (
       <React.Fragment key={order._id}>
         {/* For mobile view */}
-        <div className={`md:hidden mb-4 p-4 rounded-lg shadow-md overflow-hidden ${order.store_manager_approval === null
+        <div className={`md:hidden mb-4 p-4 rounded-lg shadow-md overflow-hidden ${order.register_approval === null
             ? "bg-red-50"
-            : order.store_manager_approval === false
+            : order.register_approval === false
               ? "bg-red-50"
               : "bg-green-50"
           }`}>
@@ -124,9 +124,9 @@ const AdminHome = () => {
 
         {/* For tablet/desktop view */}
         <tr
-          className={`hidden md:table-row border-b transition duration-200 ${order.store_manager_approval === null
+          className={`hidden md:table-row border-b transition duration-200 ${order.register_approval === null
               ? "bg-red-50 hover:bg-red-100"
-              : order.store_manager_approval === false
+              : order.register_approval === false
                 ? "bg-red-50 hover:bg-red-100"
                 : "bg-green-50 hover:bg-green-100"
             }`}

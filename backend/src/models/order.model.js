@@ -22,10 +22,14 @@ const ItemSchema = new mongoose.Schema({
         type: Number, 
         default: 0 
     }, // Default 0 if not allocated
-    comment: {
+    user_comment: {
         type: String, 
         default: '' 
-    }
+    }, //comment from the user
+    manager_comment: {
+        type: String, 
+        default: '' 
+    } // comment from the manager
 });
 
 const OrderSchema = new mongoose.Schema({

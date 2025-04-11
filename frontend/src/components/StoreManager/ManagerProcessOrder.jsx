@@ -65,6 +65,7 @@ const ManagerProcessOrder = () => {
       items_list: formData.orderItems.map((item) => ({
         id: item.id,
         manager_alloted_quantity: Number(item.alloted_quantity) || 0,
+        manager_comment: item.manager_comment || "",
       })),
     };
 
@@ -113,6 +114,7 @@ const ManagerProcessOrder = () => {
       items_list: formData.orderItems.map((item) => ({
         id: item.id,
         manager_alloted_quantity: 0,
+        manager_comment: item.manager_comment || "",
       })),
     };
 
@@ -153,12 +155,13 @@ const ManagerProcessOrder = () => {
       </h2>
 
       {/* Table Header - Desktop only */}
-      <div className="text-center hidden md:grid grid-cols-5 gap-3 px-3 py-2 bg-gray-100 rounded-md font-semibold text-gray-700 text-sm">
+      <div className="text-center hidden md:grid grid-cols-6 gap-3 px-3 py-2 bg-gray-100 rounded-md font-semibold text-gray-700 text-sm">
         <span>Product Name</span>
         <span>Demand Quantity</span>
+        <span>Comment</span>
         <span>Current Stock</span>
         <span>Manager Alloted</span>
-        <span>Comment</span>
+        <span>Manager comment</span>
       </div>
 
       {/* Order Items List */}
@@ -170,13 +173,13 @@ const ManagerProcessOrder = () => {
           return (
             <div
               key={item.id}
-              className="grid grid-cols-1 md:grid-cols-5 gap-2 md:gap-3 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200"
+              className="grid grid-cols-1 md:grid-cols-6 gap-2 md:gap-3 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200"
             >
               {/* Mobile: Product Name Label */}
               <div className="md:hidden text-left font-semibold text-gray-700">
                 Product Name:
               </div>
-              
+
               {/* Product Name (Readonly) */}
               <input
                 type="text"
@@ -189,7 +192,7 @@ const ManagerProcessOrder = () => {
               <div className="md:hidden text-left font-semibold text-gray-700">
                 Demand Quantity:
               </div>
-              
+
               {/* Demand Quantity (Readonly) */}
               <input
                 type="number"
@@ -198,11 +201,24 @@ const ManagerProcessOrder = () => {
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
 
+              {/* Mobile: Comment Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700">
+                Comment:
+              </div>
+
+              {/* Comment (Readonly) */}
+              <input
+                type="text"
+                value={item.user_comment}
+                readOnly
+                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
+              />
+
               {/* Mobile: Current Stock Label */}
               <div className="md:hidden text-left font-semibold text-gray-700">
                 Current Stock:
               </div>
-              
+
               {/* Current Stock (Readonly) */}
               <input
                 type="number"
@@ -215,7 +231,7 @@ const ManagerProcessOrder = () => {
               <div className="md:hidden text-left font-semibold text-gray-700">
                 Manager Alloted:
               </div>
-              
+
               {/* Alloted Quantity (Editable) */}
               <div className="flex flex-col">
                 <input
@@ -233,9 +249,8 @@ const ManagerProcessOrder = () => {
                       }
                     }
                   })}
-                  className={`w-full p-2 border bg-white border-gray-300 rounded-lg text-center ${
-                    errors.orderItems?.[index]?.alloted_quantity ? "border-red-500" : ""
-                  }`}
+                  className={`w-full p-2 border bg-white border-gray-300 rounded-lg text-center ${errors.orderItems?.[index]?.alloted_quantity ? "border-red-500" : ""
+                    }`}
                   aria-invalid={errors.orderItems?.[index]?.alloted_quantity ? "true" : "false"}
                 />
                 {errors.orderItems?.[index]?.alloted_quantity && (
@@ -245,19 +260,18 @@ const ManagerProcessOrder = () => {
                 )}
               </div>
 
-              {/* Mobile: Comment Label */}
+              {/* Mobile: Manager Comment Label */}
               <div className="md:hidden text-left font-semibold text-gray-700">
-                Comment:
+                Manager Comment:
               </div>
-              
-              {/* Comment (Readonly) */}
+              {/* Manager Comment (Editable) */}
               <input
                 type="text"
-                value={item.comment}
-                readOnly
-                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
+                {...register(`orderItems.${index}.manager_comment`)}
+                placeholder="Optional note..."
+                className="w-full bg-white p-2 border justify-items-center border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
-              
+
               {/* Mobile-only divider */}
               <div className="md:hidden border-b border-gray-300 w-full my-2 col-span-1"></div>
             </div>

@@ -86,7 +86,7 @@ const OrderForm = () => {
         id: item._id,
         product_name: item.product_name,
         demand_quantity: item.demand_quantity,
-        comment: item.comment
+        user_comment: item.comment
       }))
     };
 
@@ -103,7 +103,7 @@ const OrderForm = () => {
       });
       if(response){
         toast.success( "Order Submitted Successfully... " );
-      navigate('/dept-admin');
+        navigate('/dept-admin');
       }
       // console.log(response);
       

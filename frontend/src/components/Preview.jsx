@@ -52,12 +52,13 @@ const Preview = () => {
       </div>
       
       {/* Table header - desktop only */}
-      <div className="text-center hidden md:grid grid-cols-5 gap-3 px-3 py-2 bg-gray-100 rounded-md font-semibold text-gray-700 text-sm">
+      <div className="text-center hidden md:grid grid-cols-6 gap-3 px-3 py-2 bg-gray-100 rounded-md font-semibold text-gray-700 text-sm">
         <span>Product Name</span>
         <span>Demand Quantity</span>
-        <span>Manager Alloted</span>
-        <span>Register Alloted</span>
         <span>Comment</span>
+        <span>Manager Alloted</span>
+        <span>Manager Comment</span>
+        <span>Register Alloted</span>
       </div>
 
       {/* Order items list */}
@@ -66,7 +67,7 @@ const Preview = () => {
           const product = products.find((p) => p._id === item.id);
           
           return (
-            <div key={item.id} className="grid grid-cols-1 md:grid-cols-5 gap-2 md:gap-3 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+            <div key={item.id} className="grid grid-cols-1 md:grid-cols-6 gap-2 md:gap-3 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
               {/* Mobile: Product Name Label */}
               <div className="md:hidden text-left font-semibold text-gray-700">
                 Product Name:
@@ -92,6 +93,19 @@ const Preview = () => {
                 readOnly
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
+
+              {/* Mobile: Comment Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
+                Comment:
+              </div>
+
+              {/* Comment (Readonly) */}
+              <input
+                type="text"
+                value={item.user_comment}
+                readOnly
+                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
+              />
               
               {/* Mobile: Manager Alloted Label */}
               <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
@@ -102,6 +116,19 @@ const Preview = () => {
               <input
                 type="number"
                 value={item.manager_alloted_quantity}
+                readOnly
+                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
+              />
+
+              {/* Mobile: Comment Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
+                Manager Comment:
+              </div>
+
+              {/* Comment (Readonly) */}
+              <input
+                type="text"
+                value={item.manager_comment}
                 readOnly
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
@@ -119,18 +146,7 @@ const Preview = () => {
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
               
-              {/* Mobile: Comment Label */}
-              <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
-                Comment:
-              </div>
-
-              {/* Comment (Readonly) */}
-              <input
-                type="text"
-                value={item.comment}
-                readOnly
-                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
-              />
+              
               
               {/* Mobile-only divider */}
               <div className="md:hidden border-b border-gray-300 w-full my-3 col-span-1"></div>

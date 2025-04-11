@@ -130,14 +130,14 @@ const generatePDF = (order, regSign, manSign, deptSign) => {
   // Add Table with Borders
   autoTable(doc, {
     startY: currentY,
-    head: [["No", "Item Name", "Demand Quantity", "Comment", "Allocate Quantity", "In Words"]],
+    head: [["No", "Item Name", "Demand Quantity", "Comment", "Allocate Quantity", "Manager Comment"]],
     body: order.items_list.map((item, index) => [
       index + 1,
       item.product_name,
       item.demand_quantity,
-      item.comment,
+      item.user_comment,
       item.register_alloted_quantity,
-      toWords.convert(item.register_alloted_quantity || 0) // Convert to words
+      item.manager_comment || "",
     ]),
     styles: {
       halign: "center",
