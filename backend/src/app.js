@@ -1,12 +1,15 @@
 import express from 'express';
 import cors from "cors";
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
 
+// Load environment variables from .env file
+dotenv.config();
 
 const app = express();
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN.split(','), // Convert comma-separated string to an array
+    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*', // Add fallback if undefined
     methods: ['GET', 'POST', 'PATCH'],
     credentials: true,
 }));
