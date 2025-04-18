@@ -1,3 +1,4 @@
+version: '3.8'
 name: sm-system
 
 services:
@@ -5,8 +6,6 @@ services:
     image: mongo:8.0.4
     volumes:
       - mongo_data:/data/db
-    ports:
-      - 27017:27017
     networks:
       - sms-network
     restart: unless-stopped
@@ -15,9 +14,9 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: sms-backend
     restart: unless-stopped
     env_file: ./backend/.env
-    volumes: [] # Corrected: Explicitly defined as an empty list
     ports:
       - 3000:3000
     networks:
@@ -29,22 +28,28 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_SERVER_URL=http://103.159.2.149/api/v1
+    container_name: sms-frontend
     restart: unless-stopped
-    env_file: ./frontend/.env
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     networks:
       - sms-network
+  nginx:
+    image: nginx:1.24.0-alpine
+    container_name: sms-nginx
     ports:
-      - 5173:5173
-    command: npm run dev -- --host
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./frontend/dist:/usr/share/nginx/html 
     depends_on:
+      - frontend
       - backend
-
+    networks:
+      - sms-network
 volumes:
   mongo_data:
-  frontend_build:
 
 networks:
   sms-network:
