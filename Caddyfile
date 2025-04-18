@@ -1,0 +1,24 @@
+:80 {
+    # API requests handler - handle both /api/* and /admin/api/* paths
+    handle_path /api/v1/* {
+        reverse_proxy backend:3000
+    }}
+
+    # Static files handler
+    handle {
+        root * /srv
+        try_files {path} /index.html
+        file_server
+        encode gzip
+    }
+
+    # Security headers with updated CSP
+    header {
+        Strict-Transport-Security "max-age=31536000;"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        X-XSS-Protection "1; mode=block"
+        X-Frame-Options "DENY"
+        Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob:; connect-src 'self' http://103.159.2.149;"
+    }
+}

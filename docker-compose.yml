@@ -1,7 +1,7 @@
 name: sm-system
 services:
   mongo:
-    image: mongo:4.4
+    image: mongo:8.0.4
     volumes:
       - mongo_data:/data/db
     networks:
@@ -11,7 +11,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     restart: unless-stopped
     env_file: ./backend/.env
     volumes: []
@@ -23,20 +23,37 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     restart: unless-stopped
     env_file: ./frontend/.env
+    args:
+      - VITE_SERVER_URL=http://103.159.2.149
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - ./frontend_build:/srv
     networks:
       - sms-network
     depends_on:
       - backend
 
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - frontend_build:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - sms-network
+
 volumes:
   mongo_data:
   frontend_build:
+  caddy_data:
+  caddy_config:
 
 networks:
   sms-network:
