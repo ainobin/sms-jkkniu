@@ -1,12 +1,9 @@
 name: sm-system
-
 services:
   mongo:
-    image: mongo:8.0.4
+    image: mongo:4.4
     volumes:
       - mongo_data:/data/db
-    ports:
-      - 27017:27017
     networks:
       - sms-network
     restart: unless-stopped
@@ -14,12 +11,10 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     restart: unless-stopped
     env_file: ./backend/.env
-    volumes: [] # Corrected: Explicitly defined as an empty list
-    ports:
-      - 3000:3000
+    volumes: []
     networks:
       - sms-network
     depends_on:
@@ -28,7 +23,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     restart: unless-stopped
     env_file: ./frontend/.env
     volumes:
@@ -36,9 +31,6 @@ services:
       - /app/node_modules
     networks:
       - sms-network
-    ports:
-      - 5173:5173
-    command: npm run dev -- --host
     depends_on:
       - backend
 

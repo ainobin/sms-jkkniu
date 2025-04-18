@@ -1,9 +1,7 @@
-# Build stage
-FROM node:22-bookworm-slim AS builder
+FROM node:22-bookworm-slim
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-
-# Production stage
-# RUN npm run build
+EXPOSE 5173
+CMD ["npm", "run", "dev", "--", "--host"]
