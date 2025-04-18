@@ -5,6 +5,8 @@ services:
     image: mongo:8.0.4
     volumes:
       - mongo_data:/data/db
+    ports:
+      - 27017:27017
     networks:
       - sms-network
     restart: unless-stopped
@@ -12,12 +14,12 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     restart: unless-stopped
     env_file: ./backend/.env
     volumes: [] # Corrected: Explicitly defined as an empty list
     ports:
-      - "127.0.0.1:3000:3000"
+      - 3000:3000
     networks:
       - sms-network
     depends_on:
@@ -26,7 +28,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     restart: unless-stopped
     env_file: ./frontend/.env
     volumes:
