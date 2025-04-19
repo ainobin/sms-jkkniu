@@ -15,7 +15,7 @@ const createProduct = asyncHandler(async (req, res) => {
     // return res
 
     const {name, category, threshold_point, current_stock } = req.body
-    // console.log("name: ", name);
+    console.log("name: ", name);
 
     if( 
         [name, category].some((field) => field?.trim() === "")
@@ -82,8 +82,8 @@ const getProduct = asyncHandler(async (req, res) => {
     // return res
 
     const {id, name} = req.body;
-    // console.log("id: ", id);
-    // console.log("name: ", name);
+    console.log("id: ", id);
+    console.log("name: ", name);
 
     if (!id && !name) {
         throw new ApiError(400, "Id or name is required")
@@ -109,7 +109,7 @@ const stockUpdate = asyncHandler(async (req, res) => {
     // return res
 
     const {name, stock} = req.body;
-    // console.log("name: ", name);
+    console.log("name: ", name);
 
     if (!name || !stock) {
         throw new ApiError(400, "Name and stock are required")

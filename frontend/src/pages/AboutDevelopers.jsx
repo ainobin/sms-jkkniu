@@ -34,7 +34,7 @@ const projectManager = {
 
 const AboutDevelopers = () => {
     const { user } = useContext(UserContext);
-    // console.log("context: ",user);
+    console.log("context: ",user);
     
     return (
         <div className="py-30 min-h-screen flex flex-col items-center justify-center p-8">

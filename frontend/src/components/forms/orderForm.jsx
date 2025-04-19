@@ -90,7 +90,7 @@ const OrderForm = () => {
       }))
     };
 
-    // console.log(formattedData);
+    console.log(formattedData);
     
 
     try {
@@ -105,7 +105,7 @@ const OrderForm = () => {
         toast.success( "Order Submitted Successfully... " );
         navigate('/dept-admin');
       }
-      // console.log(response);
+      console.log(response);
       
 
     } catch (error) {

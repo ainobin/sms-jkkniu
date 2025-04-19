@@ -20,7 +20,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
     const {username, fullName, email, department, designation, role, password, signatureURL } = req.body
-    // console.log("email: ", email);
+    console.log("email: ", email);
 
     if (
         [fullName, email, username, password].some((field) => field?.trim() === "")
@@ -81,8 +81,8 @@ const loginUser = asyncHandler(async (req, res) => {
     // return res
 
     const { username, password } = req.body;
-    // console.log("username: ", username);
-    // console.log("password: ", password);
+    console.log("username: ", username);
+    console.log("password: ", password);
 
     if (!username || !password) {
         throw new ApiError(400, "username and password are required");
@@ -103,7 +103,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const loggedInUser = await User.findById(user._id).select("-password");
 
     const accessToken = await loggedInUser.generateAccessToken();
-    // console.log(accessToken);
+    console.log(accessToken);
     
     return res
         .status(200)
@@ -267,7 +267,7 @@ const getDeptAdminSignature = asyncHandler(async (req, res) => {
     // find deptAdmin from db by id
     // return res
     const { id } = req.params;
-    // console.log(id);
+    console.log(id);
     if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new ApiError(400, "Invalid user id");
     }
@@ -277,7 +277,7 @@ const getDeptAdminSignature = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Department Admin not found");
     }
 
-    // console.log(user);
+    console.log(user);
     return res
         .status(200)
         .json(new ApiResponse(200, user.signature, "Dept Admin found successfully"));

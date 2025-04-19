@@ -21,7 +21,7 @@ const createOrder = asyncHandler(async (req, res) => {
     // return res
 
     const { order_name, dept_id, dept_name, dept_admin_name, items_list } = req.body
-    // console.log("order_name: ", order_name);
+    console.log("order_name: ", order_name);
 
     if (
         [order_name, dept_id, dept_name, dept_admin_name].some((field) => field?.trim() === "")
@@ -32,7 +32,7 @@ const createOrder = asyncHandler(async (req, res) => {
     if (!Array.isArray(items_list) || items_list.length === 0) {
         throw new ApiError(400, "Items list can not be empty")
     }
-    // console.log(items_list);
+    console.log(items_list);
 
     const formattedItems = items_list.map((item, index) => {
         if (!item.product_name || item.demand_quantity === undefined) {
@@ -106,8 +106,8 @@ const managerApproval = asyncHandler(async (req, res) => {
 
     const { id, items_list, store_manager_name, store_manager_approval } = req.body
 
-    // console.log("id", id);
-    // console.log("item_list: ", items_list);
+    console.log("id", id);
+    console.log("item_list: ", items_list);
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
         throw new ApiError(400, "Invalid order id")
     }
@@ -330,7 +330,7 @@ const regesterApproval = asyncHandler(async (req, res) => {
                 order_id: order._id
             });
         } else {
-            // console.log("invoice: ", invoice);
+            console.log("invoice: ", invoice);
             const newInvoiceNo = (invoice?.invoice_no + 1) || 1;
 
             // update new invoice no in invoice

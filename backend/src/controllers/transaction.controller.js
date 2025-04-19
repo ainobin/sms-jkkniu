@@ -11,7 +11,7 @@ const getTransactions = asyncHandler(async (req, res) => {
 
     const { product_id } = req.params; // Extract product_id from request parameters
 
-    // console.log(product_id);
+    console.log(product_id);
     
 
     // Query transactions by product_id
