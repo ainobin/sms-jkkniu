@@ -1,7 +1,7 @@
 name: sm-system
 services:
   mongo:
-    image: mongo:8.0.4
+    image: mongo:4.4
     volumes:
       - mongo_data:/data/db
     networks:
@@ -14,7 +14,8 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     env_file: ./backend/.env
-    volumes: []
+    ports:
+      - "127.0.0.1:4000:4000"
     networks:
       - sms-network
     depends_on:
@@ -24,12 +25,12 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_SERVER_URL=http://103.159.2.149/api/v1
     restart: unless-stopped
     env_file: ./frontend/.env
-    args:
-      - VITE_SERVER_URL=http://103.159.2.149
     volumes:
-      - ./frontend_build:/srv
+      - frontend_build:/srv
     networks:
       - sms-network
     depends_on:
