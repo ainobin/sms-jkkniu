@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
-// import config from "../../config/config.js";
+import config from "../../config/config.js";
 
 const RegistrationForm = () => {
   const {

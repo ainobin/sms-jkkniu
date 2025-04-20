@@ -48,9 +48,8 @@ const AboutDevelopers = () => {
   return (
     <div className="py-30 min-h-screen flex flex-col items-center justify-center p-8">
       <h2 className="text-4xl font-bold text-green-700 mb-8">
-        Meet the Team: {user?.fullName}{" "}
+        Meet the Team
       </h2>
-
       {/* Project Manager Section */}
       <div className="text-center mb-12">
         <h3 className="text-3xl font-bold text-gray-900 mb-6">
