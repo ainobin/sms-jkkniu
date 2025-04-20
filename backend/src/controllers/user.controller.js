@@ -1,9 +1,9 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import {ApiError} from "../utils/ApiError.js"; 
-import {uploadOnCloudinary} from "../utils/cloudinary.js";
+import { ApiError } from "../utils/ApiError.js";
+import { uploadBufferToCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import mongoose from "mongoose";
-import {User} from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -19,7 +19,7 @@ const registerUser = asyncHandler(async (req, res) => {
     // return res
 
 
-    const {username, fullName, email, department, designation, role, password, signatureURL } = req.body
+    const { username, fullName, email, department, designation, role, password, signatureURL } = req.body
     console.log("email: ", email);
 
     if (
@@ -34,17 +34,28 @@ const registerUser = asyncHandler(async (req, res) => {
     if (existedUser) {
         throw new ApiError(409, "email or username or depertment already exists")
     }
-    
-    const signatureLocalPath = req.files?.signature[0]?.path;
 
-    if (!signatureLocalPath) {
+    // const signatureLocalPath = req.files?.signature[0]?.path;
+
+    // if (!signatureLocalPath) {
+    //     throw new ApiError(400, "Signature file is required")
+    // }
+    // const signature = await uploadOnCloudinary(signatureLocalPath)
+    // if (!signature) {
+    //     throw new ApiError(400, "Signature file is required")
+    // }
+
+    // version 2 of cloudinary upload:
+    const signatureFile = req.files?.signature?.[0];
+    if (!signatureFile) {
         throw new ApiError(400, "Signature file is required")
     }
 
-    const signature = await uploadOnCloudinary(signatureLocalPath)
+    const signature = await uploadBufferToCloudinary(signatureFile.buffer, "signatures")
     if (!signature) {
-        throw new ApiError(400, "Signature file is required")
+        throw new ApiError(400, "Error uploading signature file")
     }
+
 
     const user = await User.create({
         username,
@@ -104,14 +115,25 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const accessToken = await loggedInUser.generateAccessToken();
     console.log(accessToken);
-    
+
+    // return res
+    //     .status(200)
+    //     .cookie("accessToken", accessToken, {
+    //         httpOnly: true,
+    //         sameSite: "none",  // Helps prevent CSRF attacks //temporarily changed to lax
+    //         secure: process.env.NODE_ENV === "production" || true,
+    //         maxAge: 3600000,  // Optional: Set cookie expiry (e.g., 1 hour)
+    //     })
+    //     .json(new ApiResponse(200, loggedInUser, "User logged in successfully", accessToken));
+
+    // for http connections
     return res
         .status(200)
         .cookie("accessToken", accessToken, {
             httpOnly: true,
-            sameSite: "none",  // Helps prevent CSRF attacks //temporarily changed to lax
-            secure: process.env.NODE_ENV === "production" || true,
-            maxAge: 3600000,  // Optional: Set cookie expiry (e.g., 1 hour)
+            sameSite: "lax",  // Works with HTTP
+            secure: false,    // Allow cookies over HTTP
+            maxAge: 3600000,
         })
         .json(new ApiResponse(200, loggedInUser, "User logged in successfully", accessToken));
 });
@@ -121,14 +143,25 @@ const logoutUser = asyncHandler(async (req, res) => {
     // clear the access token cookie
     // return res
 
+    //for https connections
+    // return res
+    //     .status(200)
+    //     .clearCookie("accessToken", {
+    //         httpOnly: true,
+    //         secure: process.env.NODE_ENV === "production" || true, // Set secure to true if the site is being served over HTTPS (production)
+    //         sameSite: "none" // Set sameSite to 'none' if the site is being served over HTTPS (production)
+    //     })
+    //     .json(new ApiResponse(200, {}, "User logged out successfully"));
+
+    // for http connections
     return res
-    .status(200)
-    .clearCookie("accessToken", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production" || true, // Set secure to true if the site is being served over HTTPS (production)
-        sameSite: "none" // Set sameSite to 'none' if the site is being served over HTTPS (production)
-    })
-    .json( new ApiResponse(200, {}, "User logged out successfully"));
+        .status(200)
+        .clearCookie("accessToken", {
+            httpOnly: true,
+            secure: false, // Allow cookies over HTTP
+            sameSite: "lax" // Works with HTTP
+        })
+        .json(new ApiResponse(200, {}, "User logged out successfully"));
 
 });
 
@@ -157,7 +190,7 @@ const changePassword = asyncHandler(async (req, res) => {
     }
 
     user.password = newPassword;
-    await user.save({validateBeforeSave: false});
+    await user.save({ validateBeforeSave: false });
 
     return res
         .status(200)
@@ -170,7 +203,7 @@ const changeDetails = asyncHandler(async (req, res) => {
     // find user by id
     // update user details
     // return res
-    const {fullName, email} = req.body
+    const { fullName, email } = req.body
 
     if (!fullName || !email) {
         throw new ApiError(400, "All fields are required")
@@ -180,17 +213,17 @@ const changeDetails = asyncHandler(async (req, res) => {
         req.user?._id,
         {
             $set: {
-                fullName : fullName,
+                fullName: fullName,
                 email: email
             }
         },
-        {new: true}
-        
+        { new: true }
+
     ).select("-password")
 
     return res
-    .status(200)
-    .json(new ApiResponse(200, user, "Account details updated successfully"))
+        .status(200)
+        .json(new ApiResponse(200, user, "Account details updated successfully"))
 });
 
 const changeSignature = asyncHandler(async (req, res) => {
@@ -202,24 +235,61 @@ const changeSignature = asyncHandler(async (req, res) => {
     // update user signature
     // return res
 
-    const signatureLocalPath = req.file?.path;
+    // const signatureLocalPath = req.file?.path;
+    // if (!signatureLocalPath) {
+    //     throw new ApiError(400, "Signature file is required");
+    // }
+    // const signature = await uploadOnCloudinary(signatureLocalPath);
 
-    if (!signatureLocalPath) {
+
+    // version 2 of cloudinary upload:
+    // First get the current user to find their existing signature
+    const currentUser = await User.findById(req.user._id);
+    if (!currentUser) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // Check if file is provided
+    const signatureFile = req.file;
+    if (!signatureFile) {
         throw new ApiError(400, "Signature file is required");
     }
 
-    const signature = await uploadOnCloudinary(signatureLocalPath);
-
+    // Upload new signature
+    const signature = await uploadBufferToCloudinary(signatureFile.buffer, "signatures");
     if (!signature.url) {
         throw new ApiError(400, "Error uploading signature");
     }
 
+    // Extract public_id from the existing signature URL if it exists
+    if (currentUser.signature) {
+        try {
+            // Extract the public ID from the Cloudinary URL
+            // URL format: http://res.cloudinary.com/dmbssx3sj/image/upload/v1745120666/signatures/etk2hrkyaejfjmxmscrr.png
+            const urlParts = currentUser.signature.split('/');
+
+            // Get the last two segments (folder/filename)
+            const filename = urlParts[urlParts.length - 1].split('.')[0]; // etk2hrkyaejfjmxmscrr
+            const folder = urlParts[urlParts.length - 2];                 // signatures
+            const publicId = `${folder}/${filename}`;                     // signatures/etk2hrkyaejfjmxmscrr
+
+            console.log("Deleting signature with publicId:", publicId);
+
+            // Delete old signature
+            await deleteFromCloudinary(publicId);
+        } catch (error) {
+            console.error("Error deleting previous signature:", error);
+            // Continue with update even if deletion fails
+        }
+    }
+
+
     const user = await User.findByIdAndUpdate(
         req.user._id,
-        { 
-            $set: { 
-                signature: signature.url 
-            } 
+        {
+            $set: {
+                signature: signature.url
+            }
         },
         { new: true }
     ).select("-password");
@@ -244,7 +314,7 @@ const getRegisterSignature = asyncHandler(async (req, res) => {
     if (!user) {
         throw new ApiError(404, "Register users not found")
     }
-    
+
     return res
         .status(200)
         .json(new ApiResponse(200, user[0]?.signature, "Register users found successfully"));
@@ -282,13 +352,13 @@ const getDeptAdminSignature = asyncHandler(async (req, res) => {
         .status(200)
         .json(new ApiResponse(200, user.signature, "Dept Admin found successfully"));
 
-    
+
 });
 
 
 
-export { 
-    registerUser, 
+export {
+    registerUser,
     loginUser,
     logoutUser,
     changePassword,
@@ -298,5 +368,5 @@ export {
     getRegisterSignature,
     getManagerSignature,
     getDeptAdminSignature
-    
+
 }

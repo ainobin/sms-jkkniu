@@ -16,11 +16,11 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/JKKNIU_Top_View.jpg/1280px-JKKNIU_Top_View.jpg");
+    background-image: url("/JKKNIU_Top_View.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 75%;
+    opacity: 0.75;
     filter: blur(10px);
     z-index: -1; /* Push it behind the content */
   }

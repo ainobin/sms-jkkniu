@@ -38,7 +38,7 @@ function Header() {
 
     // Navigation links to be used in both desktop and mobile menus
     const navLinks = [
-        { name: "About", link: "/about" },
+        { name: "About", link: "/aboutus" },
         { name: "Contact", link: "/contact" },
     ];
 
@@ -50,7 +50,7 @@ function Header() {
                 <div className="flex items-center">
                     <Link to="/">
                         <img
-                            src="https://upload.wikimedia.org/wikipedia/en/7/7d/Jatiya_Kabi_Kazi_Nazrul_Islam_University_Logo.png"
+                            src="/Jatiya_Kabi_Kazi_Nazrul_Islam_University_Logo.png"
                             alt="University Logo"
                             className="h-10 w-10 md:h-16 md:w-17"
                         />

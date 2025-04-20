@@ -13,7 +13,9 @@ import {
   LoginPage,
   RegistrationForm,
   StoreManagerPage,
-  RegisterPage
+  RegisterPage,
+  AboutUs,
+  Contact
 } from "./pages/pageIndex.js"
 import { 
   ManagerHome,
@@ -38,6 +40,8 @@ const router = createBrowserRouter([
       { path: "/", element: <LoginPage /> },
       { path: "/login", element: <LoginPage /> },
       { path: "/developers", element: <AboutDevelopers /> },
+      { path: "/aboutus", element: <AboutUs /> },
+      { path: "/contact", element: <Contact /> },
 
       // Store Manager Page with Nested Routes
       {
