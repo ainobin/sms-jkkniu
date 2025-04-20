@@ -2,12 +2,46 @@ name: sm-system
 services:
   mongo:
     image: mongo:4.4
+    command: ["--replSet", "rs0", "--bind_ip_all"]
     volumes:
       - mongo_data:/data/db
     networks:
       - sms-network
+    healthcheck:
+      # Simplified health check that doesn't require replica set to be initialized
+      test: ["CMD", "mongo", "--eval", "db.stats()"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
     restart: unless-stopped
 
+  mongo-init:
+    image: mongo:4.4
+    restart: "no"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    # More robust replica set initialization
+    command: >
+      bash -c "
+      echo 'Waiting for MongoDB to start...' &&
+      sleep 5 &&
+      mongo --host mongo:27017 --eval '
+      if (!rs.isMaster().ismaster) {
+        rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"mongo:27017\"}]});
+        while (!rs.isMaster().ismaster) {
+          print(\"Waiting for replica set to initialize...\");
+          sleep(1000);
+        }
+        print(\"Replica set initialized and I am primary\");
+      } else {
+        print(\"Replica set already initialized\");
+      }
+      '
+      "
+    networks:
+      - sms-network
   backend:
     build:
       context: ./backend
@@ -19,7 +53,8 @@ services:
     networks:
       - sms-network
     depends_on:
-      - mongo
+      mongo-init:
+        condition: service_completed_successfully
 
   frontend:
     build:
