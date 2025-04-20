@@ -12,7 +12,7 @@ const developers = [
     linkedin: "https://www.linkedin.com/in/ashrafulnobin/",
     github: "https://github.com/ainobin",
     facebook: "https://www.facebook.com/ainobin.9",
-    image: "https://avatars.githubusercontent.com/u/133261184?v=4",
+    image: "/nobin.jpg",
     portfolio:
       "https://www.google.com/search?q=Md+Ashraful+Islam+Nobin+jkkniu&sca_esv=97e4ebd26cccd6f2&ei=hvADaObRDr-n2roPhdeDiA0&ved=0ahUKEwjmrPHm4eSMAxW_k1YBHYXrANEQ4dUDCBA&uact=5&oq=Md+Ashraful+Islam+Nobin+jkkniu&gs_lp=Egxnd3Mtd2l6LXNlcnAiHk1kIEFzaHJhZnVsIElzbGFtIE5vYmluIGpra25pdTIFECEYoAEyBRAhGKABSLEdUM8EWIEacAJ4AJABAJgBqAGgAaQKqgEDMC45uAEDyAEA-AEBmAIKoAKzCcICDhAAGIAEGLADGIYDGIoFwgILEAAYgAQYsAMYogTCAggQABiwAxjvBcICBxAhGKABGAqYAwCIBgGQBgaSBwMyLjigB6ocsgcDMC44uAelCQ&sclient=gws-wiz-serp",
   },
@@ -26,7 +26,7 @@ const developers = [
     facebook:
       "https://www.facebook.com/people/Md-Abu-Omayer-Babu/pfbid02j4q8HCTvHW3xFaCCCSiP1rcDqUSFpsug8xhSkbMgi3Vq2g1GKk5w2ARYPU7o6rcAl/",
     image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuCHJQAGq2cR7Pkf9iOsyOIUfdRbj4nYze-w&s",
+      "/omayer.jpeg",
     portfolio:
       "https://www.google.com/search?q=md+abu+omayer+babu&oq=Md+Abu+Omayer&gs_lcrp=EgRlZGdlKgwIABBFGDsYgAQY-QcyDAgAEEUYOxiABBj5BzIGCAEQRRg5Mg0IAhAAGIYDGIAEGIoFMg0IAxAAGIYDGIAEGIoFMg0IBBAAGIYDGIAEGIoFMg0IBRAAGIYDGIAEGIoFMgYIBhBFGEEyBggHEEUYPDIGCAgQRRg80gEIMjk1MGowajGoAgCwAgA&sourceid=chrome&ie=UTF-8",
   },
@@ -38,7 +38,7 @@ const projectManager = {
   email: "kamal@jkkniu.edu.bd",
   linkedin: "https://www.linkedin.com/in/ahm-kamal-5237534/",
   image:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ04CfZiFRLxUV0OYKqhIHgvBCM2VbiN5XZOw&s",
+    "/kamal_sir.jpg",
     portfolio: "https://jkkniu.edu.bd/teachers_personal_page/?t=102"
 };
 
