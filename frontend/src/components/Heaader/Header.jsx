@@ -60,11 +60,11 @@ function Header() {
                 {/* Center: Project Name & University Name */}
                 <div className="text-center flex-1 mx-2">
                     <Link to="/">
-                        <h1 className="text-lg md:text-3xl font-bold text-center text-green-700 line-clamp-1">
-                            📦 Store Management
+                        <h1 className="text-xl md:text-3xl font-bold text-center text-green-700 line-clamp-1">
+                            📦 Store Management System
                         </h1>
                     </Link>
-                    <h1 className="text-xs md:text-md opacity-80 font-bold text-emerald-950 hidden sm:block line-clamp-1">
+                    <h1 className="text-xs md:text-base opacity-80 font-bold text-emerald-950 line-clamp-1">
                         Jatiya Kabi Kazi Nazrul Islam University
                     </h1>
                 </div>
@@ -80,7 +80,7 @@ function Header() {
                 {/* Desktop Navigation & User Section */}
                 <div className="hidden md:flex items-center space-x-6 font-bold">
                     {navLinks.map(({ name, link }) => (
-                        <Link key={name} to={link} className="hover:text-gray-300 transition">
+                        <Link key={name} to={link} className="hover:text-green-600 transition">
                             {name}
                         </Link>
                     ))}
@@ -102,7 +102,7 @@ function Header() {
                             <div className="relative">
                                 <button
                                     onClick={() => navigate("/login")}
-                                    className="flex items-center space-x-2 hover:text-gray-300 justify-center"
+                                    className="flex items-center space-x-2 hover:text-green-600 cursor-pointer justify-center"
                                     role="button"
                                 >
                                 <CgLogIn size={24} />
@@ -133,7 +133,7 @@ function Header() {
                         {isLoggedIn ? (
                             <button
                                 onClick={() => logout()}
-                                className="flex items-center space-x-2 py-2 px-3 text-gray-800 hover:bg-gray-100 rounded-md"
+                                className="flex items-center cursor-pointer space-x-2 py-2 px-3 text-green-600 hover:bg-gray-100 rounded-md"
                             >
                                 <CgLogOut size={20} />
                                 <span>Logout</span>

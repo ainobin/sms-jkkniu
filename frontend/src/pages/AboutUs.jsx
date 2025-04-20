@@ -3,13 +3,13 @@ const AboutUs = () => {
       <div className="min-h-screen mt-20 bg-white/50 px-6 py-12 text-gray-800">
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Hero Section */}
-          <div className="bg-white border-l-4 border-indigo-600 p-6 rounded-lg shadow-lg transform transition duration-300 hover:shadow-xl">
-            <h1 className="text-3xl font-bold text-indigo-700 mb-4 text-center">
+          <div className="bg-white border-l-4 border-green-600 p-6 rounded-lg shadow-lg transform transition duration-300 hover:shadow-xl">
+            <h1 className="text-3xl font-bold text-green-600 mb-4 text-center">
               About This Web App
             </h1>
             <p className="text-lg leading-7 text-gray-700">
               This web application is designed to streamline and digitize the
-              <span className="font-semibold text-indigo-700">
+              <span className="font-semibold text-amber-500">
                 {" "}
                 Store Management System{" "}
               </span>
@@ -25,10 +25,10 @@ const AboutUs = () => {
   
           {/* Features Grid */}
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white border-t-4 border-teal-500 p-6 rounded-lg shadow-md transform transition duration-300 hover:shadow-xl hover:translate-y-1">
+            <div className="bg-white border-t-4 border-blue-500 p-6 rounded-lg shadow-md transform transition duration-300 hover:shadow-xl hover:translate-y-1">
               <div className="flex items-center mb-3">
                 <div className="bg-teal-100 p-2 rounded-full mr-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>

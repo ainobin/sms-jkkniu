@@ -207,7 +207,7 @@ const Profile = () => {
         {!editMode ? (
           <button
             onClick={() => setEditMode(true)}
-            className="bg-[#008337] text-white px-4 py-2 rounded"
+            className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded"
           >
             Edit Name & Email
           </button>
@@ -215,13 +215,13 @@ const Profile = () => {
           <>
             <button
               onClick={handleSave}
-              className="bg-[#008337] text-white px-4 py-2 rounded"
+              className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded"
             >
               Save Changes
             </button>
             <button
               onClick={() => setEditMode(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded"
+              className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
             >
               Cancel
             </button>
@@ -231,7 +231,7 @@ const Profile = () => {
         {/* Change Password */}
         <button
           onClick={() => setChangePassword(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded"
         >
           Change Password
         </button>
@@ -239,7 +239,7 @@ const Profile = () => {
         {/* Change Signature */}
         <button
           onClick={() => setChangeSignature(true)}
-          className="bg-purple-500 text-white px-4 py-2 rounded"
+          className="bg-purple-500 cursor-pointer text-white px-4 py-2 rounded"
         >
           Change Signature
         </button>
@@ -273,13 +273,13 @@ const Profile = () => {
           <div className="mt-4 flex gap-2">
             <button
               onClick={handleChangePassword}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded"
             >
               Save Password
             </button>
             <button
               onClick={() => setChangePassword(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded"
+              className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
             >
               Cancel
             </button>
@@ -307,13 +307,13 @@ const Profile = () => {
           <div className="mt-4 flex gap-2">
             <button
               onClick={handleSaveSignature}
-              className="bg-purple-500 text-white px-4 py-2 rounded"
+              className="bg-purple-500 cursor-pointer text-white px-4 py-2 rounded"
             >
               Save Signature
             </button>
             <button
               onClick={() => setChangeSignature(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded"
+              className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
             >
               Cancel
             </button>
