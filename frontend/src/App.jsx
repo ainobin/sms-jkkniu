@@ -1,12 +1,9 @@
-import { useState } from 'react'
+import React from 'react'
 import './App.css'
 import {Header, Footer} from './components/index.js'
-import AboutDevelopers from './pages/AboutDevelopers.jsx'
 import { Outlet } from 'react-router-dom'
 
 function App() {
-  
-
   return (
     
     <div className="w-full h-16 md:h-20 items-center justify-between px-4 relative">

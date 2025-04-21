@@ -71,6 +71,7 @@ const AboutDevelopers = () => {
                 href={projectManager.google_scholars}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="cursor-pointer"
             >
               <FaGoogleScholar className="text-2xl hover:scale-110 transition-transform" />
             </a>
@@ -78,16 +79,21 @@ const AboutDevelopers = () => {
               href={projectManager.linkedin}
               target="_blank"
               rel="noopener noreferrer"
+              className="cursor-pointer"
             >
               <FaLinkedin className="text-blue-700 text-2xl hover:scale-110 transition-transform" />
             </a>
-            <a href={`mailto:${projectManager.email}`}>
+            <a 
+              href={`mailto:${projectManager.email}`}
+              className="cursor-pointer"
+            >
               <FaEnvelope className="text-red-600 text-2xl hover:scale-110 transition-transform" />
             </a>
             <a
               href={projectManager.portfolio}
               target="_blank"
               rel="noopener noreferrer"
+              className="cursor-pointer"
             >
               <CgProfile className="text-blue-700 text-2xl hover:scale-110 transition-transform" />
             </a>
@@ -112,16 +118,36 @@ const AboutDevelopers = () => {
             <p className="text-gray-700">{dev.role}</p>
             <p className="text-gray-600">{dev.session}</p>
             <div className="flex justify-center space-x-4 mt-4">
-              <a href={dev.linkedin} target="_blank" rel="noopener noreferrer">
+              <a 
+                href={dev.linkedin} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="cursor-pointer"
+              >
                 <FaLinkedin className="text-blue-700 text-2xl hover:scale-110 transition-transform" />
               </a>
-              <a href={dev.github} target="_blank" rel="noopener noreferrer">
+              <a 
+                href={dev.github} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="cursor-pointer"
+              >
                 <FaGithub className="text-gray-800 text-2xl hover:scale-110 transition-transform" />
               </a>
-              <a href={dev.facebook} target="_blank" rel="noopener noreferrer">
+              <a 
+                href={dev.facebook} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="cursor-pointer"
+              >
                 <FaFacebook className="text-blue-600 text-2xl hover:scale-110 transition-transform" />
               </a>
-              <a href={dev.portfolio} target="_blank" rel="noopener noreferrer">
+              <a 
+                href={dev.portfolio} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="cursor-pointer"
+              >
                 <CgProfile className="text-blue-600 text-2xl hover:scale-110 transition-transform" />
               </a>
             </div>

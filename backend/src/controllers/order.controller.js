@@ -327,8 +327,10 @@ const regesterApproval = asyncHandler(async (req, res) => {
         if (!invoice) {
             const newInvoice = await Invoice.create({
                 invoice_no: 1,
-                order_id: order._id
+                order_id: order._id,
+                
             });
+            order.invoice_no = 1;
         } else {
             console.log("invoice: ", invoice);
             const newInvoiceNo = (invoice?.invoice_no + 1) || 1;

@@ -14,6 +14,11 @@ const generatePDF = (order, regSign, manSign, deptSign) => {
     }
   });
 
+  console.log("Order Data:", order);
+  console.log("Register Signature:", regSign);
+  console.log("Manager Signature:", manSign);
+  console.log("Department Signature:", deptSign);
+
   // Hardcoded JSON Data (shortened for brevity)
   const orderData = {
     order_name: "11 Mar 2025 Computer Science and Engineering",

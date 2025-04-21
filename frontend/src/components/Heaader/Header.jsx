@@ -71,7 +71,7 @@ function Header() {
 
                 {/* Mobile Menu Button */}
                 <button 
-                    className="md:hidden p-2 rounded-md"
+                    className="md:hidden p-2 rounded-md cursor-pointer"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
                     {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -91,7 +91,7 @@ function Header() {
                             <div className="relative">
                                 <button
                                     onClick={() => logout()}
-                                    className="flex items-center space-x-2 hover:text-gray-300 justify-center"
+                                    className="flex items-center space-x-2 hover:text-green-600 justify-center cursor-pointer"
                                     role="button"
                                 >
                                 <CgLogOut size={24} />
@@ -144,7 +144,7 @@ function Header() {
                                     navigate("/login");
                                     setMobileMenuOpen(false);
                                 }}
-                                className="flex items-center space-x-2 py-2 px-3 text-gray-800 hover:bg-gray-100 rounded-md"
+                                className="flex items-center space-x-2 py-2 px-3 text-gray-800 hover:bg-gray-100 rounded-md cursor-pointer"
                             >
                                 <CgLogIn size={20} />
                                 <span>Login</span>

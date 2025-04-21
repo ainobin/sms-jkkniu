@@ -114,14 +114,14 @@ const ManagerHome = () => {
         {order.store_manager_approval === null ? (
           <button
             onClick={() => navigate(`process/${order._id}`, { state: { order: order } })}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm flex-1"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm flex-1 cursor-pointer"
           >
             Process
           </button>
         ) : (
           <button
             onClick={() => navigate(`preview/${order._id}`, { state: { order: order } })}
-            className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md text-sm flex-1"
+            className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md text-sm flex-1 cursor-pointer"
           >
             Details
           </button>
@@ -130,7 +130,7 @@ const ManagerHome = () => {
         {order.register_approval === true && (
           <button
             onClick={() => handlePrint(order)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center justify-center flex-1"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center justify-center flex-1 cursor-pointer"
           >
             <Printer size={16} className="mr-1" /> Print
           </button>
@@ -194,7 +194,7 @@ const ManagerHome = () => {
                           state: { order: order },
                         })
                       }
-                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200"
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200 cursor-pointer"
                     >
                       Process
                     </button>
@@ -205,7 +205,7 @@ const ManagerHome = () => {
                           state: { order: order },
                         })
                       }
-                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition duration-200"
+                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition duration-200 cursor-pointer"
                     >
                       Details
                     </button>
@@ -215,7 +215,7 @@ const ManagerHome = () => {
                   {order.register_approval === true && (
                     <button
                       onClick={() => handlePrint(order)}
-                      className="text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2"
+                      className="text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2 cursor-pointer"
                     >
                       <Printer size={18} />
                     </button>
@@ -262,7 +262,7 @@ const ManagerHome = () => {
                           state: { order: order },
                         })
                       }
-                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200"
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200 cursor-pointer"
                     >
                       Process
                     </button>
@@ -273,7 +273,7 @@ const ManagerHome = () => {
                           state: { order: order },
                         })
                       }
-                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition duration-200"
+                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition duration-200 cursor-pointer"
                     >
                       Details
                     </button>
@@ -283,7 +283,7 @@ const ManagerHome = () => {
                   {order.register_approval === true && (
                     <button
                       onClick={() => handlePrint(order)}
-                      className="text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2"
+                      className="text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2 cursor-pointer"
                     >
                       <Printer size={18} />
                     </button>

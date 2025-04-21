@@ -89,7 +89,7 @@ const Contact = () => {
                             </div>
                             <a
                                 href="/AboutDevelopers"
-                                className="inline-flex items-center bg-white text-[#008337] font-medium px-6 py-3 rounded-lg hover:bg-green-50 transition shadow-sm"
+                                className="inline-flex items-center bg-white text-[#008337] font-medium px-6 py-3 rounded-lg hover:bg-green-50 transition shadow-sm cursor-pointer"
                             >
                                 Meet the Team
                             </a>

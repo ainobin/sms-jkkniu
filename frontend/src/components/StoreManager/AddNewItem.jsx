@@ -173,7 +173,7 @@ const AddNewItem = () => {
             className={`w-full py-2 rounded-lg font-medium transition duration-300 ${
               isSubmitting
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
             }`}
           >
             {isSubmitting ? "Adding..." : "Add Item"}

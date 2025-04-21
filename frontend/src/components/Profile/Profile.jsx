@@ -10,6 +10,11 @@ const Profile = () => {
   const [changePassword, setChangePassword] = useState(false);
   const [changeSignature, setChangeSignature] = useState(false);
 
+  // Add loading states for different operations
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [savingPassword, setSavingPassword] = useState(false);
+  const [savingSignature, setSavingSignature] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: user?.fullName || "",
     email: user?.email || "",
@@ -33,6 +38,8 @@ const Profile = () => {
       toast.error("Full Name and Email both Required!!");
       return;
     }
+
+    setSavingProfile(true);
     try {
       const response = await axios.patch(
         `${config.serverUrl}/users/change-details`,
@@ -51,6 +58,9 @@ const Profile = () => {
       toast.success("Profile updated successfully");
     } catch (error) {
       console.error("Error updating profile", error);
+      toast.error("Failed to update profile");
+    } finally {
+      setSavingProfile(false);
     }
   };
 
@@ -67,6 +77,7 @@ const Profile = () => {
   const handleSaveSignature = async () => {
     if (!signature) return;
 
+    setSavingSignature(true);
     const formData = new FormData();
     formData.append("signature", signature);
 
@@ -84,6 +95,9 @@ const Profile = () => {
       setPreview(null); // Clear preview after upload
     } catch (error) {
       console.error("Error uploading signature", error);
+      toast.error("Failed to upload signature");
+    } finally {
+      setSavingSignature(false);
     }
   };
 
@@ -98,6 +112,7 @@ const Profile = () => {
       return;
     }
 
+    setSavingPassword(true);
     try {
       const response = await axios.patch(
         `${config.serverUrl}/users/change-password`,
@@ -129,6 +144,8 @@ const Profile = () => {
       }
       toast.error("Password change failed");
       console.log("Failed: ", error);
+    } finally {
+      setSavingPassword(false);
     }
   };
 
@@ -215,12 +232,40 @@ const Profile = () => {
           <>
             <button
               onClick={handleSave}
-              className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded"
+              disabled={savingProfile}
+              className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center"
             >
-              Save Changes
+              {savingProfile ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Saving...
+                </>
+              ) : (
+                "Save Changes"
+              )}
             </button>
             <button
               onClick={() => setEditMode(false)}
+              disabled={savingProfile}
               className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
             >
               Cancel
@@ -273,12 +318,40 @@ const Profile = () => {
           <div className="mt-4 flex gap-2">
             <button
               onClick={handleChangePassword}
-              className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded"
+              disabled={savingPassword}
+              className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center"
             >
-              Save Password
+              {savingPassword ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Saving...
+                </>
+              ) : (
+                "Save Password"
+              )}
             </button>
             <button
               onClick={() => setChangePassword(false)}
+              disabled={savingPassword}
               className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
             >
               Cancel
@@ -295,6 +368,7 @@ const Profile = () => {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
+            disabled={savingSignature}
             className="mt-2"
           />
           {preview && (
@@ -307,12 +381,40 @@ const Profile = () => {
           <div className="mt-4 flex gap-2">
             <button
               onClick={handleSaveSignature}
-              className="bg-purple-500 cursor-pointer text-white px-4 py-2 rounded"
+              disabled={savingSignature}
+              className="bg-purple-500 cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center"
             >
-              Save Signature
+              {savingSignature ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Saving...
+                </>
+              ) : (
+                "Save Signature"
+              )}
             </button>
             <button
               onClick={() => setChangeSignature(false)}
+              disabled={savingSignature}
               className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
             >
               Cancel

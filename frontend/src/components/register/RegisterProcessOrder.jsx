@@ -31,6 +31,10 @@ const RegisterProcessOrder = () => {
 
   const [products, setProducts] = useState([]); // State to store product details
 
+  // Add loading state variables
+  const [approvingOrder, setApprovingOrder] = useState(false);
+  const [decliningOrder, setDecliningOrder] = useState(false);
+
   // Fetch all products on component mount
   useEffect(() => {
     const fetchProducts = async () => {
@@ -51,6 +55,7 @@ const RegisterProcessOrder = () => {
    * Sends the approved data to the server and navigates back to the register page.
    */
   const onYesSubmit = handleSubmit(async (formData) => {
+    setApprovingOrder(true); // Set loading state when starting approval
     const formattedData = {
       id: order._id, // Order ID
       register_name: user.fullName, // Name of the user approving the order
@@ -80,6 +85,8 @@ const RegisterProcessOrder = () => {
         return;
       }
       toast.error("Order Approval Failed"); // Notify failure
+    } finally {
+      setApprovingOrder(false); // Reset loading state regardless of outcome
     }
   });
 
@@ -88,6 +95,7 @@ const RegisterProcessOrder = () => {
    * Sends the declined data to the server and navigates back to the register page.
    */
   const onNoSubmit = async () => {
+    setDecliningOrder(true); // Set loading state when starting decline
     const formData = getValues(); // Get all form values
     const formattedData = {
       id: order._id, // Order ID
@@ -111,6 +119,8 @@ const RegisterProcessOrder = () => {
     } catch (error) {
       console.log("error in register submit: ", error);
       toast.error("Order Processing Failed"); // Notify failure
+    } finally {
+      setDecliningOrder(false); // Reset loading state regardless of outcome
     }
   };
 
@@ -211,7 +221,7 @@ const RegisterProcessOrder = () => {
               {/* Comment (Readonly) */}
               <input
                 type="text"
-                value={item.comment}
+                value={item.user_comment}
                 readOnly
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
@@ -225,15 +235,37 @@ const RegisterProcessOrder = () => {
       <div className="flex justify-center sm:justify-between gap-4 sm:gap-6 mt-5">
         <button
           onClick={onNoSubmit}
-          className="w-full sm:w-auto bg-red-500 text-white font-bold py-3 px-6 rounded-lg transition-transform duration-200 hover:bg-red-600 text-sm sm:text-base"
+          disabled={approvingOrder || decliningOrder}
+          className="w-full sm:w-auto bg-red-500 text-white font-bold py-3 px-6 rounded-lg transition-transform duration-200 hover:bg-red-600 text-sm sm:text-base cursor-pointer flex items-center justify-center"
         >
-          Decline
+          {decliningOrder ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </>
+          ) : (
+            "Decline"
+          )}
         </button>
         <button
           onClick={onYesSubmit}
-          className="w-full sm:w-auto bg-green-500 text-white font-bold py-3 px-6 rounded-lg transition-transform duration-200 hover:bg-green-600 text-sm sm:text-base"
+          disabled={approvingOrder || decliningOrder}
+          className="w-full sm:w-auto bg-green-500 text-white font-bold py-3 px-6 rounded-lg transition-transform duration-200 hover:bg-green-600 text-sm sm:text-base cursor-pointer flex items-center justify-center"
         >
-          Approve
+          {approvingOrder ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </>
+          ) : (
+            "Approve"
+          )}
         </button>
       </div>
     </div>

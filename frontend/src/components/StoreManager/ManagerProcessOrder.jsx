@@ -33,6 +33,10 @@ const ManagerProcessOrder = () => {
   // State to store available products
   const [products, setProducts] = useState([]);
 
+  // Add loading state variables
+  const [approvingOrder, setApprovingOrder] = useState(false);
+  const [decliningOrder, setDecliningOrder] = useState(false);
+
   /**
    * Fetch all available products from the backend when the component mounts.
    */
@@ -58,6 +62,8 @@ const ManagerProcessOrder = () => {
    * Sends an API request with approved quantities.
    */
   const onYesSubmit = handleSubmit(async (formData) => {
+    setApprovingOrder(true); // Set loading state when starting approval
+
     const formattedData = {
       id: order._id,
       store_manager_name: user.name,
@@ -87,17 +93,19 @@ const ManagerProcessOrder = () => {
       console.error("Error in approval submission:", error);
       if (error.response?.status === 400) {
         toast.error("invalid Request");
-        return
+        return;
       }
       if (error.response?.status === 404) {
         toast.error("Order not found");
-        return
+        return;
       }
       if (error.response?.status === 403) {
         toast.error("Invalid allotted quantity");
-        return
+        return;
       }
       toast.error("Failed to approve order. Try again.");
+    } finally {
+      setApprovingOrder(false); // Reset loading state regardless of outcome
     }
   });
 
@@ -106,6 +114,8 @@ const ManagerProcessOrder = () => {
    * Sends an API request to update order status.
    */
   const onNoSubmit = async () => {
+    setDecliningOrder(true); // Set loading state when starting decline
+
     const formData = getValues(); // Get all form values
     const formattedData = {
       id: order._id,
@@ -135,13 +145,15 @@ const ManagerProcessOrder = () => {
       console.error("Error in decline submission:", error);
       if (error.response?.status === 400) {
         toast.error("invalid Request");
-        return
+        return;
       }
       if (error.response?.status === 404) {
         toast.error("Order not found");
-        return
+        return;
       }
       toast.error("Failed to decline order. Try again.");
+    } finally {
+      setDecliningOrder(false); // Reset loading state regardless of outcome
     }
   };
 
@@ -283,15 +295,37 @@ const ManagerProcessOrder = () => {
       <div className="flex justify-between space-x-4 mt-6">
         <button
           onClick={onNoSubmit}
-          className="flex-1 cursor-pointer bg-red-500 text-white font-bold py-3 px-4 rounded-lg transition-transform duration-200 hover:bg-red-600 text-sm sm:text-base"
+          disabled={approvingOrder || decliningOrder}
+          className="flex-1 cursor-pointer bg-red-500 text-white font-bold py-3 px-4 rounded-lg transition-transform duration-200 hover:bg-red-600 text-sm sm:text-base flex items-center justify-center"
         >
-          Decline
+          {decliningOrder ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </>
+          ) : (
+            "Decline"
+          )}
         </button>
         <button
           onClick={onYesSubmit}
-          className="flex-1 bg-green-500 text-white font-bold py-3 px-4 rounded-lg transition-transform duration-200 hover:bg-green-600 text-sm sm:text-base"
+          disabled={approvingOrder || decliningOrder}
+          className="flex-1 bg-green-500 text-white font-bold py-3 px-4 rounded-lg transition-transform duration-200 hover:bg-green-600 text-sm sm:text-base cursor-pointer flex items-center justify-center"
         >
-          Approve
+          {approvingOrder ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </>
+          ) : (
+            "Approve"
+          )}
         </button>
       </div>
     </div>

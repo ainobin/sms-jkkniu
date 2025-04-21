@@ -150,7 +150,7 @@ const Restock = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition-all duration-200 text-lg font-semibold"
+            className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition-all duration-200 text-lg font-semibold cursor-pointer"
           >
             Restock
           </button>
