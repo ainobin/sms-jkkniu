@@ -116,26 +116,26 @@ const loginUser = asyncHandler(async (req, res) => {
     const accessToken = await loggedInUser.generateAccessToken();
     console.log(accessToken);
 
+    return res
+    .status(200)
+    .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        sameSite: "strict",  // Strongest protection against CSRF
+        secure: true,        // Only send cookies over HTTPS
+        maxAge: 3600000,     // 1 hour expiry
+        path: "/",           // Cookie available across your entire domain
+        domain: "store.jkkniu.edu.bd" // Explicitly set your domain
+    })
+    .json(new ApiResponse(200, loggedInUser, "User logged in successfully", accessToken));
     // return res
     //     .status(200)
     //     .cookie("accessToken", accessToken, {
     //         httpOnly: true,
-    //         sameSite: "none",  // Helps prevent CSRF attacks //temporarily changed to lax
-    //         secure: process.env.NODE_ENV === "production" || true,
-    //         maxAge: 3600000,  // Optional: Set cookie expiry (e.g., 1 hour)
+    //         sameSite: "lax",  // Works with HTTP
+    //         secure: false,    // Allow cookies over HTTP
+    //         maxAge: 3600000,
     //     })
     //     .json(new ApiResponse(200, loggedInUser, "User logged in successfully", accessToken));
-
-    // for http connections
-    return res
-        .status(200)
-        .cookie("accessToken", accessToken, {
-            httpOnly: true,
-            sameSite: "lax",  // Works with HTTP
-            secure: false,    // Allow cookies over HTTP
-            maxAge: 3600000,
-        })
-        .json(new ApiResponse(200, loggedInUser, "User logged in successfully", accessToken));
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -155,13 +155,15 @@ const logoutUser = asyncHandler(async (req, res) => {
 
     // for http connections
     return res
-        .status(200)
-        .clearCookie("accessToken", {
-            httpOnly: true,
-            secure: false, // Allow cookies over HTTP
-            sameSite: "lax" // Works with HTTP
-        })
-        .json(new ApiResponse(200, {}, "User logged out successfully"));
+    .status(200)
+    .clearCookie("accessToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+        domain: "store.jkkniu.edu.bd"
+    })
+    .json(new ApiResponse(200, {}, "User logged out successfully"));
 
 });
 

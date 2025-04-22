@@ -21,6 +21,6 @@ store.jkkniu.edu.bd {
         Referrer-Policy "strict-origin-when-cross-origin"
         X-XSS-Protection "1; mode=block"
         X-Frame-Options "DENY"
-        Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' https://store.jkkniu.edu.bd;"
+        Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' https://store.jkkniu.edu.bd  https://res.cloudinary.com;"
     }
 }
