@@ -56,6 +56,8 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error uploading signature file")
     }
 
+    // Ensure the URL uses HTTPS instead of HTTP
+    const secureSignatureUrl = signature.url.replace("http://", "https://");
 
     const user = await User.create({
         username,
@@ -65,7 +67,7 @@ const registerUser = asyncHandler(async (req, res) => {
         designation,
         role,
         password,
-        signature: signature.url
+        signature: secureSignatureUrl
     })
 
     const createdUser = await User.findById(user._id).select(
@@ -262,6 +264,9 @@ const changeSignature = asyncHandler(async (req, res) => {
     if (!signature.url) {
         throw new ApiError(400, "Error uploading signature");
     }
+    
+    // Ensure the URL uses HTTPS instead of HTTP
+    const secureSignatureUrl = signature.url.replace("http://", "https://");
 
     // Extract public_id from the existing signature URL if it exists
     if (currentUser.signature) {
@@ -290,7 +295,7 @@ const changeSignature = asyncHandler(async (req, res) => {
         req.user._id,
         {
             $set: {
-                signature: signature.url
+                signature: secureSignatureUrl
             }
         },
         { new: true }
