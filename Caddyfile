@@ -1,4 +1,4 @@
-:80 {
+store.jkkniu.edu.bd {
     # API requests
     handle /api/v1/* {
         reverse_proxy backend:4000 {
@@ -21,6 +21,6 @@
         Referrer-Policy "strict-origin-when-cross-origin"
         X-XSS-Protection "1; mode=block"
         X-Frame-Options "DENY"
-        Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' http://103.159.2.149;"
+        Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' https://store.jkkniu.edu.bd;"
     }
 }

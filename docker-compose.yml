@@ -61,7 +61,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - VITE_SERVER_URL=http://103.159.2.149/api/v1
+        - VITE_SERVER_URL=https://store.jkkniu.edu.bd/api/v1
     restart: unless-stopped
     env_file: ./frontend/.env
     volumes:

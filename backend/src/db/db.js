@@ -7,8 +7,8 @@ const connectDB = async () => {
         console.log('Connecting to MongoDB...');
         console.log(`url: ${process.env.MONGO_URI} /// dbName: ${DB_NAME}`);
         
-        // const connectionInstanace = await mongoose.connect(process.env.MONGO_URI, { dbName: DB_NAME });
-        const connectionInstanace = await mongoose.connect(`${process.env.MONGO_URI}/${DB_NAME}`);
+        const connectionInstanace = await mongoose.connect(process.env.MONGO_URI, { dbName: DB_NAME });
+        // const connectionInstanace = await mongoose.connect(`${process.env.MONGO_URI}/${DB_NAME}`);
 
         console.log(`MongoDB Connected: ${connectionInstanace.connection.host}`);
     
