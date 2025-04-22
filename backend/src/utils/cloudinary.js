@@ -2,39 +2,11 @@ import {v2 as cloudinary} from "cloudinary"
 import fs from "fs"
 import { Readable } from "stream";
 
-// cloudinary.config({ 
-//     cloud_name: process.env.CLOUDINARY_NAME, 
-//     api_key: process.env.CLOOUDINARY_API_KEY, 
-//     api_secret: process.env.CLOUDINARY_API_SECRET 
-//   });
-
-//   const uploadOnCloudinary = async (localFilePath) => {
-//     try {
-//         if (!localFilePath) return null
-//         //upload the file on cloudinary
-//         const response = await cloudinary.uploader.upload(localFilePath, {
-//             resource_type: "auto"
-//         })
-//         // file has been uploaded successfull
-//         //console.log("file is uploaded on cloudinary ", response.url);
-//         fs.unlinkSync(localFilePath)
-//         return response;
-
-//     } catch (error) {
-//         fs.unlinkSync(localFilePath) // remove the locally saved temporary file as the upload operation got failed
-//         return null;
-//     }
-// }
-
-// export {uploadOnCloudinary}
-
-
-// version 2:
-
 cloudinary.config({ 
     cloud_name: process.env.CLOUDINARY_NAME, 
     api_key: process.env.CLOOUDINARY_API_KEY, 
-    api_secret: process.env.CLOUDINARY_API_SECRET 
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    secure: true // Force HTTPS URLs
 });
 
 // Keep original function for backward compatibility
@@ -43,7 +15,8 @@ const uploadOnCloudinary = async (localFilePath) => {
         if (!localFilePath) return null;
         //upload the file on cloudinary
         const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: "auto"
+            resource_type: "auto",
+            secure: true // Force HTTPS URLs
         });
         // file has been uploaded successfully
         fs.unlinkSync(localFilePath);
@@ -64,7 +37,8 @@ const uploadBufferToCloudinary = async (buffer, folder = "temp") => {
             const uploadStream = cloudinary.uploader.upload_stream(
                 {
                     folder,
-                    resource_type: "auto"
+                    resource_type: "auto",
+                    secure: true // Force HTTPS URLs
                 },
                 (error, result) => {
                     if (error) return reject(error);

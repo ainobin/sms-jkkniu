@@ -267,7 +267,7 @@ const changeSignature = asyncHandler(async (req, res) => {
     if (currentUser.signature) {
         try {
             // Extract the public ID from the Cloudinary URL
-            // URL format: http://res.cloudinary.com/dmbssx3sj/image/upload/v1745120666/signatures/etk2hrkyaejfjmxmscrr.png
+            // URL format: https://res.cloudinary.com/dmbssx3sj/image/upload/v1745120666/signatures/etk2hrkyaejfjmxmscrr.png
             const urlParts = currentUser.signature.split('/');
 
             // Get the last two segments (folder/filename)
