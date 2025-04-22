@@ -15,6 +15,6 @@ export{
     StoreManagerPage,
     RegisterPage,
     AboutUs,
-    Contact
+    Contact,
 
 }

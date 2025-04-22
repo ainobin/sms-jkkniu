@@ -8,6 +8,7 @@ const StoreManagerPage = () => {
   const storeManagerMenu = [
     { label: "Register New User", path: "/store-manager/register-new-user" },
     { label: "Add New Item", path: "/store-manager/add-item" },
+    { label: "Dept/Office History", path: "/store-manager/allocation-hitory" },
     { label: "Stock Check", path: "/store-manager/stock-check" },
     { label: "Restock", path: "/store-manager/restock" },
     { label: "Profile", path: "/store-manager/profile" },

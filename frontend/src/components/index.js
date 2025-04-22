@@ -15,10 +15,10 @@ import ManagerHome from "./StoreManager/ManagerHome.jsx"
 import ManagerProcessOrder from "./StoreManager/ManagerProcessOrder.jsx";
 import AddNewItem from "./StoreManager/AddNewItem.jsx";
 import Restock from "./StoreManager/Restock.jsx";
-import StockCheck from "./StoreManager/StockCheck.jsx";
-import Transactions from "./StoreManager/Transactions.jsx";
 
-
+import StockCheck from "./StockTransactions/StockCheck.jsx";
+import Transactions from "./StockTransactions/Transactions.jsx"
+import Allocation from "./StockTransactions/Allocation.jsx";
 
 
 export{
@@ -33,10 +33,12 @@ export{
     
     AddNewItem,
     Restock,
-    StockCheck,
     ManagerProcessOrder,
     ManagerHome,
+    
+    StockCheck,
     Transactions,
+    Allocation,
 
     RegisterHome,
     RegisterProcessOrder,

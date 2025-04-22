@@ -1,60 +1,13 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import { ToWords } from 'to-words';
 
 const generatePDF = (order, regSign, manSign, deptSign) => {
 
-  // Initialize number to words converter
-  const toWords = new ToWords({
-    localeCode: 'en-US',
-    converterOptions: {
-      currency: false,
-      ignoreDecimal: false,
-      ignoreZeroCurrency: false,
-    }
-  });
 
   console.log("Order Data:", order);
   console.log("Register Signature:", regSign);
   console.log("Manager Signature:", manSign);
   console.log("Department Signature:", deptSign);
-
-  // Hardcoded JSON Data (shortened for brevity)
-  const orderData = {
-    order_name: "11 Mar 2025 Computer Science and Engineering",
-    dept_name: "Computer Science and Engineering",
-    dept_admin_name: "Md. Ashraful Islam",
-    register_name: "Md. Boss Vai",
-    store_manager_approval: true,
-    register_approval: true,
-    store_manager_name: "John Doe",
-    items_list: [
-      {
-        product_name: "Pen",
-        demand_quantity: 10,
-        comment: "Urgent",
-        allocate_quantity: 10,
-        in_words: "Ten",
-      },
-      {
-        product_name: "Highlighter",
-        demand_quantity: 5,
-        comment: "Normal",
-        allocate_quantity: 5,
-        in_words: "Five",
-      },
-      {
-        product_name: "Pencil",
-        demand_quantity: 15,
-        comment: "High Priority",
-        allocate_quantity: 15,
-        in_words: "Fifteen",
-      },
-
-    ],
-    createdAt: new Date(1741680207677).toLocaleString(),
-    updatedAt: new Date(1741680395464).toLocaleString(),
-  };
 
   // Create PDF with slightly larger margins
   const doc = new jsPDF({
@@ -71,7 +24,7 @@ const generatePDF = (order, regSign, manSign, deptSign) => {
   // ============ HEADER SECTION ============
 
   // Add Logo
-  const logoUrl = "Jatiya_Kabi_Kazi_Nazrul_Islam_University_Logo.png";
+  const logoUrl = "/public/Jatiya_Kabi_Kazi_Nazrul_Islam_University_Logo.png";
   const logoWidth = 20;
   const logoHeight = 20;
   const logoX = (pageWidth - logoWidth) / 2;
@@ -126,7 +79,14 @@ const generatePDF = (order, regSign, manSign, deptSign) => {
   doc.setFont("helvetica", "bold");
   doc.text("Date:", margin, currentY);
   doc.setFont("helvetica", "normal");
-  doc.text(order.createdAt, margin + 15, currentY);
+  
+  // Format the date as DD-Month-YYYY
+  const orderDate = new Date(order.createdAt);
+  const formattedDate = orderDate.getDate() + '-' + 
+    orderDate.toLocaleString('default', { month: 'long' }) + '-' + 
+    orderDate.getFullYear();
+  
+  doc.text(formattedDate, margin + 15, currentY);
 
   // ============ TABLE SECTION ============
 

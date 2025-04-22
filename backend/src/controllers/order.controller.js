@@ -278,8 +278,9 @@ const regesterApproval = asyncHandler(async (req, res) => {
                 if (updatedItem.register_alloted_quantity === undefined || updatedItem.register_alloted_quantity < 0) {
                     throw new ApiError(400, `Invalid alloted quantity for item ${item.id}`);
                 }
-                if (updatedItem.register_alloted_quantity > item.manager_alloted_quantity) {
-                    throw new ApiError(403, `Alloted quantity exceeds demand for item ${item.product_name}`);
+                
+                if (updatedItem.manager_alloted_quantity > item.demand_quantity) {
+                    throw new ApiError(403, `Allotted quantity exceeds demand for item ${item.product_name}`);
                 }
 
                 item.register_alloted_quantity = Number(updatedItem.register_alloted_quantity);
@@ -303,9 +304,11 @@ const regesterApproval = asyncHandler(async (req, res) => {
 
                 // Create transaction
                 const transaction = await Transaction.create([{
+                    product_name: item.product_name,
                     product_id: item.id,
-                    order_id: order._id,
                     department: order.dept_name,
+                    dept_id: order.dept_id,
+                    order_id: order._id,
                     previous_stock: product.current_stock,
                     new_stock: product.current_stock - item.register_alloted_quantity,
                     change_stock: item.register_alloted_quantity,

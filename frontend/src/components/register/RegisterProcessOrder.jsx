@@ -63,6 +63,7 @@ const RegisterProcessOrder = () => {
       items_list: formData.orderItems.map(item => ({
         id: item.id,
         register_alloted_quantity: Number(item.alloted_quantity) || 0, // Allocated quantity
+        register_comment: item.manager_comment || "", // Forward the modified comment
       })),
     };
 
@@ -74,7 +75,7 @@ const RegisterProcessOrder = () => {
         withCredentials: true,
       });
       toast.success("Order Approved"); // Notify success
-      navigate("/register"); // Navigate back to the register page
+      navigate("/registrar"); // Navigate back to the registrar page
     } catch (error) {
       console.log("error in register submit: ", error);
       if (error.response?.status === 401) {
@@ -104,6 +105,7 @@ const RegisterProcessOrder = () => {
       items_list: formData.orderItems.map(item => ({
         id: item.id,
         register_alloted_quantity: 0, // No quantity allocated
+        register_comment: item.manager_comment || "", // Forward the modified comment
       })),
     };
 
@@ -115,7 +117,7 @@ const RegisterProcessOrder = () => {
         withCredentials: true,
       });
       toast.success("Order Cancelled"); // Notify success
-      navigate("/register"); // Navigate back to the register page
+      navigate("/registrar"); // Navigate back to the registrar page
     } catch (error) {
       console.log("error in register submit: ", error);
       toast.error("Order Processing Failed"); // Notify failure
@@ -130,10 +132,11 @@ const RegisterProcessOrder = () => {
       <h2 className="text-lg sm:text-xl text-center text-gray-600 mb-3 sm:mb-4">{order.order_name}</h2>
       
       {/* Desktop table header - hidden on mobile */}
-      <div className="text-center hidden md:grid grid-cols-5 gap-3 px-3 py-2 bg-gray-100 rounded-md font-semibold text-gray-700 text-sm">
+      <div className="text-center hidden md:grid grid-cols-6 gap-3 px-3 py-2 bg-gray-100 rounded-md font-semibold text-gray-700 text-sm">
         <span>Product Name</span>
         <span>Demand Quantity</span>
         <span>Manager Alloted</span>
+        <span>Current Stock</span>
         <span>Register Alloted</span>
         <span>Comment</span>
       </div>
@@ -141,9 +144,10 @@ const RegisterProcessOrder = () => {
       <div className="text-center space-y-3 mt-2">
         {fields.map((item, index) => {
           const product = products.find((p) => p._id === item.id);
+          const currentStock = products.find(p => p.name === item.product_name)?.current_stock || 0;
 
           return (
-            <div key={item.id} className="grid grid-cols-1 md:grid-cols-5 gap-2 md:gap-3 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+            <div key={item.id} className="grid grid-cols-1 md:grid-cols-6 gap-2 md:gap-3 items-center bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
               {/* Mobile: Product Name Label */}
               <div className="md:hidden text-left font-semibold text-gray-700">
                 Product Name:
@@ -182,6 +186,19 @@ const RegisterProcessOrder = () => {
                 readOnly
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
+              
+              {/* Mobile: Current Stock Label */}
+              <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
+                Current Stock:
+              </div>
+              
+              {/* Current Stock (Readonly) */}
+              <input
+                type="number"
+                value={currentStock}
+                readOnly
+                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
+              />
 
               {/* Mobile: Register Alloted Label */}
               <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
@@ -196,9 +213,11 @@ const RegisterProcessOrder = () => {
                   min={0}
                   {...register(`orderItems.${index}.alloted_quantity`, {
                     validate: {
-                      notExceedManager: value =>
-                        Number(value) <= Number(item.manager_alloted_quantity) ||
-                        "Cannot exceed manager allocation"
+                      notExceedStock: value => {
+                        const currentStock = products.find(p => p.name === item.product_name)?.current_stock || 0;
+                        return Number(value) <= currentStock ||
+                          "Cannot exceed current stock";
+                      }
                     },
                     valueAsNumber: true,
                   })}
@@ -218,12 +237,12 @@ const RegisterProcessOrder = () => {
                 Comment:
               </div>
               
-              {/* Comment (Readonly) */}
+              {/* Comment (Editable) */}
               <input
                 type="text"
-                value={item.user_comment}
-                readOnly
-                className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
+                {...register(`orderItems.${index}.manager_comment`)}
+                defaultValue={item.manager_comment}
+                className="w-full p-2 border border-gray-300 rounded-lg bg-white text-center"
               />
               
               {/* Mobile-only divider */}

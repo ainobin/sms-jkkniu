@@ -24,3 +24,11 @@ export const isRegister = asyncHandler(async (req, res, next) => {
     }
     next();
 });
+
+// Middleware to check if the user is a manager/registrar
+export const isManagerOrRegistrar = asyncHandler(async (req, res, next) => {
+    if (req.user.role !== "manager" && req.user.role !== "register") {
+        throw new ApiError(403, "Access denied: Requires Manager or Registrar privileges");
+    }
+    next();
+});

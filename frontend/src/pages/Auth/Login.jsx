@@ -25,7 +25,7 @@ const LoginPage = () => {
     if (isLoggedIn) {
       const targetPath =
         user.role === "register"
-          ? "/register"
+          ? "/registrar"
           : user.role === "manager"
           ? "/store-manager"
           : "/dept-admin";

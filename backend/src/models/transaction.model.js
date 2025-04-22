@@ -3,16 +3,24 @@ import mongoose from "mongoose";
 
 const transactionSchema = new mongoose.Schema(
     {
+        product_name: {
+            type: String,
+            require: true,
+        },
         product_id: {
             type: String,
             require: true,
 
         },
-        order_id: {
+        department:{
             type: String,
             require: true,
         },
-        department:{
+        dept_id:{
+            type: String,
+            require: true,
+        },
+        order_id: {
             type: String,
             require: true,
         },

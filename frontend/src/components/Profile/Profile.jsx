@@ -364,20 +364,45 @@ const Profile = () => {
       {changeSignature && (
         <div className="mt-6 p-4 border rounded-lg bg-gray-100">
           <h3 className="text-lg font-semibold">Change Signature</h3>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            disabled={savingSignature}
-            className="mt-2"
-          />
-          {preview && (
-            <img
-              src={preview}
-              alt="New Signature Preview"
-              className="w-32 h-20 mt-2 border rounded"
+          
+          <div className="mt-3">
+            <label htmlFor="signature-upload" className="block text-sm font-medium text-gray-700 mb-2">
+              Select an image file for your signature
+            </label>
+            
+            <div className="flex items-center">
+              <label 
+                htmlFor="signature-upload" 
+                className="cursor-pointer px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+              >
+                Choose File
+              </label>
+              <span className="ml-3 text-sm text-gray-500">
+                {signature ? signature.name : "No file selected"}
+              </span>
+            </div>
+            
+            <input
+              id="signature-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              disabled={savingSignature}
+              className="hidden"
             />
+          </div>
+          
+          {preview && (
+            <div className="mt-3">
+              <p className="text-sm text-gray-700 mb-1">Preview:</p>
+              <img
+                src={preview}
+                alt="New Signature Preview"
+                className="w-32 h-20 border rounded object-contain bg-white"
+              />
+            </div>
           )}
+          
           <div className="mt-4 flex gap-2">
             <button
               onClick={handleSaveSignature}

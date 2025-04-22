@@ -10,13 +10,17 @@ import {
     changeSignature,
     getRegisterSignature,
     getManagerSignature,
-    getDeptAdminSignature
+    getDeptAdminSignature,
+    getAllDept
 }from "../controllers/user.controller.js";
-import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { verifyJWT} from "../middlewares/auth.middleware.js";
+import { isManagerOrRegistrar, isStoreManager } from "../middlewares/role.middleware.js";
 
 const router = Router();
 
 router.route("/register").post(
+    verifyJWT,
+    isStoreManager,
     upload.fields([{
         name: "signature",
         maxCount: 1
@@ -32,6 +36,7 @@ router.route("/getDeptAdminSign/:id").get(verifyJWT, getDeptAdminSignature)
 router.route("/change-password").patch(verifyJWT, changePassword)
 router.route("/change-details").patch(verifyJWT, changeDetails)
 router.route("/change-signature").patch(verifyJWT, upload.single("signature"), changeSignature)
+router.route("/all-dept").get(getAllDept)
 
 
 router.route("/me").get(verifyJWT, getCurrentUser)

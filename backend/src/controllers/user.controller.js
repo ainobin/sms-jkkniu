@@ -355,6 +355,18 @@ const getDeptAdminSignature = asyncHandler(async (req, res) => {
 
 });
 
+// get all department's only name with role deptAdmin
+const getAllDept = asyncHandler(async (req, res) => {
+    const users = await User.find({ role: "deptAdmin" }).select("department _id");
+    if (!users) {
+        throw new ApiError(404, "Department Admins not found");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, users, "Department Admins found successfully"));
+});
+
 
 
 export {
@@ -367,6 +379,7 @@ export {
     changeSignature,
     getRegisterSignature,
     getManagerSignature,
-    getDeptAdminSignature
+    getDeptAdminSignature,
+    getAllDept
 
 }

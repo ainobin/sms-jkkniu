@@ -5,12 +5,14 @@ import UserContext from '../context/UserContext';
 
 const RegisterPage = () => {
   const RegisterMenu = [
-    { label: "Profile", path: "/register/profile" },
+    { label: "Dept/Office History", path: "/registrar/allocation-hitory" },
+    { label: "Stock Check", path: "/registrar/stock-check" },
+    { label: "Profile", path: "/registrar/profile" },
   ];
 
   const {user} = useContext(UserContext);
 
-  const homePage = { label: "Register", path: "/register/" };
+  const homePage = { label: "Registrar", path: "/registrar/" };
 
   return (
     <div className='bg-white/70 backdrop-blur-md shadow-lg rounded-lg p-6 mt-29 mb-5 min-h-screen'>
