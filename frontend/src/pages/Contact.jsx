@@ -19,7 +19,7 @@ const Contact = () => {
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500">Address</p>
-                                    <p className="font-medium">JKKNIU Register Office, JKKNIU</p>
+                                    <p className="font-medium">JKKNIU Registrar Office, JKKNIU</p>
                                 </div>
                             </div>
 
@@ -30,7 +30,7 @@ const Contact = () => {
                                 <div>
                                     <p className="text-sm text-gray-500">Email</p>
                                     <a href="mailto:store@jkkniu.edu.bd" className="font-medium text-[#008337] hover:underline">
-                                        store@jkkniu.edu.bd
+                                        storemanagerjkkniu@gmail.com
                                     </a>
                                 </div>
                             </div>
@@ -41,8 +41,12 @@ const Contact = () => {
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500">Phone</p>
-                                    <a href="tel:+8801234567890" className="font-medium text-[#008337] hover:underline">
-                                        +880 1234 567 890
+                                    <a href="tel:+8801724192501" className="font-medium text-[#008337] hover:underline">
+                                        +880 1724192501
+                                    </a>
+                                    <br/>
+                                    <a href="tel:+8801822874584" className="font-medium text-[#008337] hover:underline">
+                                        +880 1822874584
                                     </a>
                                 </div>
                             </div>
@@ -54,12 +58,12 @@ const Contact = () => {
                                 <div>
                                     <p className="text-sm text-gray-500">Website</p>
                                     <a
-                                        href="https://jkkniu.edu.bd/"
+                                        href="https://store.jkkniu.edu.bd/"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="font-medium text-[#008337] hover:underline flex items-center gap-1"
                                     >
-                                        jkkniu.edu.bd <ExternalLink className="w-3 h-3" />
+                                        store.jkkniu.edu.bd <ExternalLink className="w-3 h-3" />
                                     </a>
                                 </div>
                             </div>

@@ -54,7 +54,7 @@ const RegistrationForm = () => {
   return (
       <div className="pt-6 pb-6 flex items-center justify-center mt-3">
         <div className="bg-white/90 backdrop-blur-md shadow-lg rounded-lg p-8 w-150 ">
-          <h2 className="text-2xl font-semibold text-center text-black mb-6">Register</h2>
+          <h2 className="text-2xl font-semibold text-center text-black mb-6">Registrar</h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Username */}
@@ -134,8 +134,8 @@ const RegistrationForm = () => {
                 className="w-full p-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 <option value="">Select Role</option>
-                <option value="register">Register</option>
-                <option value="manager">Manager</option>
+                {/* <option value="register">Registrar</option>
+                <option value="manager">Manager</option> */}
                 <option value="deptAdmin">Dept Admin</option>
               </select>
               {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>}

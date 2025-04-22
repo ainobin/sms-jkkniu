@@ -155,9 +155,37 @@ const managerApproval = asyncHandler(async (req, res) => {
                 const emailSent = await sendEmail({
                     to: user.email,
                     subject: "Store Order Declined",
-                    text: `Your order ${order.order_name} has been declined by the store manager. We are sorry for the inconvenience.`,
-                    
-                    
+                    text: `Your order ${order.order_name} has been declined. We are sorry for the inconvenience.`,
+                    html: `
+                        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 5px;">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <h2 style="color: #d32f2f; margin-bottom: 5px;">Order Declined Notification</h2>
+                                <p style="color: #666; font-size: 16px; margin-top: 0;">Jatiya Kabi Kazi Nazrul Islam University</p>
+                            </div>
+                            
+                            <div style="padding: 15px; background-color: #f9f9f9; border-radius: 4px; margin-bottom: 20px;">
+                                <h3 style="color: #333; margin-top: 0;">Order Details</h3>
+                                <p style="margin-bottom: 5px;"><strong>Order Name:</strong> ${order.order_name}</p>
+                                <p style="margin-bottom: 5px;"><strong>Department:</strong> ${order.dept_name}</p>
+                                <p style="margin-bottom: 5px;"><strong>Status:</strong> <span style="color: #d32f2f; font-weight: bold;">Declined</span></p>
+                            </div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <p>Unfortunately, your order has been declined. We apologize for any inconvenience this may cause.</p>
+                                <p>If you have any questions or need further clarification, please contact the store manager office.</p>
+                                <p>You can order <a href="https://store.jkkniu.edu.bd/" style="color: #007bff; text-decoration: none;">here</a>.</p>
+                            </div>
+                            
+                            <div style="background-color: #d32f2f; color: white; padding: 10px; text-align: center; border-radius: 4px;">
+                                <p style="margin: 0;">You may submit a new order with revised requirements if needed.</p>
+                            </div>
+                            
+                            <div style="text-align: center; margin-top: 20px; color: #666; font-size: 12px;">
+                                <p>This is an automated message. Please do not reply to this email.</p>
+                                <p>&copy; ${new Date().getFullYear()} JKKNIU Store Management System</p>
+                            </div>
+                        </div>
+                    `
                 });
                 if (!emailSent) {
                     throw new ApiError(500, "Failed to send email notification");
@@ -264,6 +292,36 @@ const regesterApproval = asyncHandler(async (req, res) => {
                 to: user.email,
                 subject: "Store product order Declined",
                 text: `Your order ${order.order_name} has been declined. We are sorry for the inconvenience.`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 5px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h2 style="color: #d32f2f; margin-bottom: 5px;">Order Declined Notification</h2>
+                            <p style="color: #666; font-size: 16px; margin-top: 0;">Jatiya Kabi Kazi Nazrul Islam University</p>
+                        </div>
+                        
+                        <div style="padding: 15px; background-color: #f9f9f9; border-radius: 4px; margin-bottom: 20px;">
+                            <h3 style="color: #333; margin-top: 0;">Order Details</h3>
+                            <p style="margin-bottom: 5px;"><strong>Order Name:</strong> ${order.order_name}</p>
+                            <p style="margin-bottom: 5px;"><strong>Department:</strong> ${order.dept_name}</p>
+                            <p style="margin-bottom: 5px;"><strong>Status:</strong> <span style="color: #d32f2f; font-weight: bold;">Declined</span></p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <p>Unfortunately, your order has been declined. We apologize for any inconvenience this may cause.</p>
+                            <p>If you have any questions or need further clarification, please contact the store manager office.</p>
+                            <p>You can track your order status <a href="https://store.jkkniu.edu.bd" style="color: #007bff; text-decoration: none;">here</a>.</p>
+                        </div>
+                        
+                        <div style="background-color: #d32f2f; color: white; padding: 10px; text-align: center; border-radius: 4px;">
+                            <p style="margin: 0;">You may submit a new order with revised requirements if needed.</p>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 20px; color: #666; font-size: 12px;">
+                            <p>This is an automated message. Please do not reply to this email.</p>
+                            <p>&copy; ${new Date().getFullYear()} JKKNIU Store Management System</p>
+                        </div>
+                    </div>
+                `
             });
             if (!emailSent) {
                 throw new ApiError(500, "Failed to send email notification");
@@ -279,7 +337,7 @@ const regesterApproval = asyncHandler(async (req, res) => {
                     throw new ApiError(400, `Invalid alloted quantity for item ${item.id}`);
                 }
                 
-                if (updatedItem.manager_alloted_quantity > item.demand_quantity) {
+                if (updatedItem.register_alloted_quantity > item.demand_quantity) {
                     throw new ApiError(403, `Allotted quantity exceeds demand for item ${item.product_name}`);
                 }
 
@@ -343,7 +401,6 @@ const regesterApproval = asyncHandler(async (req, res) => {
             invoice.order_id = order._id;
             await invoice.save({ session });
             order.invoice_no = newInvoiceNo;
-
         }
 
         // Save order updates
@@ -362,6 +419,37 @@ const regesterApproval = asyncHandler(async (req, res) => {
             to: user.email,
             subject: "Store Order Approved",
             text: `Your order ${order.order_name} has been approved. You can collect your alloted items.`,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 5px;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h2 style="color: #008337; margin-bottom: 5px;">Order Approval Notification</h2>
+                        <p style="color: #666; font-size: 16px; margin-top: 0;">Jatiya Kabi Kazi Nazrul Islam University</p>
+                    </div>
+                    
+                    <div style="padding: 15px; background-color: #f9f9f9; border-radius: 4px; margin-bottom: 20px;">
+                        <h3 style="color: #333; margin-top: 0;">Order Details</h3>
+                        <p style="margin-bottom: 5px;"><strong>Order Name:</strong> ${order.order_name}</p>
+                        <p style="margin-bottom: 5px;"><strong>Department:</strong> ${order.dept_name}</p>
+                        <p style="margin-bottom: 5px;"><strong>Invoice Number:</strong> ${order.invoice_no}</p>
+                        <p style="margin-bottom: 5px;"><strong>Status:</strong> <span style="color: #008337; font-weight: bold;">Approved</span></p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <p>Your order has been approved and is ready for collection. Please visit the university store to collect your allotted items.</p>
+                        <p><strong>Important:</strong> To collect allocated items, please print this receipt and send an office assistant during working hours.</p>
+                        <p>You can <a href="https://store.jkkniu.edu.bd/" style="color: #007bff; text-decoration: none;">print your receipt here.</a></p>
+                    </div>
+                    
+                    <div style="background-color: #008337; color: white; padding: 10px; text-align: center; border-radius: 4px;">
+                        <p style="margin: 0;">If you have any query, please contact the store management office.</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px; color: #666; font-size: 12px;">
+                        <p>This is an automated message. Please do not reply to this email.</p>
+                        <p>&copy; ${new Date().getFullYear()} JKKNIU Store Management System</p>
+                    </div>
+                </div>
+            `
         });
         if (!emailSent) {
             throw new ApiError(500, "Failed to send email notification");

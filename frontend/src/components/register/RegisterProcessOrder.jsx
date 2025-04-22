@@ -77,7 +77,7 @@ const RegisterProcessOrder = () => {
       toast.success("Order Approved"); // Notify success
       navigate("/registrar"); // Navigate back to the registrar page
     } catch (error) {
-      console.log("error in register submit: ", error);
+      console.log("error in registrar submit: ", error);
       if (error.response?.status === 401) {
         toast.error("Order already Reviewed by store manager");
       }
@@ -119,7 +119,7 @@ const RegisterProcessOrder = () => {
       toast.success("Order Cancelled"); // Notify success
       navigate("/registrar"); // Navigate back to the registrar page
     } catch (error) {
-      console.log("error in register submit: ", error);
+      console.log("error in registrar submit: ", error);
       toast.error("Order Processing Failed"); // Notify failure
     } finally {
       setDecliningOrder(false); // Reset loading state regardless of outcome
@@ -137,7 +137,7 @@ const RegisterProcessOrder = () => {
         <span>Demand Quantity</span>
         <span>Manager Alloted</span>
         <span>Current Stock</span>
-        <span>Register Alloted</span>
+        <span>Registrar Alloted</span>
         <span>Comment</span>
       </div>
 
@@ -202,7 +202,7 @@ const RegisterProcessOrder = () => {
 
               {/* Mobile: Register Alloted Label */}
               <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
-                Register Alloted:
+                Registrar Alloted:
               </div>
               
               {/* Alloted Quantity (Editable in Process Mode) */}
@@ -217,6 +217,10 @@ const RegisterProcessOrder = () => {
                         const currentStock = products.find(p => p.name === item.product_name)?.current_stock || 0;
                         return Number(value) <= currentStock ||
                           "Cannot exceed current stock";
+                      },
+                      notExceedDemand: value => {
+                        return Number(value) <= item.demand_quantity ||
+                          "Cannot exceed demand quantity";
                       }
                     },
                     valueAsNumber: true,

@@ -58,7 +58,7 @@ const Preview = () => {
         <span>Comment</span>
         <span>Manager Alloted</span>
         <span>Manager Comment</span>
-        <span>Register Alloted</span>
+        <span>Registrar Alloted</span>
       </div>
 
       {/* Order items list */}
@@ -133,12 +133,12 @@ const Preview = () => {
                 className="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-center"
               />
               
-              {/* Mobile: Register Alloted Label */}
+              {/* Mobile: Registrar Alloted Label */}
               <div className="md:hidden text-left font-semibold text-gray-700 mt-2">
-                Register Alloted:
+                Registrar Alloted:
               </div>
 
-              {/* Register Alloted Quantity (Readonly) */}
+              {/* Registrar Alloted Quantity (Readonly) */}
               <input
                 type="number"
                 value={item.register_alloted_quantity}
@@ -177,7 +177,7 @@ const Preview = () => {
           </span>
         </div>
         <div className="flex flex-col items-center">
-          <span className="font-medium mb-1 text-sm sm:text-base">Register:</span>
+          <span className="font-medium mb-1 text-sm sm:text-base">Registrar:</span>
           <span
             className={`px-3 py-1 rounded-full text-black text-xs sm:text-sm inline-block ${
               order.register_approval === null

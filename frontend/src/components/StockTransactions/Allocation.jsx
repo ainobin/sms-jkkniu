@@ -54,8 +54,9 @@ const Allocation = () => {
                 withCredentials: true
             });
             
-            // Fix: Use response.data.message instead of response.data.data to access the transactions
-            setTransactions(response.data.message || []);
+            // Reverse the transactions to show newest first
+            const reversedTransactions = [...(response.data.message || [])].reverse();
+            setTransactions(reversedTransactions);
             setIsSearched(true);
             setLoading(false);
         } catch (error) {

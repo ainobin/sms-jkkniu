@@ -69,7 +69,7 @@ const RegisterHome = () => {
           generatePDF(order, regSign, manSign, deptSign); // Call the function with the order data
         toast.success("Receipt is downloading...");
         } catch (error) {
-          console.error("Error fetching register signature:", error.message);
+          console.error("Error fetching registrar signature:", error.message);
           toast.error("Error while fatching data, Please Refresh..")
           
         }

@@ -204,7 +204,7 @@ const Profile = () => {
         {/* Role */}
         <div>
           <p className="text-gray-600">Role</p>
-          <p className="text-lg">{user.role}</p>
+          <p className="text-lg">{user.role === "register" ? "Registrar" : user.role}</p>
         </div>
 
         {/* Signature */}

@@ -5,7 +5,7 @@ const generatePDF = (order, regSign, manSign, deptSign) => {
 
 
   console.log("Order Data:", order);
-  console.log("Register Signature:", regSign);
+  console.log("Registrar Signature:", regSign);
   console.log("Manager Signature:", manSign);
   console.log("Department Signature:", deptSign);
 
@@ -191,7 +191,7 @@ const generatePDF = (order, regSign, manSign, deptSign) => {
   doc.setFontSize(10);
   doc.text("Store Manager", margin + signatureWidth / 2, signaturesY + 5, { align: "center" });
   
-    // Register signature (right)
+    // Registrar signature (right)
     if (regSign) {
       addSignatureImage(
         regSign,
@@ -202,7 +202,7 @@ const generatePDF = (order, regSign, manSign, deptSign) => {
       );
     }
     doc.line(pageWidth - margin - signatureWidth, signaturesY, pageWidth - margin, signaturesY);
-    doc.text("Register", pageWidth - margin - signatureWidth / 2, signaturesY + 5, { align: "center" });
+    doc.text("Registrar", pageWidth - margin - signatureWidth / 2, signaturesY + 5, { align: "center" });
     
     // Second row of signatures - increase spacing
     signaturesY += 30; // Increased from 20 to 30
