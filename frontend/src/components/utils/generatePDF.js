@@ -26,13 +26,24 @@ const generatePDF = (order, regSign, manSign, deptSign) => {
   const logoHeight = 20;
 
   try {
-    // Use direct URL to logo instead of base64
-    const logoUrl = "/Jatiya_Kabi_Kazi_Nazrul_Islam_University_Logo.png";
+    // Use a relative URL path that works in browser context
+    const logoUrl = "/Jatiya_Kabi_Kazi_Nazrul_Islam_University_Logo.png"; // From public directory
+    // Or use import.meta.env.BASE_URL + "Jatiya_Kabi_Kazi_Nazrul_Islam_University_Logo.png" for Vite
     const logoX = (pageWidth - logoWidth) / 2;
     doc.addImage(logoUrl, "PNG", logoX, margin, logoWidth, logoHeight);
+
+    // Position text content after logo
+    let currentY = margin + logoHeight + 10;
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Jatiya Kabi Kazi Nazrul Islam University", pageWidth / 2, currentY, { align: "center" });
   } catch (error) {
     console.error("Error adding university logo:", error);
-    // Continue without the logo if there's an error
+    // If logo fails to load, continue with text only
+    let currentY = margin + 10;
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Jatiya Kabi Kazi Nazrul Islam University", pageWidth / 2, currentY, { align: "center" });
   }
 
   // University Name and Address
