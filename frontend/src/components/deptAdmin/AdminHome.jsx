@@ -193,7 +193,7 @@ const AdminHome = () => {
   return (
     <div className="flex flex-col items-center min-h-screen p-2 sm:p-6">
       {isPrinting && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
             <Loader2 size={48} className="animate-spin text-blue-600 mb-3" />
             <p className="text-lg font-medium">Generating Receipt...</p>
