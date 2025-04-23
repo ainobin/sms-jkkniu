@@ -11,16 +11,18 @@ const app = express();
 // Add Helmet early in middleware chain for security headers
 app.use(
     helmet({
-        contentSecurityPolicy: false, // since Caddy handles it
+        contentSecurityPolicy: false, // Caddy handles this
         crossOriginEmbedderPolicy: true,
-        crossOriginOpenerPolicy: { policy: "same-origin" },
-        crossOriginResourcePolicy: { policy: "same-origin" },
-        frameguard: { action: "sameorigin" },
-        referrerPolicy: { policy: "strict-origin-when-cross-origin" },
-        xssFilter: true,
+        crossOriginOpenerPolicy: true, // shorthand for { policy: "same-origin" }
+        crossOriginResourcePolicy: true, // shorthand for { policy: "same-origin" }
+        frameguard: true, // shorthand for { action: "sameorigin" }
+        referrerPolicy: true, // shorthand for { policy: "strict-origin-when-cross-origin" }
+        xssFilter: false, // deprecated, do NOT use this anymore
         hidePoweredBy: true,
+        hsts: false, // Caddy sets this with preload
     })
 );
+
 
 
 app.use(cors({
