@@ -76,7 +76,7 @@ const LoginPage = () => {
   return (
     <div className="relative z-10 flex items-center justify-center min-h-screen p-6">
       <div className="bg-white/90 backdrop-blur-md shadow-lg rounded-lg p-8 w-3xl max-w-md ">
-        <h2 className="text-2xl font-semibold text-center text-black mb-6">
+        <h2 className="text-2xl cursor-pointer font-semibold text-center text-black mb-6">
           Login
         </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

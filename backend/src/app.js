@@ -8,6 +8,11 @@ dotenv.config();
 
 const app = express();
 
+// Add Helmet early in middleware chain for security headers
+app.use(helmet({
+    contentSecurityPolicy: false, // Let Caddy handle CSP
+  }));
+
 app.use(cors({
     origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*', // Add fallback if undefined
     methods: ['GET', 'POST', 'PATCH'],

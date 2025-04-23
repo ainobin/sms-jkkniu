@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Printer } from 'lucide-react';
+import { Printer, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import UserContext from '../../context/UserContext';
 import { generatePDF } from '../index.js';
@@ -14,6 +14,7 @@ const AdminHome = () => {
   // State to store orders fetched from the API.
   const [pendingOrders, setPendingOrders] = useState([]); // Orders pending approval
   const [processdOrders, setProcessdOrders] = useState([]); // Orders already processed
+  const [printingOrderId, setPrintingOrderId] = useState(null); // Track which order is being printed
 
   // Fetch orders from the backend when the component mounts.
   useEffect(() => {
@@ -48,6 +49,7 @@ const AdminHome = () => {
   // Function to handle printing an order.
   const handlePrint = async (order) => {
     try {
+      setPrintingOrderId(order._id); // Set the printing order ID
       const registerSign = await axios.get(`${config.serverUrl}/users/getRegisterSign`, {
         withCredentials: true,
       });
@@ -68,7 +70,8 @@ const AdminHome = () => {
     } catch (error) {
       console.error("Error fetching register signature:", error.message);
       toast.error("Error while fatching data, Please Refresh..")
-
+    } finally {
+      setPrintingOrderId(null); // Reset the printing order ID
     }
   };
 
@@ -115,8 +118,14 @@ const AdminHome = () => {
               <button
                 onClick={() => handlePrint(order)}
                 className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center justify-center flex-1"
+                disabled={printingOrderId === order._id}
               >
-                <Printer size={16} className="mr-1" /> Print
+                {printingOrderId === order._id ? (
+                  <Loader2 size={16} className="animate-spin mr-1" />
+                ) : (
+                  <Printer size={16} className="mr-1" />
+                )}
+                Print
               </button>
             )}
           </div>
@@ -162,8 +171,13 @@ const AdminHome = () => {
               <button
                 onClick={() => handlePrint(order)}
                 className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2"
+                disabled={printingOrderId === order._id}
               >
-                <Printer size={18} />
+                {printingOrderId === order._id ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : (
+                  <Printer size={18} />
+                )}
               </button>
             )}
           </td>
