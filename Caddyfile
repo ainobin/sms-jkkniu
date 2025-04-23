@@ -15,12 +15,19 @@ store.jkkniu.edu.bd {
     }
     
     # Security headers
+    # header {
+    #     Strict-Transport-Security "max-age=31536000;"
+    #     X-Content-Type-Options "nosniff"
+    #     Referrer-Policy "strict-origin-when-cross-origin"
+    #     X-XSS-Protection "1; mode=block"
+    #     X-Frame-Options "DENY"
+    #     Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' https://store.jkkniu.edu.bd https://res.cloudinary.com;"
+    # }
+
+    # after helmet use:
     header {
-        Strict-Transport-Security "max-age=31536000;"
-        X-Content-Type-Options "nosniff"
-        Referrer-Policy "strict-origin-when-cross-origin"
-        X-XSS-Protection "1; mode=block"
-        X-Frame-Options "DENY"
-        Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' https://store.jkkniu.edu.bd https://res.cloudinary.com;"
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' https://store.jkkniu.edu.bd https://res.cloudinary.com;"
     }
+
 }

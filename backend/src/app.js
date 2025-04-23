@@ -9,9 +9,19 @@ dotenv.config();
 const app = express();
 
 // Add Helmet early in middleware chain for security headers
-app.use(helmet({
-    contentSecurityPolicy: false, // Let Caddy handle CSP
-  }));
+app.use(
+    helmet({
+        contentSecurityPolicy: false, // since Caddy handles it
+        crossOriginEmbedderPolicy: true,
+        crossOriginOpenerPolicy: { policy: "same-origin" },
+        crossOriginResourcePolicy: { policy: "same-origin" },
+        frameguard: { action: "sameorigin" },
+        referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+        xssFilter: true,
+        hidePoweredBy: true,
+    })
+);
+
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*', // Add fallback if undefined
@@ -23,7 +33,7 @@ app.use(express.json({
 
 }));
 app.use(express.urlencoded({
-    extended:true,
+    extended: true,
     limit: '16kb'
 }));
 app.use(express.static('public'));
@@ -42,5 +52,5 @@ app.use("/api/v1/products", productRoutes)
 app.use("/api/v1/orders", orderRoutes)
 app.use("/api/v1/transactions", transactionRoutes)
 
- 
-export {app}
+
+export { app }
