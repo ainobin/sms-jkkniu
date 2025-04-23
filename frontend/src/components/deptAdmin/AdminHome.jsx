@@ -15,6 +15,7 @@ const AdminHome = () => {
   const [pendingOrders, setPendingOrders] = useState([]); // Orders pending approval
   const [processdOrders, setProcessdOrders] = useState([]); // Orders already processed
   const [printingOrderId, setPrintingOrderId] = useState(null); // Track which order is being printed
+  const [isPrinting, setIsPrinting] = useState(false); // Control loading overlay
 
   // Fetch orders from the backend when the component mounts.
   useEffect(() => {
@@ -50,6 +51,7 @@ const AdminHome = () => {
   const handlePrint = async (order) => {
     try {
       setPrintingOrderId(order._id); // Set the printing order ID
+      setIsPrinting(true); // Show loading overlay
       const registerSign = await axios.get(`${config.serverUrl}/users/getRegisterSign`, {
         withCredentials: true,
       });
@@ -72,6 +74,7 @@ const AdminHome = () => {
       toast.error("Error while fatching data, Please Refresh..")
     } finally {
       setPrintingOrderId(null); // Reset the printing order ID
+      setIsPrinting(false); // Hide loading overlay
     }
   };
 
@@ -118,7 +121,7 @@ const AdminHome = () => {
               <button
                 onClick={() => handlePrint(order)}
                 className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center justify-center flex-1"
-                disabled={printingOrderId === order._id}
+                disabled={printingOrderId === order._id || isPrinting}
               >
                 {printingOrderId === order._id ? (
                   <Loader2 size={16} className="animate-spin mr-1" />
@@ -171,13 +174,14 @@ const AdminHome = () => {
               <button
                 onClick={() => handlePrint(order)}
                 className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2"
-                disabled={printingOrderId === order._id}
+                disabled={printingOrderId === order._id || isPrinting}
               >
                 {printingOrderId === order._id ? (
                   <Loader2 size={18} className="animate-spin" />
                 ) : (
                   <Printer size={18} />
                 )}
+                Print
               </button>
             )}
           </td>
@@ -188,6 +192,15 @@ const AdminHome = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen p-2 sm:p-6">
+      {isPrinting && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+            <Loader2 size={48} className="animate-spin text-blue-600 mb-3" />
+            <p className="text-lg font-medium">Generating Receipt...</p>
+            <p className="text-sm text-gray-500 mt-1">Please wait, this may take a moment</p>
+          </div>
+        </div>
+      )}
       <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-3 sm:p-6">
         <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-green-700">📋 Orders List</h1>
 
