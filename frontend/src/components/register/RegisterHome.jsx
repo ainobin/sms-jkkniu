@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import UserContext from '../../context/UserContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Printer } from 'lucide-react';
+import { Printer, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { generatePDF } from '../index.js';
 import config from '../../config/config.js';
@@ -15,6 +15,8 @@ const RegisterHome = () => {
     // State variables to manage orders
     const [pendingOrders, setPendingOrders] = useState([]); // Orders pending approval
     const [processdOrders, setProcessdOrders] = useState([]); // Orders already processed
+    const [printingOrderId, setPrintingOrderId] = useState(null); // Track which order is being printed
+    const [isPrinting, setIsPrinting] = useState(false); // Control loading overlay
 
     // Fetch orders from the API when the component mounts
     useEffect(() => {
@@ -51,6 +53,9 @@ const RegisterHome = () => {
     // Handle printing an order by generating a PDF
     const handlePrint = async (order) => {
         try {
+          setPrintingOrderId(order._id);
+          setIsPrinting(true);
+          
           const registerSign = await axios.get(`${config.serverUrl}/users/getRegisterSign`, {
             withCredentials: true, 
           });
@@ -67,11 +72,13 @@ const RegisterHome = () => {
           const deptSign = deptAdminSign.data.data;
     
           generatePDF(order, regSign, manSign, deptSign); // Call the function with the order data
-        toast.success("Receipt is downloading...");
+          toast.success("Receipt is downloading...");
         } catch (error) {
           console.error("Error fetching registrar signature:", error.message);
           toast.error("Error while fatching data, Please Refresh..")
-          
+        } finally {
+          setPrintingOrderId(null);
+          setIsPrinting(false);
         }
     };
     
@@ -131,8 +138,14 @@ const RegisterHome = () => {
                     <button
                         onClick={() => handlePrint(order)}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center justify-center flex-1 cursor-pointer"
+                        disabled={printingOrderId === order._id || isPrinting}
                     >
-                        <Printer size={16} className="mr-1" /> Print
+                        {printingOrderId === order._id ? (
+                          <Loader2 size={16} className="animate-spin mr-1" />
+                        ) : (
+                          <Printer size={16} className="mr-1" />
+                        )}
+                        Print
                     </button>
                 )}
             </div>
@@ -141,6 +154,15 @@ const RegisterHome = () => {
 
     return (
         <div className="flex flex-col items-center p-2 sm:p-6">
+            {isPrinting && (
+                <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+                        <Loader2 size={48} className="animate-spin text-blue-600 mb-3" />
+                        <p className="text-lg font-medium">Generating Receipt...</p>
+                        <p className="text-sm text-gray-500 mt-1">Please wait, this may take a moment</p>
+                    </div>
+                </div>
+            )}
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-3 sm:p-6">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-green-700">📋 Orders List</h1>
 
@@ -211,8 +233,14 @@ const RegisterHome = () => {
                                         <button
                                             onClick={() => handlePrint(order)}
                                             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2 cursor-pointer"
+                                            disabled={printingOrderId === order._id || isPrinting}
                                         >
-                                            <Printer size={18} />
+                                            {printingOrderId === order._id ? (
+                                              <Loader2 size={18} className="animate-spin" />
+                                            ) : (
+                                              <Printer size={18} />
+                                            )}
+                                            Print
                                         </button>
                                     )}
                                 </td>
@@ -275,8 +303,14 @@ const RegisterHome = () => {
                                         <button
                                             onClick={() => handlePrint(order)}
                                             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2 cursor-pointer"
+                                            disabled={printingOrderId === order._id || isPrinting}
                                         >
-                                            <Printer size={18} />
+                                            {printingOrderId === order._id ? (
+                                              <Loader2 size={18} className="animate-spin" />
+                                            ) : (
+                                              <Printer size={18} />
+                                            )}
+                                            Print
                                         </button>
                                     )}
                                 </td>
