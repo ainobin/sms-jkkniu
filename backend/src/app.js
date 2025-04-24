@@ -2,7 +2,6 @@ import express from 'express';
 import cors from "cors";
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import helmet from 'helmet';
 // Load environment variables from .env file
 dotenv.config();
 
