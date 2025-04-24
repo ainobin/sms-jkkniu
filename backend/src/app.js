@@ -8,27 +8,35 @@ dotenv.config();
 
 const app = express();
 
-// Add Helmet early in middleware chain for security headers
 app.use(
     helmet({
-        contentSecurityPolicy: false, // Caddy handles this
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                imgSrc: ["'self'", "data:", "blob:", "res.cloudinary.com"],
+                connectSrc: ["'self'", "https://store.jkkniu.edu.bd", "https://res.cloudinary.com"],
+                scriptSrc: ["'self'"], // Remove 'unsafe-inline' and 'unsafe-eval'
+                styleSrc: ["'self'"],
+            }
+        },
         crossOriginEmbedderPolicy: true,
-        crossOriginOpenerPolicy: { policy: "same-origin" }, // shorthand for { policy: "same-origin" }
-        crossOriginResourcePolicy: { policy: "same-origin" }, // shorthand for { policy: "same-origin" }
-        frameguard: { action: "sameorigin" }, // shorthand for { action: "sameorigin" }
-        referrerPolicy: { policy: "strict-origin-when-cross-origin" }, // shorthand for { policy: "strict-origin-when-cross-origin" }
+        crossOriginOpenerPolicy: { policy: "same-origin" },
+        crossOriginResourcePolicy: { policy: "same-origin" },
+        // Explicitly enable these headers that were missing
+        frameguard: { action: "sameorigin" }, // X-Frame-Options
+        referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+        xContentTypeOptions: true, // X-Content-Type-Options
         hidePoweredBy: true,
-        hsts: false, // Caddy sets this with preload
+        // Let Caddy handle HSTS
+        hsts: false,
     })
 );
-
-// Set remaining headers manually
+// Set Permissions-Policy manually - wasn't being set properly
 app.use((req, res, next) => {
-    res.setHeader("X-Content-Type-Options", "nosniff");
-    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    // Make sure this is properly passed through to client
+    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), interest-cohort=()");
     next();
-  });
-
+});
 
 
 app.use(cors({
