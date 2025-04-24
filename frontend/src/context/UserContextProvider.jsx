@@ -19,7 +19,7 @@ const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
 
     useEffect(() => {
         const verifyUser = async () => {
-            console.log("verifyUser: ");
+            // console.log("verifyUser: ");
             
             try {
                 const response = await axios.get(`${config.serverUrl}/users/me`, {
@@ -31,7 +31,7 @@ const UserContextProvider = ({ children }) => {  // ✅ Fixed function name
                     }
                 })
 
-                console.log(response)
+                // console.log(response)
 
                 if (response.status === 200 && response?.data) {
                     setUser({

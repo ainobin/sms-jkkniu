@@ -3,11 +3,20 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import config from "../config/config.js";
+import { Printer, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { generatePDF } from './index.js';
+import UserContext from "../context/UserContext";
 
 const Preview = () => {
   const location = useLocation();
   const { state } = location;
   const { order } = state || {};
+  const { user } = useContext(UserContext);
+  
+  // Add state for printing functionality
+  const [printingOrderId, setPrintingOrderId] = useState(null);
+  const [isPrinting, setIsPrinting] = useState(false);
   
   const { register, control, setValue } = useForm({
     defaultValues: {
@@ -35,9 +44,52 @@ const Preview = () => {
     fetchProducts();
   }, []);
 
+  // Function to handle printing an order
+  const handlePrint = async () => {
+    try {
+      setPrintingOrderId(order._id);
+      setIsPrinting(true);
+      
+      const registerSign = await axios.get(`${config.serverUrl}/users/getRegisterSign`, {
+        withCredentials: true,
+      });
+      const managerSign = await axios.get(`${config.serverUrl}/users/getManagerSign`, {
+        withCredentials: true,
+      });
+      
+      const deptAdminSign = await axios.get(`${config.serverUrl}/users/getDeptAdminSign/${order.dept_id}`, {
+        withCredentials: true,
+      });
+      
+      const regSign = registerSign.data.data;
+      const manSign = managerSign.data.data;
+      const deptSign = deptAdminSign.data.data;
+
+      generatePDF(order, regSign, manSign, deptSign);
+      toast.success("Receipt is downloading...");
+      
+    } catch (error) {
+      console.error("Error fetching signatures:", error.message);
+      toast.error("Error while fetching data. Please try again.");
+    } finally {
+      setPrintingOrderId(null);
+      setIsPrinting(false);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-3 sm:p-6 bg-white shadow-lg rounded-xl">
+      {/* Loading overlay */}
+      {isPrinting && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+            <Loader2 size={48} className="animate-spin text-blue-600 mb-3" />
+            <p className="text-lg font-medium">Generating Receipt...</p>
+            <p className="text-sm text-gray-500 mt-1">Please wait, this may take a moment</p>
+          </div>
+        </div>
+      )}
+      
       <h2 className="text-xl sm:text-2xl font-semibold text-center text-gray-800 mb-2 sm:mb-4">{order.order_name}</h2>
       <h2 className="text-lg sm:text-xl font-medium text-center text-gray-600 mb-3 sm:mb-4">🛠 Preview Order</h2>
       
@@ -196,6 +248,29 @@ const Preview = () => {
           </span>
         </div>
       </div>
+
+      {/* Print Button - Only show when order is approved by registrar */}
+      {order.register_approval === true && (
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={handlePrint}
+            disabled={isPrinting}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isPrinting ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <Printer size={18} />
+                Print Receipt
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -63,7 +63,7 @@ const ManagerHome = () => {
       const managerSign = await axios.get(`${config.serverUrl}/users/getManagerSign`, {
         withCredentials: true,
       });
-      console.log(order.dept_id);
+      // console.log(order.dept_id);
       
       const deptAdminSign = await axios.get(`${config.serverUrl}/users/getDeptAdminSign/${order.dept_id}`, {
         withCredentials: true,

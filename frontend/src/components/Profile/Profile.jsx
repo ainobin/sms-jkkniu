@@ -131,7 +131,7 @@ const Profile = () => {
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");
-        console.log("Response: ", response);
+        // console.log("Response: ", response);
       }
     } catch (error) {
       if (error.response?.status === 401) {
@@ -143,7 +143,7 @@ const Profile = () => {
         return;
       }
       toast.error("Password change failed");
-      console.log("Failed: ", error);
+      // console.log("Failed: ", error);
     } finally {
       setSavingPassword(false);
     }

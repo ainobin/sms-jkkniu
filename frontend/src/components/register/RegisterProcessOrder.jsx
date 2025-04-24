@@ -77,7 +77,7 @@ const RegisterProcessOrder = () => {
       toast.success("Order Approved"); // Notify success
       navigate("/registrar"); // Navigate back to the registrar page
     } catch (error) {
-      console.log("error in registrar submit: ", error);
+      // console.log("error in registrar submit: ", error);
       if (error.response?.status === 401) {
         toast.error("Order already Reviewed by store manager");
       }
@@ -119,7 +119,7 @@ const RegisterProcessOrder = () => {
       toast.success("Order Cancelled"); // Notify success
       navigate("/registrar"); // Navigate back to the registrar page
     } catch (error) {
-      console.log("error in registrar submit: ", error);
+      // console.log("error in registrar submit: ", error);
       toast.error("Order Processing Failed"); // Notify failure
     } finally {
       setDecliningOrder(false); // Reset loading state regardless of outcome
