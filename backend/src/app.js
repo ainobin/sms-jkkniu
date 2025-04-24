@@ -13,15 +13,21 @@ app.use(
     helmet({
         contentSecurityPolicy: false, // Caddy handles this
         crossOriginEmbedderPolicy: true,
-        crossOriginOpenerPolicy: true, // shorthand for { policy: "same-origin" }
-        crossOriginResourcePolicy: true, // shorthand for { policy: "same-origin" }
-        frameguard: true, // shorthand for { action: "sameorigin" }
-        referrerPolicy: true, // shorthand for { policy: "strict-origin-when-cross-origin" }
-        xssFilter: false, // deprecated, do NOT use this anymore
+        crossOriginOpenerPolicy: { policy: "same-origin" }, // shorthand for { policy: "same-origin" }
+        crossOriginResourcePolicy: { policy: "same-origin" }, // shorthand for { policy: "same-origin" }
+        frameguard: { action: "sameorigin" }, // shorthand for { action: "sameorigin" }
+        referrerPolicy: { policy: "strict-origin-when-cross-origin" }, // shorthand for { policy: "strict-origin-when-cross-origin" }
         hidePoweredBy: true,
         hsts: false, // Caddy sets this with preload
     })
 );
+
+// Set remaining headers manually
+app.use((req, res, next) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    next();
+  });
 
 
 
