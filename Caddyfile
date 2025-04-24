@@ -31,7 +31,8 @@ store.jkkniu.edu.bd {
         X-Content-Type-Options "nosniff"
         Referrer-Policy "strict-origin-when-cross-origin"
         X-Frame-Options "SAMEORIGIN"
-        Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+        # Update only this line in your existing header block
+        Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), clipboard-read=(), clipboard-write=(), display-capture=()"
         
         # Updated Content Security Policy allowing inline styles and scripts
         Content-Security-Policy "default-src 'self'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' https://store.jkkniu.edu.bd https://res.cloudinary.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
