@@ -8,37 +8,6 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-    helmet({
-        contentSecurityPolicy: {
-            directives: {
-                defaultSrc: ["'self'"],
-                imgSrc: ["'self'", "data:", "blob:", "res.cloudinary.com"],
-                connectSrc: ["'self'", "https://store.jkkniu.edu.bd", "https://res.cloudinary.com"],
-                scriptSrc: ["'self'"], // Remove 'unsafe-inline' and 'unsafe-eval'
-                styleSrc: ["'self'"],
-            }
-        },
-        crossOriginEmbedderPolicy: true,
-        crossOriginOpenerPolicy: { policy: "same-origin" },
-        crossOriginResourcePolicy: { policy: "same-origin" },
-        // Explicitly enable these headers that were missing
-        frameguard: { action: "sameorigin" }, // X-Frame-Options
-        referrerPolicy: { policy: "strict-origin-when-cross-origin" },
-        xContentTypeOptions: true, // X-Content-Type-Options
-        hidePoweredBy: true,
-        // Let Caddy handle HSTS
-        hsts: false,
-    })
-);
-// Set Permissions-Policy manually - wasn't being set properly
-app.use((req, res, next) => {
-    // Make sure this is properly passed through to client
-    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), interest-cohort=()");
-    next();
-});
-
-
 app.use(cors({
     origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*', // Add fallback if undefined
     methods: ['GET', 'POST', 'PATCH'],
