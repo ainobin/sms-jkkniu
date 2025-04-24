@@ -24,7 +24,7 @@ store.jkkniu.edu.bd {
     #     Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' https://store.jkkniu.edu.bd https://res.cloudinary.com;"
     # }
 
-    # after helmet use:
+    # Security headers with updated CSP to allow inline styles and scripts
     header {
         # Required security headers from scan
         Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
@@ -33,13 +33,13 @@ store.jkkniu.edu.bd {
         X-Frame-Options "SAMEORIGIN"
         Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
         
-        # Content Security Policy
-        Content-Security-Policy "default-src 'self'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' https://store.jkkniu.edu.bd https://res.cloudinary.com; script-src 'self'; style-src 'self';"
+        # Updated Content Security Policy allowing inline styles and scripts
+        Content-Security-Policy "default-src 'self'; img-src 'self' data: blob: res.cloudinary.com; connect-src 'self' https://store.jkkniu.edu.bd https://res.cloudinary.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
 
         # Additional security headers
         X-XSS-Protection "1; mode=block"
         
-        # Cross-Origin headers (replacing helmet's crossOrigin* settings)
+        # Cross-Origin headers
         Cross-Origin-Embedder-Policy "require-corp"
         Cross-Origin-Opener-Policy "same-origin"
         Cross-Origin-Resource-Policy "same-origin"
