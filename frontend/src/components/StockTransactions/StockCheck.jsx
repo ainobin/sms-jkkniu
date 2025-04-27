@@ -73,16 +73,16 @@ const StockCheck = () => {
       {/* Legend/Key for color coding */}
       <div className="mb-4 flex flex-wrap gap-4 justify-center">
         <div className="flex items-center">
-          <div className="w-4 h-4 bg-red-100 border border-red-200 rounded mr-2"></div>
-          <span className="text-sm text-gray-600">Out of Stock</span>
+          <div className="w-4 h-4 bg-red-100 border border-red-300 rounded mr-2"></div>
+          <span className="text-sm text-gray-700">Out of Stock</span>
         </div>
         <div className="flex items-center">
-          <div className="w-4 h-4 bg-amber-100 border border-amber-200 rounded mr-2"></div>
-          <span className="text-sm text-gray-600">Low Stock (Below Threshold)</span>
+          <div className="w-4 h-4 bg-yellow-100 border border-yellow-300 rounded mr-2"></div>
+          <span className="text-sm text-gray-700">Low Stock (Below Threshold)</span>
         </div>
         <div className="flex items-center">
-          <div className="w-4 h-4 bg-white border border-gray-200 rounded mr-2"></div>
-          <span className="text-sm text-gray-600">Normal Stock</span>
+          <div className="w-4 h-4 bg-emerald-50 border border-emerald-200 rounded mr-2"></div>
+          <span className="text-sm text-gray-700">Normal Stock</span>
         </div>
       </div>
 
@@ -111,20 +111,20 @@ const StockCheck = () => {
                     onClick={() => navigate(`transactions/${item.name}`, { state: { product: item } })}
                     className={`cursor-pointer transition-all duration-200 hover:shadow-md
                       ${item.current_stock === 0 
-                        ? "bg-gradient-to-r from-red-50 to-red-100 hover:from-red-100 hover:to-red-200" 
+                        ? "bg-red-50 hover:bg-red-100" 
                         : item.current_stock <= item.threshold_point 
-                          ? "bg-gradient-to-r from-amber-50 to-amber-100 hover:from-amber-100 hover:to-amber-200" 
-                          : "hover:bg-gray-50"
+                          ? "bg-yellow-50 hover:bg-yellow-100" 
+                          : "hover:bg-emerald-50"
                       }`}
                   >
-                    <td className="py-4 px-6 border-b border-gray-100 text-blue-700 font-medium text-center">{item.name}</td>
+                    <td className="py-4 px-6 border-b border-gray-100 text-gray-800 font-medium text-center">{item.name}</td>
                     <td className="py-4 px-6 border-b border-gray-100 text-center">
                       <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
                         item.current_stock === 0
-                          ? "bg-red-100 text-red-800"
+                          ? "bg-red-200 text-red-800 border border-red-300"
                           : item.current_stock <= item.threshold_point
-                            ? "bg-amber-100 text-amber-800"
-                            : "bg-green-100 text-green-800"
+                            ? "bg-yellow-200 text-yellow-800 border border-yellow-300"
+                            : "bg-emerald-100 text-emerald-800 border border-emerald-200"
                       }`}>
                         {item.current_stock}
                       </span>
@@ -133,7 +133,7 @@ const StockCheck = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="2" className="py-6 text-center text-gray-500 italic">No items found</td>
+                  <td colSpan="2" className="py-6 text-center text-gray-700 italic">No items found</td>
                 </tr>
               )}
             </tbody>
