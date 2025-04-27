@@ -85,6 +85,10 @@ const StockCheck = () => {
           <span className="text-sm text-gray-700">Normal Stock</span>
         </div>
       </div>
+      {/* Quick info text */}
+      <div className="mt-4 text-center text-sm text-gray-500">
+        Click on any item to view detailed transaction history
+      </div>
 
       {/* Stock Table */}
       {isLoading ? (
@@ -140,11 +144,6 @@ const StockCheck = () => {
           </table>
         </div>
       )}
-
-      {/* Quick info text */}
-      <div className="mt-4 text-center text-sm text-gray-500">
-        Click on any item to view detailed transaction history
-      </div>
     </div>
   );
 };
