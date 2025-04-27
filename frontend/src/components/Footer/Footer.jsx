@@ -42,14 +42,7 @@ const Footer = () => {
                 About
               </Link>
             </li>
-            {/* <li>
-              <Link
-                to="/developers"
-                className="text-gray-400 hover:text-green-300 transition text-sm"
-              >
-                Developers
-              </Link>
-            </li> */}
+
             <li>
               <Link
                 to="/contact"
@@ -57,6 +50,15 @@ const Footer = () => {
               >
                 Contact
               </Link>
+            </li>
+            {/* TODO: temporary for Registration via google form  have to remove later*/}
+            
+            <li>
+              <a href="https://forms.gle/c8CJdHf4DcPzubar9">
+                <span className="text-gray-400 hover:text-green-300 transition text-sm">
+                  Register Now
+                </span>
+              </a>
             </li>
           </ul>
         </div>

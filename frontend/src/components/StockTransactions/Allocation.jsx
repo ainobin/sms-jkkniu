@@ -18,12 +18,11 @@ const Allocation = () => {
                 const response = await axios.get(`${config.serverUrl}/users/all-dept`, {
                     withCredentials: true
                 });
-                
                 // Now we expect to receive department objects with _id and department name
                 const allDepts = response.data.data || [];
                 setDepartments(allDepts);
             } catch (error) {
-                console.error('Error fetching departments:', error);
+                // console.error('Error fetching departments:', error);
                 toast.error('Failed to load departments. Please try again.');
             }
         };
@@ -53,15 +52,15 @@ const Allocation = () => {
             const response = await axios.get(`${config.serverUrl}/transactions/dept/${encodeURIComponent(selectedDept)}`, {
                 withCredentials: true
             });
-            
+            toast.success('Transactions loaded successfully');
             // Reverse the transactions to show newest first
             const reversedTransactions = [...(response.data.message || [])].reverse();
             setTransactions(reversedTransactions);
             setIsSearched(true);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching transactions:', error);
-            toast.error(error.response?.data?.message || 'Failed to load transactions');
+            // console.error('Error fetching transactions:', error);
+            toast.error('Failed to load transactions');
             setTransactions([]);
             setIsSearched(true);
             setLoading(false);

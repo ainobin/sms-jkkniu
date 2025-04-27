@@ -53,7 +53,7 @@ const AboutDevelopers = () => {
       {/* Project Manager Section */}
       <div className="text-center mb-12">
         <h3 className="text-3xl font-bold text-gray-900 mb-6">
-          Project Manager
+          Project Supervisor
         </h3>
         <div className="bg-white/80 p-6 rounded-lg shadow-lg max-w-md mx-auto">
           <img
