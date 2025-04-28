@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set variables
-BACKUP_DIR="/var/www/sms-jkkniu/backup/data"
+BACKUP_DIR="./data"
 DB_NAME="sms"
 
 # Check if backup directory exists

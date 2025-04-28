@@ -2,7 +2,8 @@
 
 # Set variables
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-BACKUP_DIR="/var/www/sms-jkkniu/backup/data"
+# Use relative path instead of absolute path
+BACKUP_DIR="./data"
 DB_NAME="sms"
 BACKUP_FILE="mongodb_backup_${DB_NAME}_${TIMESTAMP}.gz"
 
