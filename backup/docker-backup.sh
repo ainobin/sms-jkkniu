@@ -2,10 +2,10 @@
 
 # Set variables
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-# Use relative path instead of absolute path
-BACKUP_DIR="./data"
+BACKUP_DIR="/var/opt/sms-jkkniu-backups/data"
 DB_NAME="sms"
 BACKUP_FILE="mongodb_backup_${DB_NAME}_${TIMESTAMP}.gz"
+MAX_BACKUPS=5
 
 # Create backup directory if it doesn't exist
 mkdir -p ${BACKUP_DIR}
@@ -40,7 +40,7 @@ else
 fi
 
 # Optional: Keep only the latest 5 backups to save space
-echo "Cleaning old backups, keeping latest 5..."
-ls -tp ${BACKUP_DIR}/mongodb_backup_*.gz | grep -v '/$' | tail -n +6 | xargs -I {} rm -- {} 2>/dev/null || true
+echo "Cleaning old backups, keeping latest ${MAX_BACKUPS}..."
+ls -tp ${BACKUP_DIR}/mongodb_backup_*.gz | grep -v '/$' | tail -n +$((MAX_BACKUPS + 1)) | xargs -I {} rm -- {} 2>/dev/null || true
 
 echo "Backup process completed."
