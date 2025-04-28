@@ -25,7 +25,11 @@ const RegistrationForm = () => {
     formData.append("designation", data.designation);
     formData.append("role", data.role);
     formData.append("password", data.password);
-    formData.append("signature", signature);
+    
+    // Only append signature if it exists
+    if (signature) {
+      formData.append("signature", signature);
+    }
 
     try {
       const response = await axios.post(`${config.serverUrl}/users/register`, formData,
@@ -171,13 +175,13 @@ const RegistrationForm = () => {
               {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
             </div>
 
-            {/* Signature Upload */}
+            {/* Signature Upload - Now Optional */}
             <div>
-              <label className="block text-gray-600 text-sm mb-1">Upload Signature:</label>
+              <label className="block text-gray-600 text-sm mb-1">Upload Signature (Optional):</label>
               <input
                 type="file"
                 accept="image/*"
-                {...register("signature", { required: "Signature is required" })}
+                {...register("signature")}
                 onChange={(e) => setSignature(e.target.files[0])}
                 className="w-full p-2 border border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
               />

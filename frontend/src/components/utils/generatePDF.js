@@ -207,42 +207,68 @@ const generatePDF = (order, regSign, manSign, deptSign) => {
   doc.setFontSize(10);
   doc.text("Store Manager", margin + signatureWidth / 2, signaturesY + 5, { align: "center" });
   
-    // Registrar signature (right)
-    if (regSign) {
-      addSignatureImage(
-        regSign,
-        pageWidth - margin - signatureWidth + (signatureWidth - signatureImgWidth) / 2,
-        signaturesY - signatureImgHeight - signatureYOffset,
-        signatureImgWidth,
-        signatureImgHeight
-      );
-    }
-    doc.line(pageWidth - margin - signatureWidth, signaturesY, pageWidth - margin, signaturesY);
-    doc.text("Registrar", pageWidth - margin - signatureWidth / 2, signaturesY + 5, { align: "center" });
-    
-    // Second row of signatures - increase spacing
-    signaturesY += 30; // Increased from 20 to 30
-    
-    // Calculate positions for 3 signatures in the second row
-    const sig2Width = 40;
-    const totalWidth = 3 * sig2Width;
-    // Rename this variable to avoid redeclaration
-    const signatureSpacing = pageWidth - 2 * margin - totalWidth; 
-    const gap2 = signatureSpacing / 4;
-    
-    // Office/Dept Head signature (left)
-    const sig1X = margin + gap2;
-    if (deptSign) {
-      addSignatureImage(
-        deptSign,
-        sig1X + (sig2Width - signatureImgWidth) / 2,
-        signaturesY - signatureImgHeight - signatureYOffset,
-        signatureImgWidth,
-        signatureImgHeight
-      );
-    }
-    doc.line(sig1X, signaturesY, sig1X + sig2Width, signaturesY);
-    doc.text("Office/Dept Head", sig1X + sig2Width / 2, signaturesY + 5, { align: "center" });
+  // Registrar signature (right)
+  // Check if regSign exists, otherwise use order.register_name
+  if (regSign) {
+    addSignatureImage(
+      regSign,
+      pageWidth - margin - signatureWidth + (signatureWidth - signatureImgWidth) / 2,
+      signaturesY - signatureImgHeight - signatureYOffset,
+      signatureImgWidth,
+      signatureImgHeight
+    );
+  } else if (order.register_name) {
+    // If no signature is available, add text with the name instead
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "italic");
+    doc.text(order.register_name, 
+      pageWidth - margin - signatureWidth / 2,
+      signaturesY - signatureImgHeight / 2, 
+      { align: "center" }
+    );
+  }
+
+  doc.line(pageWidth - margin - signatureWidth, signaturesY, pageWidth - margin, signaturesY);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text("Registrar", pageWidth - margin - signatureWidth / 2, signaturesY + 5, { align: "center" });
+  
+  // Second row of signatures - increase spacing
+  signaturesY += 30; // Increased from 20 to 30
+  
+  // Calculate positions for 3 signatures in the second row
+  const sig2Width = 40;
+  const totalWidth = 3 * sig2Width;
+  // Rename this variable to avoid redeclaration
+  const signatureSpacing = pageWidth - 2 * margin - totalWidth; 
+  const gap2 = signatureSpacing / 4;
+  
+  // Office/Dept Head signature (left)
+  const sig1X = margin + gap2;
+  // Check if deptSign exists, otherwise fall back to order.dept_admin_name
+  if (deptSign) {
+    addSignatureImage(
+      deptSign,
+      sig1X + (sig2Width - signatureImgWidth) / 2,
+      signaturesY - signatureImgHeight - signatureYOffset,
+      signatureImgWidth,
+      signatureImgHeight
+    );
+  } else if (order.dept_admin_name) {
+    // If no signature is available, add text with the name instead
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "italic");
+    doc.text(order.dept_admin_name, 
+      sig1X + sig2Width / 2,
+      signaturesY - signatureImgHeight / 2, 
+      { align: "center" }
+    );
+  }
+
+  doc.setFont("helvetica", "normal");
+  doc.line(sig1X, signaturesY, sig1X + sig2Width, signaturesY);
+  doc.setFontSize(10);
+  doc.text("Office/Dept Head", sig1X + sig2Width / 2, signaturesY + 5, { align: "center" });
 
   // Issuer Sign (center)
   const sig2X = sig1X + sig2Width + gap2;

@@ -37,8 +37,8 @@ const userSchema = new mongoose.Schema(
             required: true 
         },
         signature: { 
-            type: String, // coudianry url
-            required: true
+            type: String, // cloudinary url
+            default: "" // Make signature optional with empty string as default
         }
     },
     {

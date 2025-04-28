@@ -35,29 +35,19 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(409, "email or username or depertment already exists")
     }
 
-    // const signatureLocalPath = req.files?.signature[0]?.path;
-
-    // if (!signatureLocalPath) {
-    //     throw new ApiError(400, "Signature file is required")
-    // }
-    // const signature = await uploadOnCloudinary(signatureLocalPath)
-    // if (!signature) {
-    //     throw new ApiError(400, "Signature file is required")
-    // }
-
-    // version 2 of cloudinary upload:
+    // Get signature URL if file is provided, otherwise set to empty string
+    let secureSignatureUrl = "";
     const signatureFile = req.files?.signature?.[0];
-    if (!signatureFile) {
-        throw new ApiError(400, "Signature file is required")
-    }
+    
+    if (signatureFile) {
+        const signature = await uploadBufferToCloudinary(signatureFile.buffer, "signatures")
+        if (!signature) {
+            throw new ApiError(400, "Error uploading signature file")
+        }
 
-    const signature = await uploadBufferToCloudinary(signatureFile.buffer, "signatures")
-    if (!signature) {
-        throw new ApiError(400, "Error uploading signature file")
+        // Ensure the URL uses HTTPS instead of HTTP
+        secureSignatureUrl = signature.url.replace("http://", "https://");
     }
-
-    // Ensure the URL uses HTTPS instead of HTTP
-    const secureSignatureUrl = signature.url.replace("http://", "https://");
 
     const user = await User.create({
         username,
@@ -239,14 +229,6 @@ const changeSignature = asyncHandler(async (req, res) => {
     // update user signature
     // return res
 
-    // const signatureLocalPath = req.file?.path;
-    // if (!signatureLocalPath) {
-    //     throw new ApiError(400, "Signature file is required");
-    // }
-    // const signature = await uploadOnCloudinary(signatureLocalPath);
-
-
-    // version 2 of cloudinary upload:
     // First get the current user to find their existing signature
     const currentUser = await User.findById(req.user._id);
     if (!currentUser) {
