@@ -14,7 +14,7 @@ const DeptAdminPage = () => {
   const homePage = { label: "Depertment Admin", path: "/dept-admin/" };
 
   return (
-    <div className='bg-white/70 backdrop-blur-md shadow-lg rounded-lg p-6 mt-29 mb-5 min-h-screen'>
+    <div className='backdrop-blur-md shadow-lg rounded-lg p-6 mt-29 mb-5 min-h-screen'>
       {(user?.role === "deptAdmin") ? (<div>
         <Navbar menuItems={deptAdminMenu} homePage = {homePage}  />
       <div className="p-4">

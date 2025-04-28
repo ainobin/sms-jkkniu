@@ -16,7 +16,7 @@ const StoreManagerPage = () => {
   const homePage = { label: "Store Manager", path: "/store-manager/" };
 
   return (
-    <div className="bg-white/70 backdrop-blur-md shadow-lg rounded-lg p-6 mt-29 mb-5 min-h-screen">
+    <div className="backdrop-blur-md shadow-lg rounded-lg p-6 mt-29 mb-5 min-h-screen">
       {(user?.role === "manager") ? (
         <div>
           <Navbar menuItems={storeManagerMenu} homePage = {homePage} />

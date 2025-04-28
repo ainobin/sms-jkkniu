@@ -127,7 +127,7 @@ const StockCheck = () => {
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
-            Clear Filter
+            All Products
           </button>
         </div>
       </div>
@@ -136,19 +136,19 @@ const StockCheck = () => {
       <div className="mb-4 flex flex-wrap gap-4 justify-center">
         <div className="flex items-center">
           <div className="w-4 h-4 bg-red-100 border border-red-300 rounded mr-2"></div>
-          <span className="text-sm text-gray-700">Out of Stock</span>
+          <span className="text-sm font-bold text-black">Out of Stock</span>
         </div>
         <div className="flex items-center">
           <div className="w-4 h-4 bg-yellow-100 border border-yellow-300 rounded mr-2"></div>
-          <span className="text-sm text-gray-700">Low Stock (Below Threshold)</span>
+          <span className="text-sm font-bold text-black">Low Stock (Below Threshold)</span>
         </div>
         <div className="flex items-center">
           <div className="w-4 h-4 bg-emerald-50 border border-emerald-200 rounded mr-2"></div>
-          <span className="text-sm text-gray-700">Normal Stock</span>
+          <span className="text-sm font-bold text-black">Normal Stock</span>
         </div>
       </div>
       {/* Quick info text */}
-      <div className="mt-4 text-center text-sm text-gray-500">
+      <div className="mt-4 md-4 text-center font-bold text-sm text-gray-700">
         Click on any item to view detailed transaction history
       </div>
 
@@ -159,12 +159,12 @@ const StockCheck = () => {
         </div>
       ) : (
         <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
-          <table className="w-full border-collapse">
+          <table className="w-full border-collapse border border-gray-200">
             {/* Table Header */}
             <thead>
               <tr className="bg-gradient-to-r from-blue-50 to-green-50">
-                <th className="py-4 px-6 text-center text-gray-700 font-semibold border-b">Product Name</th>
-                <th className="py-4 px-6 text-center text-gray-700 font-semibold border-b">Current Stock</th>
+                <th className="py-4 px-6 text-center text-gray-700 font-semibold border border-gray-200">Product Name</th>
+                <th className="py-4 px-6 text-center text-gray-700 font-semibold border border-gray-200">Current Stock</th>
               </tr>
             </thead>
 
@@ -183,8 +183,8 @@ const StockCheck = () => {
                           : "hover:bg-emerald-50"
                       }`}
                   >
-                    <td className="py-4 px-6 border-b border-gray-100 text-gray-800 font-medium text-center">{item.name}</td>
-                    <td className="py-4 px-6 border-b border-gray-100 text-center">
+                    <td className="py-4 px-6 border border-gray-200 text-gray-800 font-medium text-center">{item.name}</td>
+                    <td className="py-4 px-6 border border-gray-200 text-center">
                       <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
                         item.current_stock === 0
                           ? "bg-red-200 text-red-800 border border-red-300"
@@ -199,7 +199,7 @@ const StockCheck = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="2" className="py-6 text-center text-gray-700 italic">No items found</td>
+                  <td colSpan="2" className="py-6 text-center text-gray-700 italic border border-gray-200">No items found</td>
                 </tr>
               )}
             </tbody>
