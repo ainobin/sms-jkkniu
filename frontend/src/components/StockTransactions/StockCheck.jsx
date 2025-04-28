@@ -17,10 +17,17 @@ const SearchIcon = () => (
   </svg>
 );
 
+const FilterIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+  </svg>
+);
+
 const StockCheck = () => {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState("all"); // "all", "outOfStock", "lowStock"
   const navigate = useNavigate();
 
   // Fetch stock data from API
@@ -41,10 +48,25 @@ const StockCheck = () => {
     fetchStock();
   }, []);
 
-  // Filter items based on search input
-  const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
-  );
+  // Filter items based on search input and selected filter
+  const filteredItems = items.filter((item) => {
+    // First apply the search filter
+    const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
+    
+    // Then apply the stock filter
+    if (filter === "outOfStock") {
+      return matchesSearch && item.current_stock === 0;
+    } else if (filter === "lowStock") {
+      return matchesSearch && (item.current_stock > 0 && item.current_stock <= item.threshold_point);
+    } else {
+      return matchesSearch;
+    }
+  });
+
+  // Handle filter button clicks
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -57,7 +79,7 @@ const StockCheck = () => {
       </div>
 
       {/* Search Bar with Icon */}
-      <div className="relative mb-6">
+      <div className="relative mb-4">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <SearchIcon />
         </div>
@@ -68,6 +90,46 @@ const StockCheck = () => {
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pl-10 p-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
         />
+      </div>
+
+      {/* Filter Buttons */}
+      <div className="mb-6 flex flex-wrap gap-2 justify-center">
+        <div className="flex items-center gap-2 bg-gray-100 p-2 rounded-lg">
+          <div className="flex items-center">
+            <FilterIcon />
+            <span className="ml-1 text-gray-700 font-medium">Filters:</span>
+          </div>
+          <button 
+            onClick={() => handleFilterChange("outOfStock")}
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
+              filter === "outOfStock" 
+                ? "bg-red-500 text-white shadow-sm" 
+                : "bg-red-100 text-red-800 hover:bg-red-200"
+            }`}
+          >
+            Out of Stock
+          </button>
+          <button 
+            onClick={() => handleFilterChange("lowStock")}
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
+              filter === "lowStock" 
+                ? "bg-yellow-500 text-white shadow-sm" 
+                : "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+            }`}
+          >
+            Low Stock
+          </button>
+          <button 
+            onClick={() => handleFilterChange("all")}
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
+              filter === "all" 
+                ? "bg-blue-500 text-white shadow-sm" 
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            Clear Filter
+          </button>
+        </div>
       </div>
 
       {/* Legend/Key for color coding */}

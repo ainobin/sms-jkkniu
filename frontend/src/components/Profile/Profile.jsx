@@ -27,6 +27,13 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  // Helper function to reset all states
+  const resetAllStates = () => {
+    setEditMode(false);
+    setChangePassword(false);
+    setChangeSignature(false);
+  };
+
   // Handle text input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -131,7 +138,6 @@ const Profile = () => {
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");
-        // console.log("Response: ", response);
       }
     } catch (error) {
       if (error.response?.status === 401) {
@@ -143,7 +149,6 @@ const Profile = () => {
         return;
       }
       toast.error("Password change failed");
-      // console.log("Failed: ", error);
     } finally {
       setSavingPassword(false);
     }
@@ -220,74 +225,86 @@ const Profile = () => {
 
       {/* Edit Buttons */}
       <div className="mt-6 flex flex-wrap gap-4">
-        {/* Edit Name & Email */}
-        {!editMode ? (
-          <button
-            onClick={() => setEditMode(true)}
-            className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded"
-          >
-            Edit Name & Email
-          </button>
-        ) : (
+        {/* Show buttons only when no edit option is active */}
+        {!editMode && !changePassword && !changeSignature ? (
           <>
             <button
-              onClick={handleSave}
-              disabled={savingProfile}
-              className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center"
+              onClick={() => {
+                resetAllStates();
+                setEditMode(true);
+              }}
+              className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded"
             >
-              {savingProfile ? (
-                <>
-                  <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Saving...
-                </>
-              ) : (
-                "Save Changes"
-              )}
+              Edit Name & Email
             </button>
+
             <button
-              onClick={() => setEditMode(false)}
-              disabled={savingProfile}
-              className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
+              onClick={() => {
+                resetAllStates();
+                setChangePassword(true);
+              }}
+              className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded"
             >
-              Cancel
+              Change Password
+            </button>
+
+            <button
+              onClick={() => {
+                resetAllStates();
+                setChangeSignature(true);
+              }}
+              className="bg-purple-500 cursor-pointer text-white px-4 py-2 rounded"
+            >
+              Change Signature
             </button>
           </>
+        ) : (
+          // When in edit mode, only show relevant action buttons
+          editMode ? (
+            <>
+              <button
+                onClick={handleSave}
+                disabled={savingProfile}
+                className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center"
+              >
+                {savingProfile ? (
+                  <>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Saving...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
+              </button>
+              <button
+                onClick={resetAllStates}
+                disabled={savingProfile}
+                className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+            </>
+          ) : null
         )}
-
-        {/* Change Password */}
-        <button
-          onClick={() => setChangePassword(true)}
-          className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded"
-        >
-          Change Password
-        </button>
-
-        {/* Change Signature */}
-        <button
-          onClick={() => setChangeSignature(true)}
-          className="bg-purple-500 cursor-pointer text-white px-4 py-2 rounded"
-        >
-          Change Signature
-        </button>
       </div>
 
       {/* Change Password Modal */}
@@ -350,7 +367,7 @@ const Profile = () => {
               )}
             </button>
             <button
-              onClick={() => setChangePassword(false)}
+              onClick={resetAllStates}
               disabled={savingPassword}
               className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
             >
@@ -438,7 +455,7 @@ const Profile = () => {
               )}
             </button>
             <button
-              onClick={() => setChangeSignature(false)}
+              onClick={resetAllStates}
               disabled={savingSignature}
               className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
             >
