@@ -69,17 +69,17 @@ const StockCheck = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="w-full max-w-4xl mx-auto p-3 sm:p-6">
       {/* Header */}
-      <div className="flex items-center justify-center mb-6">
-        <div className="bg-gradient-to-r from-blue-500 to-green-500 p-3 rounded-full mr-3 shadow-lg">
+      <div className="flex items-center justify-center mb-4 sm:mb-6">
+        <div className="bg-gradient-to-r from-blue-500 to-green-500 p-2 sm:p-3 rounded-full mr-2 sm:mr-3 shadow-lg">
           <BoxIcon />
         </div>
-        <h2 className="text-3xl font-bold text-gray-800">Stock Check</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Stock Check</h2>
       </div>
 
       {/* Search Bar with Icon */}
-      <div className="relative mb-4">
+      <div className="relative mb-3 sm:mb-4">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <SearchIcon />
         </div>
@@ -88,122 +88,127 @@ const StockCheck = () => {
           placeholder="Search for an item..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 p-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+          className="w-full pl-10 p-2 sm:p-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base"
         />
       </div>
 
-      {/* Filter Buttons */}
-      <div className="mb-6 flex flex-wrap gap-2 justify-center">
-        <div className="flex items-center gap-2 bg-gray-100 p-2 rounded-lg">
-          <div className="flex items-center">
+      {/* Filter Buttons - Stacked on mobile, inline on desktop */}
+      <div className="mb-4 sm:mb-6 flex flex-wrap gap-2 justify-center">
+        <div className="flex flex-col sm:flex-row items-center gap-2 bg-gray-100 p-2 rounded-lg w-full sm:w-auto">
+          <div className="flex items-center mb-2 sm:mb-0">
             <FilterIcon />
             <span className="ml-1 text-gray-700 font-medium">Filters:</span>
           </div>
-          <button 
-            onClick={() => handleFilterChange("outOfStock")}
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
-              filter === "outOfStock" 
-                ? "bg-red-500 text-white shadow-sm" 
-                : "bg-red-100 text-red-800 hover:bg-red-200"
-            }`}
-          >
-            Out of Stock
-          </button>
-          <button 
-            onClick={() => handleFilterChange("lowStock")}
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
-              filter === "lowStock" 
-                ? "bg-yellow-500 text-white shadow-sm" 
-                : "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
-            }`}
-          >
-            Low Stock
-          </button>
-          <button 
-            onClick={() => handleFilterChange("all")}
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
-              filter === "all" 
-                ? "bg-blue-500 text-white shadow-sm" 
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
-          >
-            All Products
-          </button>
+          <div className="flex flex-wrap gap-1 sm:gap-2 justify-center w-full sm:w-auto">
+            <button 
+              onClick={() => handleFilterChange("outOfStock")}
+              className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                filter === "outOfStock" 
+                  ? "bg-red-500 text-white shadow-sm" 
+                  : "bg-red-100 text-red-800 hover:bg-red-200"
+              }`}
+            >
+              Out of Stock
+            </button>
+            <button 
+              onClick={() => handleFilterChange("lowStock")}
+              className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                filter === "lowStock" 
+                  ? "bg-yellow-500 text-white shadow-sm" 
+                  : "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+              }`}
+            >
+              Low Stock
+            </button>
+            <button 
+              onClick={() => handleFilterChange("all")}
+              className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                filter === "all" 
+                  ? "bg-blue-500 text-white shadow-sm" 
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              All Products
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Legend/Key for color coding */}
-      <div className="mb-4 flex flex-wrap gap-4 justify-center">
+      {/* Legend/Key for color coding - Better layout for mobile */}
+      <div className="mb-3 sm:mb-4 grid grid-cols-1 sm:flex sm:flex-wrap gap-2 sm:gap-4 justify-center">
         <div className="flex items-center">
-          <div className="w-4 h-4 bg-red-100 border border-red-300 rounded mr-2"></div>
-          <span className="text-sm font-bold text-black">Out of Stock</span>
+          <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-100 border border-red-300 rounded mr-1 sm:mr-2"></div>
+          <span className="text-xs sm:text-sm font-bold text-black">Out of Stock</span>
         </div>
         <div className="flex items-center">
-          <div className="w-4 h-4 bg-yellow-100 border border-yellow-300 rounded mr-2"></div>
-          <span className="text-sm font-bold text-black">Low Stock (Below Threshold)</span>
+          <div className="w-3 h-3 sm:w-4 sm:h-4 bg-yellow-100 border border-yellow-300 rounded mr-1 sm:mr-2"></div>
+          <span className="text-xs sm:text-sm font-bold text-black">Low Stock (Below Threshold)</span>
         </div>
         <div className="flex items-center">
-          <div className="w-4 h-4 bg-emerald-50 border border-emerald-200 rounded mr-2"></div>
-          <span className="text-sm font-bold text-black">Normal Stock</span>
+          <div className="w-3 h-3 sm:w-4 sm:h-4 bg-emerald-50 border border-emerald-200 rounded mr-1 sm:mr-2"></div>
+          <span className="text-xs sm:text-sm font-bold text-black">Normal Stock</span>
         </div>
       </div>
+      
       {/* Quick info text */}
-      <div className="mt-4 md-4 text-center font-bold text-sm text-gray-700">
+      <div className="mt-2 mb-3 text-center font-bold text-xs sm:text-sm text-gray-700">
         Click on any item to view detailed transaction history
       </div>
 
-      {/* Stock Table */}
+      {/* Stock Table - Responsive design */}
       {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <div className="flex justify-center items-center h-40 sm:h-64">
+          <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-500"></div>
         </div>
       ) : (
         <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
-          <table className="w-full border-collapse border border-gray-200">
-            {/* Table Header */}
-            <thead>
-              <tr className="bg-gradient-to-r from-blue-50 to-green-50">
-                <th className="py-4 px-6 text-center text-gray-700 font-semibold border border-gray-200">Product Name</th>
-                <th className="py-4 px-6 text-center text-gray-700 font-semibold border border-gray-200">Current Stock</th>
-              </tr>
-            </thead>
-
-            {/* Table Body */}
-            <tbody>
-              {filteredItems.length > 0 ? (
-                filteredItems.map((item) => (
-                  <tr
-                    key={item._id}
-                    onClick={() => navigate(`transactions/${item.name}`, { state: { product: item } })}
-                    className={`cursor-pointer transition-all duration-200 hover:shadow-md
-                      ${item.current_stock === 0 
-                        ? "bg-red-50 hover:bg-red-100" 
-                        : item.current_stock <= item.threshold_point 
-                          ? "bg-yellow-50 hover:bg-yellow-100" 
-                          : "hover:bg-emerald-50"
-                      }`}
-                  >
-                    <td className="py-4 px-6 border border-gray-200 text-gray-800 font-medium text-center">{item.name}</td>
-                    <td className="py-4 px-6 border border-gray-200 text-center">
-                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                        item.current_stock === 0
-                          ? "bg-red-200 text-red-800 border border-red-300"
-                          : item.current_stock <= item.threshold_point
-                            ? "bg-yellow-200 text-yellow-800 border border-yellow-300"
-                            : "bg-emerald-100 text-emerald-800 border border-emerald-200"
-                      }`}>
-                        {item.current_stock}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="2" className="py-6 text-center text-gray-700 italic border border-gray-200">No items found</td>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-200">
+              {/* Table Header */}
+              <thead>
+                <tr className="bg-gradient-to-r from-blue-50 to-green-50">
+                  <th className="py-3 sm:py-4 px-2 sm:px-6 text-center text-gray-700 text-xs sm:text-sm font-semibold border border-gray-200">Product Name</th>
+                  <th className="py-3 sm:py-4 px-2 sm:px-6 text-center text-gray-700 text-xs sm:text-sm font-semibold border border-gray-200">Current Stock</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+
+              {/* Table Body */}
+              <tbody>
+                {filteredItems.length > 0 ? (
+                  filteredItems.map((item) => (
+                    <tr
+                      key={item._id}
+                      onClick={() => navigate(`transactions/${item.name}`, { state: { product: item } })}
+                      className={`cursor-pointer transition-all duration-200 hover:shadow-md
+                        ${item.current_stock === 0 
+                          ? "bg-red-50 hover:bg-red-100" 
+                          : item.current_stock <= item.threshold_point 
+                            ? "bg-yellow-50 hover:bg-yellow-100" 
+                            : "hover:bg-emerald-50"
+                        }`}
+                    >
+                      <td className="py-2 sm:py-4 px-2 sm:px-6 border border-gray-200 text-gray-800 text-xs sm:text-sm font-medium text-center">{item.name}</td>
+                      <td className="py-2 sm:py-4 px-2 sm:px-6 border border-gray-200 text-center">
+                        <span className={`inline-block px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm font-medium ${
+                          item.current_stock === 0
+                            ? "bg-red-200 text-red-800 border border-red-300"
+                            : item.current_stock <= item.threshold_point
+                              ? "bg-yellow-200 text-yellow-800 border border-yellow-300"
+                              : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                        }`}>
+                          {item.current_stock}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="2" className="py-4 sm:py-6 text-center text-gray-700 text-xs sm:text-sm italic border border-gray-200">No items found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

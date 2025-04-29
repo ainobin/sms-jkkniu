@@ -157,74 +157,74 @@ const Profile = () => {
   return user == null ? (
     <h3 className="text-center">Loading...</h3>
   ) : (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-[#008337] mb-4">Profile</h2>
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md w-full mx-auto max-w-3xl">
+      <h2 className="text-xl sm:text-2xl font-bold text-[#008337] mb-4">Profile</h2>
 
       {/* Profile Details */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         {/* Full Name */}
-        <div>
-          <p className="text-gray-600">Full Name</p>
+        <div className="mb-2 sm:mb-0">
+          <p className="text-gray-600 text-sm">Full Name</p>
           {editMode ? (
             <input
               type="text"
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
-              className="border rounded p-2 w-full"
+              className="border rounded p-2 w-full mt-1 text-base"
             />
           ) : (
-            <p className="text-lg">{user.fullName}</p>
+            <p className="text-base sm:text-lg">{user.fullName}</p>
           )}
         </div>
 
         {/* Email */}
-        <div>
-          <p className="text-gray-600">Email</p>
+        <div className="mb-2 sm:mb-0">
+          <p className="text-gray-600 text-sm">Email</p>
           {editMode ? (
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="border rounded p-2 w-full"
+              className="border rounded p-2 w-full mt-1 text-base"
             />
           ) : (
-            <p className="text-lg">{user.email}</p>
+            <p className="text-base sm:text-lg break-words">{user.email}</p>
           )}
         </div>
 
         {/* Department */}
-        <div>
-          <p className="text-gray-600">Department</p>
-          <p className="text-lg">{user.department}</p>
+        <div className="mb-2 sm:mb-0">
+          <p className="text-gray-600 text-sm">Department</p>
+          <p className="text-base sm:text-lg">{user.department}</p>
         </div>
 
         {/* Designation */}
-        <div>
-          <p className="text-gray-600">Designation</p>
-          <p className="text-lg">{user.designation}</p>
+        <div className="mb-2 sm:mb-0">
+          <p className="text-gray-600 text-sm">Designation</p>
+          <p className="text-base sm:text-lg">{user.designation}</p>
         </div>
 
         {/* Role */}
-        <div>
-          <p className="text-gray-600">Role</p>
-          <p className="text-lg">{user.role === "register" ? "Registrar" : user.role}</p>
+        <div className="mb-2 sm:mb-0">
+          <p className="text-gray-600 text-sm">Role</p>
+          <p className="text-base sm:text-lg">{user.role === "register" ? "Registrar" : user.role}</p>
         </div>
 
         {/* Signature */}
-        <div>
-          <p className="text-gray-600">Signature</p>
+        <div className="mb-2 sm:mb-0">
+          <p className="text-gray-600 text-sm">Signature</p>
           <img
             src={user.signature}
             alt="Signature"
-            className="w-32 h-20 border rounded"
+            className="w-24 h-16 sm:w-32 sm:h-20 border rounded object-contain"
           />
         </div>
       </div>
 
       {/* Edit Buttons */}
-      <div className="mt-6 flex flex-wrap gap-4">
+      <div className="mt-5 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
         {/* Show buttons only when no edit option is active */}
         {!editMode && !changePassword && !changeSignature ? (
           <>
@@ -233,7 +233,7 @@ const Profile = () => {
                 resetAllStates();
                 setEditMode(true);
               }}
-              className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded"
+              className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
             >
               Edit Name & Email
             </button>
@@ -243,7 +243,7 @@ const Profile = () => {
                 resetAllStates();
                 setChangePassword(true);
               }}
-              className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded"
+              className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
             >
               Change Password
             </button>
@@ -253,7 +253,7 @@ const Profile = () => {
                 resetAllStates();
                 setChangeSignature(true);
               }}
-              className="bg-purple-500 cursor-pointer text-white px-4 py-2 rounded"
+              className="bg-purple-500 cursor-pointer text-white px-4 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
             >
               Change Signature
             </button>
@@ -261,11 +261,11 @@ const Profile = () => {
         ) : (
           // When in edit mode, only show relevant action buttons
           editMode ? (
-            <>
+            <div className="flex flex-col sm:flex-row gap-3 w-full">
               <button
                 onClick={handleSave}
                 disabled={savingProfile}
-                className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center"
+                className="bg-[#008337] cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center text-sm sm:text-base w-full sm:w-auto"
               >
                 {savingProfile ? (
                   <>
@@ -298,45 +298,45 @@ const Profile = () => {
               <button
                 onClick={resetAllStates}
                 disabled={savingProfile}
-                className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
+                className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
               >
                 Cancel
               </button>
-            </>
+            </div>
           ) : null
         )}
       </div>
 
       {/* Change Password Modal */}
       {changePassword && (
-        <div className="mt-6 p-4 border rounded-lg bg-gray-100">
+        <div className="mt-5 p-3 sm:p-4 border rounded-lg bg-gray-100">
           <input
             type="password"
             placeholder="Old Password"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
-            className="border rounded p-2 w-full mt-2 mb-5"
+            className="border rounded p-2 w-full mt-2 mb-4 text-sm sm:text-base"
           />
-          <h3 className="text-lg font-semibold">Change Password</h3>
+          <h3 className="text-base sm:text-lg font-semibold">Change Password</h3>
           <input
             type="password"
             placeholder="New Password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="border rounded p-2 w-full mt-2"
+            className="border rounded p-2 w-full mt-2 text-sm sm:text-base"
           />
           <input
             type="password"
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="border rounded p-2 w-full mt-2"
+            className="border rounded p-2 w-full mt-2 text-sm sm:text-base"
           />
-          <div className="mt-4 flex gap-2">
+          <div className="mt-4 flex flex-col sm:flex-row gap-2">
             <button
               onClick={handleChangePassword}
               disabled={savingPassword}
-              className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center"
+              className="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center text-sm sm:text-base w-full sm:w-auto"
             >
               {savingPassword ? (
                 <>
@@ -369,7 +369,7 @@ const Profile = () => {
             <button
               onClick={resetAllStates}
               disabled={savingPassword}
-              className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
+              className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
             >
               Cancel
             </button>
@@ -379,22 +379,22 @@ const Profile = () => {
 
       {/* Change Signature Modal */}
       {changeSignature && (
-        <div className="mt-6 p-4 border rounded-lg bg-gray-100">
-          <h3 className="text-lg font-semibold">Change Signature</h3>
+        <div className="mt-5 p-3 sm:p-4 border rounded-lg bg-gray-100">
+          <h3 className="text-base sm:text-lg font-semibold">Change Signature</h3>
           
           <div className="mt-3">
             <label htmlFor="signature-upload" className="block text-sm font-medium text-gray-700 mb-2">
               Select an image file for your signature
             </label>
             
-            <div className="flex items-center">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <label 
                 htmlFor="signature-upload" 
-                className="cursor-pointer px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                className="cursor-pointer px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm sm:text-base text-center sm:text-left w-full sm:w-auto"
               >
                 Choose File
               </label>
-              <span className="ml-3 text-sm text-gray-500">
+              <span className="text-sm text-gray-500 truncate">
                 {signature ? signature.name : "No file selected"}
               </span>
             </div>
@@ -415,16 +415,16 @@ const Profile = () => {
               <img
                 src={preview}
                 alt="New Signature Preview"
-                className="w-32 h-20 border rounded object-contain bg-white"
+                className="w-24 h-16 sm:w-32 sm:h-20 border rounded object-contain bg-white"
               />
             </div>
           )}
           
-          <div className="mt-4 flex gap-2">
+          <div className="mt-4 flex flex-col sm:flex-row gap-2">
             <button
               onClick={handleSaveSignature}
               disabled={savingSignature}
-              className="bg-purple-500 cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center"
+              className="bg-purple-500 cursor-pointer text-white px-4 py-2 rounded flex items-center justify-center text-sm sm:text-base w-full sm:w-auto"
             >
               {savingSignature ? (
                 <>
@@ -457,7 +457,7 @@ const Profile = () => {
             <button
               onClick={resetAllStates}
               disabled={savingSignature}
-              className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
+              className="bg-gray-500 cursor-pointer text-white px-4 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
             >
               Cancel
             </button>
