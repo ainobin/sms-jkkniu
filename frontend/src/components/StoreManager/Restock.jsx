@@ -18,7 +18,11 @@ const Restock = () => {
         const response = await axios.get(`${config.serverUrl}/products/getAllProducts`, {
           withCredentials: true, // Send cookies along with the request
         });
-        setProducts(response.data.message); // Store fetched products in state
+        // Sort products alphabetically by name before storing them in state
+        const sortedProducts = [...response.data.message].sort((a, b) => 
+          a.name.localeCompare(b.name)
+        );
+        setProducts(sortedProducts); // Store sorted products in state
       } catch (error) {
         console.error("Error fetching products:", error);
       }

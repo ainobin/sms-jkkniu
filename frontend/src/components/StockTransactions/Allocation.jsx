@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import config from '../../config/config.js';
 import toast from 'react-hot-toast';
+import { Printer, Loader2 } from 'lucide-react'; // Import the icons
+import { generateTransactionPDF } from '../index.js'; // Import the PDF generator
 
 const Allocation = () => {
     const [departments, setDepartments] = useState([]);
@@ -10,6 +12,7 @@ const Allocation = () => {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isSearched, setIsSearched] = useState(false);
+    const [isPrinting, setIsPrinting] = useState(false); // New state for print loading indicator
 
     // Fetch all departments on component mount
     useEffect(() => {
@@ -34,7 +37,7 @@ const Allocation = () => {
     const handleDeptChange = (e) => {
         const deptId = e.target.value;
         setSelectedDept(deptId);
-        
+
         // Find the selected department name for display purposes
         const selectedDept = departments.find(dept => dept._id === deptId);
         setSelectedDeptName(selectedDept ? selectedDept.department : '');
@@ -67,19 +70,39 @@ const Allocation = () => {
         }
     };
 
+    // Handle PDF generation and printing
+    const handlePrint = () => {
+        if (transactions.length === 0) {
+            toast.error('No transactions to print');
+            return;
+        }
+
+        try {
+            setIsPrinting(true);
+            // Generate PDF with transactions data and department name
+            generateTransactionPDF(transactions, selectedDeptName);
+            toast.success('Transaction report is downloading...');
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            toast.error('Failed to generate PDF. Please try again.');
+        } finally {
+            setIsPrinting(false);
+        }
+    };
+
     return (
         <div className="px-3 sm:px-6 py-4 max-w-6xl mx-auto">
             <h1 className="text-xl sm:text-3xl text-center my-3 sm:my-5 font-semibold text-green-700">
                 Department Allocation Transactions
             </h1>
-            
+
             {/* Department Selection */}
             <div className="mb-6 bg-white shadow-md rounded-lg p-4 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <div className="w-full sm:w-1/2">
                     <label htmlFor="department" className="block text-gray-700 font-medium mb-2">
                         Select Department
                     </label>
-                    <select 
+                    <select
                         id="department"
                         value={selectedDept}
                         onChange={handleDeptChange}
@@ -93,7 +116,7 @@ const Allocation = () => {
                         ))}
                     </select>
                 </div>
-                
+
                 <div className="w-full sm:w-auto sm:self-end">
                     <button
                         onClick={handleSearch}
@@ -108,14 +131,31 @@ const Allocation = () => {
                     </button>
                 </div>
             </div>
-            
+
+            {/* Print Button */}
+            {transactions.length > 0 && (
+                <div className="mt-6 text-right">
+                    <button
+                        onClick={handlePrint}
+                        disabled={isPrinting}
+                        className={`px-6 py-3 rounded-md text-white font-medium text-center
+                            ${isPrinting
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-blue-700 hover:bg-blue-800'
+                            } transition duration-200`}
+                    >
+                        {isPrinting ? 'Printing...' : 'Print Transactions'}
+                    </button>
+                </div>
+            )}
+
             {/* Transactions Table */}
             {isSearched && (
-                <div className="bg-white shadow-md rounded-lg overflow-hidden">
+                <div className="bg-white mt-5 shadow-md rounded-lg overflow-hidden">
                     <h2 className="text-lg sm:text-xl p-4 bg-gray-50 border-b font-semibold text-center">
                         {selectedDeptName} Transactions
                     </h2>
-                    
+
                     {transactions.length > 0 ? (
                         <>
                             {/* Desktop View - Table */}
@@ -144,8 +184,8 @@ const Allocation = () => {
                                                 <td className="p-3 border-b text-center">{item.product_name}</td>
                                                 <td className="p-3 border-b text-center">
                                                     <span className={`px-3 py-1 text-white font-medium rounded-full 
-                                                        ${item.transaction_type === "in" 
-                                                            ? "bg-green-500" 
+                                                        ${item.transaction_type === "in"
+                                                            ? "bg-green-500"
                                                             : "bg-red-500"
                                                         }`}
                                                     >
@@ -179,11 +219,11 @@ const Allocation = () => {
                                                 {item.transaction_type.toUpperCase()}
                                             </span>
                                         </div>
-                                        
+
                                         <div className="mb-2">
                                             <span className="font-medium text-gray-700">Product:</span> {item.product_name}
                                         </div>
-                                        
+
                                         <div className="grid grid-cols-3 gap-2 mt-3 text-sm bg-gray-50 p-2 rounded">
                                             <div className="text-center">
                                                 <div className="text-xs text-gray-500">Before</div>
@@ -207,6 +247,23 @@ const Allocation = () => {
                             No transactions found for this department
                         </div>
                     )}
+                </div>
+            )}
+
+            {/* Print Button */}
+            {transactions.length > 0 && (
+                <div className="mt-6 text-center">
+                    <button
+                        onClick={handlePrint}
+                        disabled={isPrinting}
+                        className={`px-6 py-3 rounded-md text-white font-medium text-center
+                            ${isPrinting
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-blue-600 hover:bg-blue-700'
+                            } transition duration-200`}
+                    >
+                        {isPrinting ? 'Printing...' : 'Print Transactions'}
+                    </button>
                 </div>
             )}
         </div>

@@ -4,7 +4,8 @@ import OrderForm from "./forms/orderForm";
 import Navbar from "../components/Navbar/Navbar.jsx";
 import Profile from "./Profile/Profile.jsx";
 import Preview from "./Preview.jsx";
-import generatePDF from "./utils/generatePDF.js";
+import generateOrderReciptPDF from "./utils/generateOrderReciptPDF.js";
+import generateTransactionPDF from "./utils/generateTransactionPDF.js";
 
 import RegisterHome from "./register/RegisterHome.jsx";
 import RegisterProcessOrder from "./register/RegisterProcessOrder.jsx";
@@ -19,6 +20,7 @@ import Restock from "./StoreManager/Restock.jsx";
 import StockCheck from "./StockTransactions/StockCheck.jsx";
 import Transactions from "./StockTransactions/Transactions.jsx"
 import Allocation from "./StockTransactions/Allocation.jsx";
+import FullAudit from "./StockTransactions/FullAudit.jsx";
 
 
 export{
@@ -29,7 +31,8 @@ export{
     Navbar,
     Profile,
     Preview,
-    generatePDF,
+    generateOrderReciptPDF,
+    generateTransactionPDF,
     
     AddNewItem,
     Restock,
@@ -39,6 +42,7 @@ export{
     StockCheck,
     Transactions,
     Allocation,
+    FullAudit,
 
     RegisterHome,
     RegisterProcessOrder,

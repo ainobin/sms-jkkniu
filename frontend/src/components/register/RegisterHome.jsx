@@ -4,13 +4,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Printer, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { generatePDF } from '../index.js';
+import { generateOrderReciptPDF } from '../index.js';
 import config from '../../config/config.js';
 
 const RegisterHome = () => {
     // Access user context
     const { user } = useContext(UserContext);
-    const role = "manager"; // Example role, can be dynamic
 
     // State variables to manage orders
     const [pendingOrders, setPendingOrders] = useState([]); // Orders pending approval
@@ -53,70 +52,68 @@ const RegisterHome = () => {
     // Handle printing an order by generating a PDF
     const handlePrint = async (order) => {
         try {
-          setPrintingOrderId(order._id);
-          setIsPrinting(true);
-          
-          const registerSign = await axios.get(`${config.serverUrl}/users/getRegisterSign`, {
-            withCredentials: true, 
-          });
-          const managerSign = await axios.get(`${config.serverUrl}/users/getManagerSign`, {
-            withCredentials: true,
-          });
-        //   console.log(order.dept_id);
-          
-          const deptAdminSign = await axios.get(`${config.serverUrl}/users/getDeptAdminSign/${order.dept_id}`, {
-            withCredentials: true,
-          });
-          const regSign = registerSign.data.data;
-          const manSign = managerSign.data.data;
-          const deptSign = deptAdminSign.data.data;
-    
-          generatePDF(order, regSign, manSign, deptSign); // Call the function with the order data
-          toast.success("Receipt is downloading...");
+            setPrintingOrderId(order._id);
+            setIsPrinting(true);
+
+            const registerSign = await axios.get(`${config.serverUrl}/users/getRegisterSign`, {
+                withCredentials: true,
+            });
+            const managerSign = await axios.get(`${config.serverUrl}/users/getManagerSign`, {
+                withCredentials: true,
+            });
+            //   console.log(order.dept_id);
+
+            const deptAdminSign = await axios.get(`${config.serverUrl}/users/getDeptAdminSign/${order.dept_id}`, {
+                withCredentials: true,
+            });
+            const regSign = registerSign.data.data;
+            const manSign = managerSign.data.data;
+            const deptSign = deptAdminSign.data.data;
+
+            generateOrderReciptPDF(order, regSign, manSign, deptSign); // Call the function with the order data
+            toast.success("Receipt is downloading...");
         } catch (error) {
-          console.error("Error fetching registrar signature:", error.message);
-          toast.error("Error while fatching data, Please Refresh..")
+            console.error("Error fetching registrar signature:", error.message);
+            toast.error("Error while fatching data, Please Refresh..")
         } finally {
-          setPrintingOrderId(null);
-          setIsPrinting(false);
+            setPrintingOrderId(null);
+            setIsPrinting(false);
         }
     };
-    
+
     // Function to render order card for mobile view
     const renderOrderCard = (order) => (
-        <div 
+        <div
             key={order._id}
-            className={`mb-4 p-4 rounded-lg shadow-md ${
-                order.register_approval === null
+            className={`mb-4 p-4 rounded-lg shadow-md ${order.register_approval === null
                     ? "bg-red-50"
                     : order.register_approval === false
-                    ? "bg-red-50"
-                    : "bg-green-50"
-            }`}
+                        ? "bg-red-50"
+                        : "bg-green-50"
+                }`}
         >
             <div className="mb-2">
                 <span className="font-semibold">Order Name:</span> {order.order_name}
             </div>
-            
+
             <div className="mb-3">
                 <span className="font-semibold">Status:</span>{" "}
                 <span
-                    className={`px-2 py-0.5 rounded-full text-xs inline-block mt-1 ${
-                        order.register_approval === null
+                    className={`px-2 py-0.5 rounded-full text-xs inline-block mt-1 ${order.register_approval === null
                             ? "bg-yellow-200"
                             : order.register_approval === false
-                            ? "bg-red-400"
-                            : "bg-green-300"
-                    }`}
+                                ? "bg-red-400"
+                                : "bg-green-300"
+                        }`}
                 >
                     {order.register_approval === null
                         ? "Pending"
                         : order.register_approval === false
-                        ? "Decline"
-                        : "Approved"}
+                            ? "Decline"
+                            : "Approved"}
                 </span>
             </div>
-            
+
             <div className="flex flex-row gap-2">
                 {order.register_approval === null ? (
                     <button
@@ -133,7 +130,7 @@ const RegisterHome = () => {
                         Details
                     </button>
                 )}
-                
+
                 {order.register_approval === true && (
                     <button
                         onClick={() => handlePrint(order)}
@@ -141,9 +138,9 @@ const RegisterHome = () => {
                         disabled={printingOrderId === order._id || isPrinting}
                     >
                         {printingOrderId === order._id ? (
-                          <Loader2 size={16} className="animate-spin mr-1" />
+                            <Loader2 size={16} className="animate-spin mr-1" />
                         ) : (
-                          <Printer size={16} className="mr-1" />
+                            <Printer size={16} className="mr-1" />
                         )}
                         Print
                     </button>
@@ -181,30 +178,28 @@ const RegisterHome = () => {
                         {pendingOrders.map((order) => (
                             <tr
                                 key={order._id}
-                                className={`border-b transition duration-200 ${
-                                    order.register_approval === null
+                                className={`border-b transition duration-200 ${order.register_approval === null
                                         ? "bg-red-50 hover:bg-red-100"
                                         : order.register_approval === false
-                                        ? "bg-red-50 hover:bg-red-100"
-                                        : "bg-green-50 hover:bg-green-100"
-                                }`}
+                                            ? "bg-red-50 hover:bg-red-100"
+                                            : "bg-green-50 hover:bg-green-100"
+                                    }`}
                             >
                                 <td className="px-4 py-3">{order.order_name}</td>
                                 <td className="px-4 py-3">
                                     <span
-                                        className={`px-3 py-1 rounded-full text-black text-sm ${
-                                            order.register_approval === null
+                                        className={`px-3 py-1 rounded-full text-black text-sm ${order.register_approval === null
                                                 ? "bg-yellow-200 hover:bg-yellow-300"
                                                 : order.register_approval === false
-                                                ? "bg-red-400"
-                                                : "bg-green-300 hover:bg-green-400"
-                                        }`}
+                                                    ? "bg-red-400"
+                                                    : "bg-green-300 hover:bg-green-400"
+                                            }`}
                                     >
                                         {order.register_approval === null
                                             ? "Pending"
                                             : order.register_approval === false
-                                            ? "Decline"
-                                            : "Approved"}
+                                                ? "Decline"
+                                                : "Approved"}
                                     </span>
                                 </td>
                                 <td className="px-4 py-3">
@@ -236,9 +231,9 @@ const RegisterHome = () => {
                                             disabled={printingOrderId === order._id || isPrinting}
                                         >
                                             {printingOrderId === order._id ? (
-                                              <Loader2 size={18} className="animate-spin" />
+                                                <Loader2 size={18} className="animate-spin" />
                                             ) : (
-                                              <Printer size={18} />
+                                                <Printer size={18} />
                                             )}
                                             Print
                                         </button>
@@ -251,30 +246,28 @@ const RegisterHome = () => {
                         {processdOrders.map((order) => (
                             <tr
                                 key={order._id}
-                                className={`border-b transition duration-200 ${
-                                    order.register_approval === null
+                                className={`border-b transition duration-200 ${order.register_approval === null
                                         ? "bg-red-50 hover:bg-red-100"
                                         : order.register_approval === false
-                                        ? "bg-red-50 hover:bg-red-100"
-                                        : "bg-green-50 hover:bg-green-100"
-                                }`}
+                                            ? "bg-red-50 hover:bg-red-100"
+                                            : "bg-green-50 hover:bg-green-100"
+                                    }`}
                             >
                                 <td className="px-4 py-3">{order.order_name}</td>
                                 <td className="px-4 py-3">
                                     <span
-                                        className={`px-3 py-1 rounded-full text-black text-sm ${
-                                            order.register_approval === null
+                                        className={`px-3 py-1 rounded-full text-black text-sm ${order.register_approval === null
                                                 ? "bg-yellow-200 hover:bg-yellow-300"
                                                 : order.register_approval === false
-                                                ? "bg-red-400"
-                                                : "bg-green-300 hover:bg-green-400"
-                                        }`}
+                                                    ? "bg-red-400"
+                                                    : "bg-green-300 hover:bg-green-400"
+                                            }`}
                                     >
                                         {order.register_approval === null
                                             ? "Pending"
                                             : order.register_approval === false
-                                            ? "Decline"
-                                            : "Approved"}
+                                                ? "Decline"
+                                                : "Approved"}
                                     </span>
                                 </td>
                                 <td className="px-4 py-3">
@@ -306,9 +299,9 @@ const RegisterHome = () => {
                                             disabled={printingOrderId === order._id || isPrinting}
                                         >
                                             {printingOrderId === order._id ? (
-                                              <Loader2 size={18} className="animate-spin" />
+                                                <Loader2 size={18} className="animate-spin" />
                                             ) : (
-                                              <Printer size={18} />
+                                                <Printer size={18} />
                                             )}
                                             Print
                                         </button>
@@ -327,7 +320,7 @@ const RegisterHome = () => {
                     ) : (
                         pendingOrders.map(renderOrderCard)
                     )}
-                    
+
                     <h2 className="text-lg font-semibold mb-3 mt-6 text-gray-700">Processed Orders</h2>
                     {processdOrders.length === 0 ? (
                         <p className="text-gray-500 italic">No processed orders</p>
@@ -337,6 +330,7 @@ const RegisterHome = () => {
                 </div>
             </div>
         </div>
-    )};
+    )
+};
 
 export default RegisterHome;

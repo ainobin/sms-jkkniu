@@ -108,6 +108,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const accessToken = await loggedInUser.generateAccessToken();
     console.log(accessToken);
 
+    // https only
     return res
     .status(200)
     .cookie("accessToken", accessToken, {
@@ -118,7 +119,8 @@ const loginUser = asyncHandler(async (req, res) => {
         path: "/",           // Cookie available across your entire domain
         domain: "store.jkkniu.edu.bd" // Explicitly set your domain
     })
-    .json(new ApiResponse(200, loggedInUser, "User logged in successfully", accessToken));
+    .json(new ApiResponse(200, loggedInUser, "User logged in successfully")); // no need to send access token in response body
+    
     // return res
     //     .status(200)
     //     .cookie("accessToken", accessToken, {
@@ -135,6 +137,16 @@ const logoutUser = asyncHandler(async (req, res) => {
     // clear the access token cookie
     // return res
 
+    return res
+    .status(200)
+    .clearCookie("accessToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+        domain: "store.jkkniu.edu.bd"
+    })
+    .json(new ApiResponse(200, {}, "User logged out successfully"));
     //for https connections
     // return res
     //     .status(200)
@@ -146,16 +158,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     //     .json(new ApiResponse(200, {}, "User logged out successfully"));
 
     // for http connections
-    return res
-    .status(200)
-    .clearCookie("accessToken", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        path: "/",
-        domain: "store.jkkniu.edu.bd"
-    })
-    .json(new ApiResponse(200, {}, "User logged out successfully"));
+    
 
 });
 

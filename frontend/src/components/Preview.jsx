@@ -5,7 +5,7 @@ import axios from "axios";
 import config from "../config/config.js";
 import { Printer, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { generatePDF } from './index.js';
+import { generateOrderReciptPDF } from './index.js';
 import UserContext from "../context/UserContext";
 
 const Preview = () => {
@@ -65,7 +65,7 @@ const Preview = () => {
       const manSign = managerSign.data.data;
       const deptSign = deptAdminSign.data.data;
 
-      generatePDF(order, regSign, manSign, deptSign);
+      generateOrderReciptPDF(order, regSign, manSign, deptSign);
       toast.success("Receipt is downloading...");
       
     } catch (error) {

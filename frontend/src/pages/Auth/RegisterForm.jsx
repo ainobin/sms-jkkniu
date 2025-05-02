@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
 import config from "../../config/config.js";
+import toast from "react-hot-toast";
 
 const RegistrationForm = () => {
   const {
@@ -33,10 +34,10 @@ const RegistrationForm = () => {
 
     try {
       const response = await axios.post(`${config.serverUrl}/users/register`, formData,
-        {headers: {"Content-Type": "multipart/form-data"}
+        {headers: {"Content-Type": "multipart/form-data"}, withCredentials: true
       })
 
-      alert(response.data.message);
+      toast.success(response.data.message);
       // Reset form after successful registration
       reset();
       setSignature(null);
@@ -46,7 +47,7 @@ const RegistrationForm = () => {
         fileInput.value = '';
       }
     } catch (error) {
-      alert("Registration Failed");
+      toast.error("Registration Failed");
       console.log("failed: ", error);
     } finally {
       setIsLoading(false);
@@ -58,7 +59,7 @@ const RegistrationForm = () => {
   return (
       <div className="pt-6 pb-6 flex items-center justify-center mt-3">
         <div className="bg-white/90 backdrop-blur-md shadow-lg rounded-lg p-8 w-150 ">
-          <h2 className="text-2xl font-semibold text-center text-black mb-6">Registrar</h2>
+          <h2 className="text-2xl font-semibold text-center text-black mb-6">Register New User</h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Username */}

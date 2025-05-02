@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const generatePDF = (order, regSign, manSign, deptSign) => {
+const generateOrderReciptPDF = (order, regSign, manSign, deptSign) => {
   // console.log("Order Data:", order);
   // console.log("Registrar Signature:", regSign);
   // console.log("Manager Signature:", manSign);
@@ -300,4 +300,4 @@ const generatePDF = (order, regSign, manSign, deptSign) => {
   doc.save("store-demand-list.pdf");
 };
 
-export default generatePDF;
+export default generateOrderReciptPDF;

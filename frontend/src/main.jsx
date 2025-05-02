@@ -30,7 +30,8 @@ import {
   Preview,
   RegisterProcessOrder,
   Transactions,
-  Allocation
+  Allocation,
+  FullAudit,
 } from './components/index.js';
 
 const router = createBrowserRouter([
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
           { path: "stock-check", element: <StockCheck/> },
           { path: "restock", element: <Restock/> },
           { path: "allocation-hitory", element: <Allocation/> },
+          { path: "full-audit", element: <FullAudit/> },
           { path: "register-new-user", element: <RegistrationForm/> },
           { path: "stock-check/transactions/:id", element: <Transactions/> },
         ],
@@ -69,6 +71,7 @@ const router = createBrowserRouter([
           {path:"preview/:id", element:<Preview />},
           { path: "profile", element: <Profile/> },
           { path: "stock-check", element: <StockCheck/> },
+          { path: "full-audit", element: <FullAudit/> },
           { path: "stock-check/transactions/:id", element: <Transactions/> },
           { path: "allocation-hitory", element: <Allocation/> },
         ],

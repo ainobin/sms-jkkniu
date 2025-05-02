@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Printer, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import UserContext from '../../context/UserContext';
-import { generatePDF } from '../index.js';
+import { generateOrderReciptPDF } from '../index.js';
 import config from '../../config/config.js';
 
 const AdminHome = () => {
@@ -67,7 +67,7 @@ const AdminHome = () => {
       const manSign = managerSign.data.data;
       const deptSign = deptAdminSign.data.data;
 
-      generatePDF(order, regSign, manSign, deptSign); // Call the function with the order data
+      generateOrderReciptPDF(order, regSign, manSign, deptSign); // Call the function with the order data
       toast.success("Receipt is downloading...");
     } catch (error) {
       console.error("Error fetching register signature:", error.message);

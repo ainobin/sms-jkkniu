@@ -5,9 +5,11 @@ import UserContext from '../context/UserContext';
 
 const RegisterPage = () => {
   const RegisterMenu = [
+    { label: "Full Audit", path: "/registrar/full-audit" },
     { label: "Dept/Office History", path: "/registrar/allocation-hitory" },
     { label: "Stock Check", path: "/registrar/stock-check" },
     { label: "Profile", path: "/registrar/profile" },
+
   ];
 
   const {user} = useContext(UserContext);

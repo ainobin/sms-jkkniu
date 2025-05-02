@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../../config/config.js";
+import { generateStockPDF } from "../utils/pdfGenerator.js";
 
 // Icon imports - if you have an icon library, you can use actual imports
 // These are placeholder elements for the icons
@@ -23,11 +24,18 @@ const FilterIcon = () => (
   </svg>
 );
 
+const PrintIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z" />
+  </svg>
+);
+
 const StockCheck = () => {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState("all"); // "all", "outOfStock", "lowStock"
+  const [isPrinting, setIsPrinting] = useState(false); // For printing state
   const navigate = useNavigate();
 
   // Fetch stock data from API
@@ -61,21 +69,60 @@ const StockCheck = () => {
     } else {
       return matchesSearch;
     }
-  });
+  })
+  // Sort items alphabetically by name
+  .sort((a, b) => a.name.localeCompare(b.name));
 
   // Handle filter button clicks
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
   };
 
+  // Handle print button click
+  const handlePrint = () => {
+    setIsPrinting(true);
+    try {
+      generateStockPDF(filteredItems, filter);
+    } catch (error) {
+      console.error("Error printing stock data:", error);
+    } finally {
+      setTimeout(() => setIsPrinting(false), 1500);
+    }
+  };
+
+  // Navigate to transactions with reversed order for newest first
+  const handleItemClick = (item) => {
+    navigate(`transactions/${item.name}`, { 
+      state: { 
+        product: item,
+        sortNewestFirst: true // Pass flag to sort transactions in reverse order
+      } 
+    });
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto p-3 sm:p-6">
-      {/* Header */}
-      <div className="flex items-center justify-center mb-4 sm:mb-6">
-        <div className="bg-gradient-to-r from-blue-500 to-green-500 p-2 sm:p-3 rounded-full mr-2 sm:mr-3 shadow-lg">
-          <BoxIcon />
+      {/* Fullscreen Loading Overlay - matches loading style from dept admin */}
+      {(isLoading || isPrinting) && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-3"></div>
+            <p className="text-lg font-medium">
+              {isPrinting ? "Generating Stock Report..." : "Loading Stock Data..."}
+            </p>
+            <p className="text-sm text-gray-500 mt-1">Please wait, this may take a moment</p>
+          </div>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Stock Check</h2>
+      )}
+
+      {/* Header with Print Button */}
+      <div className="flex items-center justify-center mb-4 sm:mb-6">
+        <div className="flex items-center">
+          <div className="bg-gradient-to-r from-blue-500 to-green-500 p-2 sm:p-3 rounded-full mr-2 sm:mr-3 shadow-lg">
+            <BoxIcon />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Stock Check</h2>
+        </div>
       </div>
 
       {/* Search Bar with Icon */}
@@ -154,13 +201,25 @@ const StockCheck = () => {
       <div className="mt-2 mb-3 text-center font-bold text-xs sm:text-sm text-gray-700">
         Click on any item to view detailed transaction history
       </div>
+              
+      {/* Print Button */}
+      <div className="flex justify-end mb-3">
+        <button
+          onClick={handlePrint}
+          disabled={isLoading || filteredItems.length === 0}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-m font-medium transition-all shadow-sm
+            ${isLoading || filteredItems.length === 0
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-blue-500 text-white hover:bg-blue-600 hover:shadow"
+            }`}
+        >
+          <PrintIcon />
+          <span>Print</span>
+        </button>
+      </div>
 
       {/* Stock Table - Responsive design */}
-      {isLoading ? (
-        <div className="flex justify-center items-center h-40 sm:h-64">
-          <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-500"></div>
-        </div>
-      ) : (
+      {!isLoading && (
         <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-200">
@@ -178,7 +237,7 @@ const StockCheck = () => {
                   filteredItems.map((item) => (
                     <tr
                       key={item._id}
-                      onClick={() => navigate(`transactions/${item.name}`, { state: { product: item } })}
+                      onClick={() => handleItemClick(item)}
                       className={`cursor-pointer transition-all duration-200 hover:shadow-md
                         ${item.current_stock === 0 
                           ? "bg-red-50 hover:bg-red-100" 

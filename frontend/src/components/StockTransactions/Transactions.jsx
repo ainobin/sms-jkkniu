@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
 import axios from "axios";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaPrint } from "react-icons/fa";
 import config from "../../config/config.js";
+import generateTransactionListPDF from "../utils/generateTransactionListPDF.js";
 
 const Transactions = () => {
     const location = useLocation();
@@ -33,6 +34,11 @@ const Transactions = () => {
         item.transaction_type.toLowerCase().includes(typeSearch?.toLowerCase() || "") && // Handle typeSearch gracefully
         (search?.toLowerCase() ? item.department?.toLowerCase().includes(search.toLowerCase()) : true) // If no department search, show all
     );
+
+    // Handle print button click
+    const handlePrint = () => {
+        generateTransactionListPDF(filteredtransactions, product.name, typeSearch);
+    }
 
     return (
         <div className="px-3 sm:px-6 py-4">
@@ -74,6 +80,12 @@ const Transactions = () => {
                     >
                         OUT
                     </button>
+                    <button
+                        className="bg-blue-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-600 transition flex-1 sm:flex-none text-sm sm:text-base flex items-center justify-center gap-1"
+                        onClick={handlePrint}
+                    >
+                        <FaPrint /> Print
+                    </button>
                 </div>
             </div>
 
@@ -85,9 +97,9 @@ const Transactions = () => {
                             <th className="p-4 text-center w-1/6">Date</th>
                             <th className="p-4 text-center w-2/6">Department</th>
                             <th className="p-4 text-center w-1/6">Transaction Type</th>
-                            <th className="p-4 text-center w-1/6">Before Transactions</th>
                             <th className="p-4 text-center w-1/6">Quantity</th>
-                            <th className="p-4 text-center w-1/6">After Transactions</th>
+                            <th className="p-4 text-center w-1/6">Before</th>
+                            <th className="p-4 text-center w-1/6">After</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -106,8 +118,8 @@ const Transactions = () => {
                                             {item.transaction_type}
                                         </span>
                                     </td>
-                                    <td className="p-4 border-b text-center truncate">{item.previous_stock}</td>
                                     <td className="p-4 border-b text-center truncate">{item.change_stock}</td>
+                                    <td className="p-4 border-b text-center truncate">{item.previous_stock}</td>
                                     <td className="p-4 border-b text-center truncate">{item.new_stock}</td>
                                 </tr>
                             ))
@@ -147,12 +159,12 @@ const Transactions = () => {
                             
                             <div className="grid grid-cols-3 gap-2 mt-3 text-sm bg-gray-50 p-2 rounded">
                                 <div className="text-center">
-                                    <div className="text-xs text-gray-500">Before</div>
-                                    <div className="font-semibold">{item.previous_stock}</div>
-                                </div>
-                                <div className="text-center">
                                     <div className="text-xs text-gray-500">Quantity</div>
                                     <div className="font-semibold">{item.change_stock}</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-xs text-gray-500">Before</div>
+                                    <div className="font-semibold">{item.previous_stock}</div>
                                 </div>
                                 <div className="text-center">
                                     <div className="text-xs text-gray-500">After</div>

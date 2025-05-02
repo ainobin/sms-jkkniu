@@ -150,6 +150,7 @@ const OrderForm = () => {
             // Filter products to prevent duplicate selections
             const filteredProducts = products
               .filter((p) => !selectedProductIds.includes(p._id) || p._id === selectedId)
+              .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically by name
               .map((p) => ({ value: p._id, label: p.name }));
 
             return (
