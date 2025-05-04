@@ -46,7 +46,7 @@ crontab -e
 Then add this line:
 
 ```
-0 2 * * * /home/nobin/ProjectWork/Working_Project/sms-jkkniu/backup/docker-backup.sh >> /var/opt/sms-jkkniu-backups/backup.log 2>&1
+0 2 * * * /var/www/sms-jkkniu/backup/docker-backup.sh >> /var/opt/sms-jkkniu-backups/backup.log 2>&1
 ```
 
 ## Backup Location
