@@ -207,7 +207,7 @@ const StockCheck = () => {
         <button
           onClick={handlePrint}
           disabled={isLoading || filteredItems.length === 0}
-          className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-m font-medium transition-all shadow-sm
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all shadow-sm
             ${isLoading || filteredItems.length === 0
               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
               : "bg-blue-500 text-white hover:bg-blue-600 hover:shadow"
