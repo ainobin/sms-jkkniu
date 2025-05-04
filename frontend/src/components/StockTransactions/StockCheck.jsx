@@ -135,7 +135,7 @@ const StockCheck = () => {
           placeholder="Search for an item..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 p-2 sm:p-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base"
+          className="w-full pl-12 p-2 sm:p-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base"
         />
       </div>
 
