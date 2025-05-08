@@ -20,7 +20,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
     const { username, fullName, email, department, designation, role, password, signatureURL } = req.body
-    console.log("email: ", email);
+    
+    console.log("Register User FullName: ", fullName);
 
     if (
         [fullName, email, username, password].some((field) => field?.trim() === "")
@@ -84,8 +85,8 @@ const loginUser = asyncHandler(async (req, res) => {
     // return res
 
     const { username, password } = req.body;
-    console.log("username: ", username);
-    console.log("password: ", password);
+    console.log("login username: ", username);
+    // console.log("password: ", password);
 
     if (!username || !password) {
         throw new ApiError(400, "username and password are required");
@@ -94,7 +95,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({ username: new RegExp(`^${username}$`, 'i') });
 
     if (!user) {
-        throw new ApiError(404, "User not found");
+        throw new ApiError(401, "Invalid credentials");
     }
 
     const isPasswordCorrect = await user.isPasswordCorrect(password);
@@ -106,7 +107,8 @@ const loginUser = asyncHandler(async (req, res) => {
     const loggedInUser = await User.findById(user._id).select("-password");
 
     const accessToken = await loggedInUser.generateAccessToken();
-    console.log(accessToken);
+
+    // console.log(accessToken);
 
     // https only
     return res
@@ -264,10 +266,7 @@ const changeSignature = asyncHandler(async (req, res) => {
             const filename = urlParts[urlParts.length - 1].split('.')[0]; // etk2hrkyaejfjmxmscrr
             const folder = urlParts[urlParts.length - 2];                 // signatures
             const publicId = `${folder}/${filename}`;                     // signatures/etk2hrkyaejfjmxmscrr
-
-            console.log("Deleting signature with publicId:", publicId);
-
-            // Delete old signature
+                        // Delete old signature
             await deleteFromCloudinary(publicId);
         } catch (error) {
             console.error("Error deleting previous signature:", error);
@@ -329,8 +328,7 @@ const getDeptAdminSignature = asyncHandler(async (req, res) => {
     // find deptAdmin from db by id
     // return res
     const { id } = req.params;
-    console.log(id);
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new ApiError(400, "Invalid user id");
     }
 
@@ -338,13 +336,9 @@ const getDeptAdminSignature = asyncHandler(async (req, res) => {
     if (!user) {
         throw new ApiError(404, "Department Admin not found");
     }
-
-    console.log(user);
-    return res
+        return res
         .status(200)
         .json(new ApiResponse(200, user.signature, "Dept Admin found successfully"));
-
-
 });
 
 // get all department's only name with role deptAdmin

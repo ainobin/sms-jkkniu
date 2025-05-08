@@ -21,7 +21,8 @@ const createOrder = asyncHandler(async (req, res) => {
     // return res
 
     const { order_name, dept_id, dept_name, dept_admin_name, items_list } = req.body
-    console.log("order_name: ", order_name);
+
+    console.log("Create order order_name: ", order_name);
 
     if (
         [order_name, dept_id, dept_name, dept_admin_name].some((field) => field?.trim() === "")
@@ -32,7 +33,8 @@ const createOrder = asyncHandler(async (req, res) => {
     if (!Array.isArray(items_list) || items_list.length === 0) {
         throw new ApiError(400, "Items list can not be empty")
     }
-    console.log(items_list);
+
+    // console.log(items_list);
 
     const formattedItems = items_list.map((item, index) => {
         if (!item.product_name || item.demand_quantity === undefined) {
@@ -105,9 +107,9 @@ const managerApproval = asyncHandler(async (req, res) => {
     // return res;
 
     const { id, items_list, store_manager_name, store_manager_approval } = req.body
-
-    console.log("id", id);
-    console.log("item_list: ", items_list);
+    
+    // TODO: remove console logs
+    console.log("manager Aprroval order id: ", id);
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
         throw new ApiError(400, "Invalid order id")
     }
@@ -150,7 +152,6 @@ const managerApproval = asyncHandler(async (req, res) => {
             if (!user.email) {
                 throw new ApiError(400, "User email not found");
             }
-            console.log(user.email);
             try {
                 const emailSent = await sendEmail({
                     to: user.email,
@@ -393,9 +394,8 @@ const regesterApproval = asyncHandler(async (req, res) => {
             });
             order.invoice_no = 1;
         } else {
-            console.log("invoice: ", invoice);
             const newInvoiceNo = (invoice?.invoice_no + 1) || 1;
-
+            console.log("new invoice no: ", newInvoiceNo);
             // update new invoice no in invoice
             invoice.invoice_no = newInvoiceNo;
             invoice.order_id = order._id;

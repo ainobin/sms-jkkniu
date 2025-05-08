@@ -11,7 +11,7 @@ const getTransactions = asyncHandler(async (req, res) => {
 
     const { product_id } = req.params; // Extract product_id from request parameters
 
-    console.log(`test : ${product_id}`);
+    // console.log(`test : ${product_id}`);
     
 
     // Query transactions by product_id
@@ -33,7 +33,8 @@ const getTransactionsByDept = asyncHandler(async (req, res) => {
     // find all transaction with that dept_name,
 
     const { dept_id } = req.params; // Extract product_id from request parameters
-    console.log(dept_id);
+
+    // console.log(dept_id);
     // Query transactions by dept_name
     const transactions = await Transaction.find({ dept_id });
     // Check if transactions exist
